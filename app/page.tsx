@@ -1,21 +1,13 @@
-"use client";
+import ButtonLogger from "./components/ButtonLogger";
 
-import { logAction } from '@/lib/logger';
-
-const LoggerForm = () => {
-
-	const handleClick = async () => {
-		const user = "user";
-		const action = "action";
-
-		await logAction(user, action);
-	};
-
+const Home = () => {
 	return (
 		<div>
-			<button onClick={handleClick}>Log Action</button>
+			<ButtonLogger action="Click" user="Sacha">
+				Click
+			</ButtonLogger>
 		</div>
 	);
 };
 
-export default LoggerForm;
+export default Home;
