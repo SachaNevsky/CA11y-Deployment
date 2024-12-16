@@ -46,9 +46,9 @@ interface ButtonLoggerProps {
  * @param {string} props.user - The user performing the action.
  * @param {(event: React.MouseEvent | React.TouchEvent) => void} [props.onClick] - Optional callback function to execute additional logic when the button is clicked.
  * @param {ReactNode} [props.children] - Content to render inside the button.
- * @returns {JSX.Element} The rendered ButtonLogger component.
+ * @returns {JSX.Element} The rendered ButtonLogger component - `<button />`
  */
-const ButtonLogger: React.FC<ButtonLoggerProps> = ({ action, user, onClick, children }) => {
+const ButtonLogger: React.FC<ButtonLoggerProps> = ({ action, user, onClick, children }: ButtonLoggerProps): JSX.Element => {
     const [isProcessing, setIsProcessing] = useState(false);
 
     /**

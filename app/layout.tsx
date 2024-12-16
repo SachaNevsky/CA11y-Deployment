@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "@/styles/globals.css";
+import Header from "./components/Header";
 
 export const metadata: Metadata = {
 	title: "CA11y Deplyment",
@@ -9,7 +10,8 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
 	return (
 		<html lang="en">
-			<body>
+			<body className="m-auto">
+				<Header />
 				{children}
 			</body>
 		</html>

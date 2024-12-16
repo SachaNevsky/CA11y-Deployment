@@ -1,12 +1,78 @@
+"use client"
+
+import { useEffect, useState } from "react";
 import ButtonLogger from "./components/ButtonLogger";
 
 const Home = () => {
+	const [name, setName] = useState<string>("Name is missing");
+
+	useEffect(() => {
+		if (typeof localStorage !== "undefined") {
+			const storedName = localStorage.getItem("ca11yDeploymentName");
+			if (storedName !== null) {
+				setName(storedName);
+			}
+		}
+	}, []);
+
+	/**
+	 * Handles the form submission event for setting a name.
+	 * 
+	 * This function prevents the default form submission behavior, extracts the value of the 
+	 * `nameInput` field from the form, updates the state with the new name, and stores it 
+	 * in `localStorage` if available.
+	 *
+	 * @param {React.SyntheticEvent<HTMLFormElement>} event - The form submission event.
+	 * 
+	 * @throws Will throw an error if `localStorage` is not defined.
+	 */
+	const handleNameSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		const form = event.currentTarget;
+		const formElements = form.elements as typeof form.elements & {
+			nameInput: { value: string }
+		}
+
+		if (typeof localStorage !== "undefined") {
+			setName(formElements.nameInput.value)
+			localStorage.setItem("ca11yDeploymentName", formElements.nameInput.value);
+		}
+	}
+
 	return (
-		<div>
-			<ButtonLogger action="Click" user="Sacha">
-				Click
-			</ButtonLogger>
-		</div>
+		<>
+			{<div className="m-auto text-center">
+				{name !== "" ? (
+					<div>
+						<h1>Hello {localStorage.getItem("ca11yDeploymentName")}</h1>
+						<ButtonLogger action="Click" user={name}>
+							Click
+						</ButtonLogger>
+					</div>
+				) : (
+					<form onSubmit={handleNameSubmit}>
+						<div>
+							<div>
+								<label htmlFor="nameInput" className="mx-2 my-4">What is your name?</label>
+							</div>
+							<div>
+								<input
+									id="nameInput"
+									type="text"
+									className="mx-2 my-4 p-4 w-1/3 rounded-md border-solid border-2 border-gray-400"
+								/>
+							</div>
+							<button
+								type="submit"
+								className="px-4 py-2 rounded-md border-solid border-2 border-gray-300 transition hover:border-gray-400 hover:bg-gray-200 ease-in delay-100"
+							>
+								Submit
+							</button>
+						</div>
+					</form>
+				)}
+			</div>}
+		</>
 	);
 };
 
