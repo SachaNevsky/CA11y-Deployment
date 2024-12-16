@@ -3,7 +3,7 @@
 import { logAction } from "@/lib/logger";
 
 /**
- * Interface for the logger
+ * Interface for the `LinkLogger` props.
  * @param {string} action - The action being performed.
  * @param {string} user - The user performing the action.
  * @param {string} href - The href to which the link points.
@@ -24,7 +24,8 @@ interface LinkLoggerProps {
  * @param {string} props.user - The user performing the action.
  * @param {string} props.href - The href to which the link points.
  * @param {string} props.text - The textual description of the logged event.
- * @returns {JSX.Element} The rendered LinkLogger component - `<a/>`
+ * @returns {JSX.Element} The rendered `LinkLogger` component
+ * @example <LinkLogger action={} user={} href={} text={} />
  */
 const LinkLogger: React.FC<LinkLoggerProps> = ({ action, user, href, text }: LinkLoggerProps): JSX.Element => {
     const handleEvent = async (event: React.MouseEvent | React.TouchEvent) => {

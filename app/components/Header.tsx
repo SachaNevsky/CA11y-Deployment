@@ -16,7 +16,7 @@ const Header: React.FC = () => {
 
 
     return (
-        <div className="py-4 px-6 text-2xl">
+        <div className="py-4 px-6 text-2xl bg-gray-300 border-2 border-b-gray-500">
             <LinkLogger
                 action="Press Home button"
                 user={name}

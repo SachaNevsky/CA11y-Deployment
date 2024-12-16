@@ -1,8 +1,9 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import ButtonLogger from "./components/ButtonLogger";
+// import ButtonLogger from "./components/ButtonLogger";
 import { logAction } from "@/lib/logger";
+import SelectAphasia from "./components/selectAphasia";
 
 const Home = () => {
 	console.log("rendered")
@@ -55,11 +56,8 @@ const Home = () => {
 	return (
 		<div className="m-auto text-center">
 			{name !== "" ? (
-				<div>
-					<h1>Hello {localStorage.getItem("ca11yDeploymentName")}</h1>
-					<ButtonLogger action="Click" user={name}>
-						Click
-					</ButtonLogger>
+				<div className="pt-2">
+					<SelectAphasia name={name} />
 				</div>
 			) : (
 				<form onSubmit={handleNameSubmit}>

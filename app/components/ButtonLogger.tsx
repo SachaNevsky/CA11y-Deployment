@@ -24,7 +24,7 @@ function debounce<T extends (...args: any[]) => void>(fn: T, wait: number): (...
 }
 
 /**
- * Interface for the logger
+ * Interface for the `ButtonLogger` props
  * @param {string} action - The action being performed.
  * @param {string} user - The user performing the action.
  * @param {(event: React.MouseEvent | React.TouchEvent) => void} onClick - Optional callback function to handle onClick event.
@@ -41,12 +41,16 @@ interface ButtonLoggerProps {
  * A React component for logging user button press.
  * The component ensures only one log is processed at a time, and logs the provided action and user data.
  * 
- * @param {ButtonLoggerProps} props - The props for the ButtonLogger component.
+ * @param {ButtonLoggerProps} props - The props for the `ButtonLogger` component.
  * @param {string} props.action - The action to be logged.
  * @param {string} props.user - The user performing the action.
  * @param {(event: React.MouseEvent | React.TouchEvent) => void} [props.onClick] - Optional callback function to execute additional logic when the button is clicked.
  * @param {ReactNode} [props.children] - Content to render inside the button.
- * @returns {JSX.Element} The rendered ButtonLogger component - `<button />`
+ * @returns {JSX.Element} The rendered `ButtonLogger` component
+ * @example
+ * <ButtonLogger action={} user={} onClick={}>
+ *     {children}
+ * </ButtonLogger>
  */
 const ButtonLogger: React.FC<ButtonLoggerProps> = ({ action, user, onClick, children }: ButtonLoggerProps): JSX.Element => {
     const [isProcessing, setIsProcessing] = useState(false);
