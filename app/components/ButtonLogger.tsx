@@ -62,8 +62,8 @@ const ButtonLogger: React.FC<ButtonLoggerProps> = ({ action, user, onClick, chil
 
         setIsProcessing(true);
         try {
-            if (action && user) {
-                await logAction(action, user);
+            if (user && action) {
+                await logAction(user, action);
                 alert("Action logged successfully");
             } else {
                 console.warn("Action or user information is missing");
