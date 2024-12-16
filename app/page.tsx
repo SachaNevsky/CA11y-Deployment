@@ -2,18 +2,27 @@
 
 import { useEffect, useState } from "react";
 import ButtonLogger from "./components/ButtonLogger";
+import { logAction } from "@/lib/logger";
 
 const Home = () => {
-	const [name, setName] = useState<string>("Name is missing");
+	console.log("rendered")
+	const [loaded, setLoaded] = useState<boolean>(false);
+	const [name, setName] = useState<string>("");
 
 	useEffect(() => {
-		if (typeof localStorage !== "undefined") {
+		console.log("useEffect")
+		if (typeof window !== "undefined") {
 			const storedName = localStorage.getItem("ca11yDeploymentName");
-			if (storedName !== null) {
+			if (storedName) {
 				setName(storedName);
 			}
+			setLoaded(true);
 		}
 	}, []);
+
+	if (loaded === false) {
+		return <div>Loading...</div>;
+	}
 
 	/**
 	 * Handles the form submission event for setting a name.
@@ -33,46 +42,48 @@ const Home = () => {
 			nameInput: { value: string }
 		}
 
+		const inputName = formElements.nameInput.value;
+
 		if (typeof localStorage !== "undefined") {
-			setName(formElements.nameInput.value)
-			localStorage.setItem("ca11yDeploymentName", formElements.nameInput.value);
+			setName(inputName);
+			localStorage.setItem("ca11yDeploymentName", inputName);
 		}
+
+		logAction(inputName, "'Submitted' a name.");
 	}
 
 	return (
-		<>
-			{<div className="m-auto text-center">
-				{name !== "" ? (
+		<div className="m-auto text-center">
+			{name !== "" ? (
+				<div>
+					<h1>Hello {localStorage.getItem("ca11yDeploymentName")}</h1>
+					<ButtonLogger action="Click" user={name}>
+						Click
+					</ButtonLogger>
+				</div>
+			) : (
+				<form onSubmit={handleNameSubmit}>
 					<div>
-						<h1>Hello {localStorage.getItem("ca11yDeploymentName")}</h1>
-						<ButtonLogger action="Click" user={name}>
-							Click
-						</ButtonLogger>
-					</div>
-				) : (
-					<form onSubmit={handleNameSubmit}>
 						<div>
-							<div>
-								<label htmlFor="nameInput" className="mx-2 my-4">What is your name?</label>
-							</div>
-							<div>
-								<input
-									id="nameInput"
-									type="text"
-									className="mx-2 my-4 p-4 w-1/3 rounded-md border-solid border-2 border-gray-400"
-								/>
-							</div>
-							<button
-								type="submit"
-								className="px-4 py-2 rounded-md border-solid border-2 border-gray-300 transition hover:border-gray-400 hover:bg-gray-200 ease-in delay-100"
-							>
-								Submit
-							</button>
+							<label htmlFor="nameInput" className="mx-2 my-4">What is your name?</label>
 						</div>
-					</form>
-				)}
-			</div>}
-		</>
+						<div>
+							<input
+								id="nameInput"
+								type="text"
+								className="mx-2 my-4 p-4 w-1/3 rounded-md border-solid border-2 border-gray-400"
+							/>
+						</div>
+						<button
+							type="submit"
+							className="px-4 py-2 rounded-md border-solid border-2 border-gray-300 transition hover:border-gray-400 hover:bg-gray-200 ease-in delay-100"
+						>
+							Submit
+						</button>
+					</div>
+				</form>
+			)}
+		</div>
 	);
 };
 
