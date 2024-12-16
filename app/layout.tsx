@@ -12,7 +12,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 		<html lang="en">
 			<body className="m-auto">
 				<Header />
-				{children}
+				<main role="main">
+					{children}
+				</main>
 			</body>
 		</html>
 	);
