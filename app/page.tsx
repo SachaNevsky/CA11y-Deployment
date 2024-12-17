@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 // import ButtonLogger from "./components/ButtonLogger";
 import { logAction } from "@/lib/logger";
-import SelectAphasia from "./components/selectAphasia";
+import SelectAphasia from "./components/SelectAphasia";
 
 const Home = () => {
 	console.log("rendered")
