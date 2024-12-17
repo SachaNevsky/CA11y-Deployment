@@ -8,7 +8,7 @@ const PersonaCard: React.FC<PersonaCardProps> = ({ name, blurb, challenges }: Pe
 
     return (
         <ul className="p-2 border rounded-md border-gray-300 list-none transition ease-in delay-500">
-            <h1>{name}</h1>
+            {name}
             {blurb.map((item, index) => (
                 <li key={item + index}>{item}</li>
             ))}
