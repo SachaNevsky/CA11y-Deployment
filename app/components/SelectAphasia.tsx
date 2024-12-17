@@ -21,6 +21,7 @@ interface SelectAphasiaProps {
  */
 const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProps): JSX.Element => {
     const [choice, setChoice] = useState("");
+    const [selectedPersona, setSelectedPersona] = useState("");
 
     const handleSelect = (event: React.MouseEvent<HTMLElement> | React.TouchEvent<HTMLElement>): void => {
         const target: HTMLButtonElement = event.target as HTMLButtonElement;
@@ -28,11 +29,19 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
         setChoice(target.innerText);
     }
 
+    const handleSelectPersona = (name: string): void => {
+        if (name === selectedPersona) {
+            setSelectedPersona("");
+        } else {
+            setSelectedPersona(name);
+        }
+    }
+
     const personas = [
         {
             name: "Annie",
             blurb: ["5 years post-stroke", "Struggles with technology", "Use if right hand is slow"],
-            challenges: ["Struggles iwht reading and writing", "Someone reading out loud helps a lot"]
+            challenges: ["Struggles with reading and writing", "Someone reading out loud helps a lot"]
         },
         {
             name: "Jimmy",
@@ -53,7 +62,7 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 
     return (
         <div className="mx-[16%]">
-            <h1>{name} chose {choice}</h1>
+            <h1>{name} chose {choice} - {selectedPersona}</h1>
             <div className="">
                 <button onClick={handleSelect} className="p-2 m-1 border-solid border-2 rounded-md border-gray-300">Personas</button>
                 <button onClick={handleSelect} className="p-2 m-1 border-solid border-2 rounded-md border-gray-300">Apahsia Characteristics</button>
@@ -62,17 +71,18 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
                 {choice === "Personas" ? (
                     personas.map((persona, index) => {
                         return (
-                            <div
+                            <button
                                 key={persona.name}
-                                className="opacity-0 animate-fade-in"
-                                style={{ animationDelay: `${index * 20}ms` }}
+                                className={`rounded-md opacity-0 animate-fade-in ${selectedPersona === persona.name ? "bg-gray-300 " : ""}`}
+                                style={{ animationDelay: `${index * 10}ms` }}
+                                onClick={() => handleSelectPersona(persona.name)}
                             >
                                 <PersonaCard
                                     name={persona.name}
                                     blurb={persona.blurb}
                                     challenges={persona.challenges}
                                 />
-                            </div>)
+                            </button>)
                     })
                 ) : (
                     <div />

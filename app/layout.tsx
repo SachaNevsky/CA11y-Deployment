@@ -13,7 +13,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
 			<head>
 				<link rel="icon" href="/favicon.ico" sizes="32x32" />
 			</head>
-			<body className="m-auto">
+			<body className="m-auto font-bold">
 				<Header />
 				<main role="main">
 					{children}
