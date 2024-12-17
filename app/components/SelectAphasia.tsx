@@ -22,11 +22,13 @@ interface SelectAphasiaProps {
 const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProps): JSX.Element => {
     const [choice, setChoice] = useState("");
     const [selectedPersona, setSelectedPersona] = useState("");
+    const [aphasiaCharacteristics, setAphasiaCharacteristics] = useState([])
 
     const handleSelect = (event: React.MouseEvent<HTMLElement> | React.TouchEvent<HTMLElement>): void => {
         const target: HTMLButtonElement = event.target as HTMLButtonElement;
-        console.log(target);
         setChoice(target.innerText);
+        setSelectedPersona("");
+        setAphasiaCharacteristics([]);
     }
 
     const handleSelectPersona = (name: string): void => {
@@ -37,10 +39,20 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
         }
     }
 
+    const handleConfirm = () => {
+        if (choice === "Personas" && selectedPersona !== "") {
+            localStorage.setItem("ca11yPersona", selectedPersona)
+            window.open("/videoLibrary", "_self")
+        } else if (choice === "Apahsia Characteristics" && (Array.isArray(aphasiaCharacteristics) && aphasiaCharacteristics.length !== 0)) {
+            localStorage.setItem("ca11yAphasiaCharacteristics", aphasiaCharacteristics.toString())
+            window.open("/videoLibrary", "_self")
+        }
+    }
+
     const personas = [
         {
             name: "Annie",
-            blurb: ["5 years post-stroke", "Struggles with technology", "Use if right hand is slow"],
+            blurb: ["5 years post-stroke", "Struggles with technology", "Use of right hand is slow"],
             challenges: ["Struggles with reading and writing", "Someone reading out loud helps a lot"]
         },
         {
@@ -67,23 +79,26 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
                 <button onClick={handleSelect} className="p-2 m-1 border-solid border-2 rounded-md border-gray-300">Personas</button>
                 <button onClick={handleSelect} className="p-2 m-1 border-solid border-2 rounded-md border-gray-300">Apahsia Characteristics</button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+            {choice !== "" ? (<button onClick={handleConfirm} className={`p-2 m-1 border-solid border-2 rounded-md border-gray-300 ${selectedPersona === "" ? "text-gray-300 cursor-default" : ""}`}>Confirm</button>) : <div />}
+            <div>
                 {choice === "Personas" ? (
-                    personas.map((persona, index) => {
-                        return (
-                            <button
-                                key={persona.name}
-                                className={`rounded-md opacity-0 animate-fade-in ${selectedPersona === persona.name ? "bg-gray-300 " : ""}`}
-                                style={{ animationDelay: `${index * 10}ms` }}
-                                onClick={() => handleSelectPersona(persona.name)}
-                            >
-                                <PersonaCard
-                                    name={persona.name}
-                                    blurb={persona.blurb}
-                                    challenges={persona.challenges}
-                                />
-                            </button>)
-                    })
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                        {personas.map((persona, index) => {
+                            return (
+                                <button
+                                    key={persona.name}
+                                    className={`rounded-md opacity-0 animate-fade-in ${selectedPersona === persona.name ? "bg-gray-300 " : ""}`}
+                                    style={{ animationDelay: `${index * 10}ms` }}
+                                    onClick={() => handleSelectPersona(persona.name)}
+                                >
+                                    <PersonaCard
+                                        name={persona.name}
+                                        blurb={persona.blurb}
+                                        challenges={persona.challenges}
+                                    />
+                                </button>)
+                        })}
+                    </div>
                 ) : (
                     <div />
                 )}
