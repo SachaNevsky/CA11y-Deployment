@@ -1,0 +1,5 @@
+Remove instrumentals
+docker run -it --gpus all -v "C:/Users/sacha/Desktop/videos:/data" beveradb/audio-separator:gpu /data/video.mp3 --output_format=MP3 --output_dir /data/output
+
+Remove crowd
+docker run -it --gpus all -v "C:/Users/sacha/Desktop/videos/output:/data" beveradb/audio-separator:gpu /data/video.mp3 -m mel_band_roformer_crowd_aufr33_viperx_sdr_8.7144.ckpt --output_format=MP3 --output_dir /data/output

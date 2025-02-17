@@ -6,11 +6,19 @@ import LinkLogger from "./LinkLogger";
 const Header: React.FC = () => {
 
     const [name, setName] = useState<string>("Name is missing");
+    const [selectedAphasia, setSelectedAphasia] = useState<boolean>(false);
 
     useEffect(() => {
         const storedName = localStorage.getItem("ca11yDeploymentName");
         if (storedName) {
             setName(storedName);
+        }
+    }, [])
+
+    useEffect(() => {
+        const storedAphasia = localStorage.getItem("ca11yPersona") != null || localStorage.getItem("ca11yAphasiaCharacteristics") != null;
+        if (storedAphasia) {
+            setSelectedAphasia(storedAphasia)
         }
     }, [])
 
@@ -20,7 +28,7 @@ const Header: React.FC = () => {
             <LinkLogger
                 action="Press Home button"
                 user={name}
-                href="/"
+                href={selectedAphasia ? "/videoLibrary" : "/"}
                 text="Home 🏠" />
         </div>
     )

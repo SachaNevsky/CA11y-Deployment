@@ -1,7 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState } from "react";
 import PersonaCard from "./PersonaCard";
+import ChallengeCard from "./ChallengeCard";
 
 /**
  * Interface for the `SelectAphasia` props
@@ -72,14 +73,33 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
         }
     ]
 
+    const challenges = [
+        {
+            text: "Fast speech",
+            icon: ""
+        },
+        {
+            text: "Remembering things",
+            icon: ""
+        },
+        {
+            text: "Multiple speakers",
+            icon: ""
+        },
+        {
+            text: "Strong accents",
+            icon: ""
+        }
+    ]
+
     return (
         <div className="mx-[16%]">
             <h1>{name} chose {choice} - {selectedPersona}</h1>
             <div className="">
-                <button onClick={handleSelect} className="p-2 m-1 border-solid border-2 rounded-md border-gray-300">Personas</button>
-                <button onClick={handleSelect} className="p-2 m-1 border-solid border-2 rounded-md border-gray-300">Apahsia Characteristics</button>
+                <button onClick={handleSelect} className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-300">Personas</button>
+                <button onClick={handleSelect} className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-300">Apahsia Characteristics</button>
             </div>
-            {choice !== "" ? (<button onClick={handleConfirm} className={`p-2 m-1 border-solid border-2 rounded-md border-gray-300 ${selectedPersona === "" ? "text-gray-300 cursor-default" : ""}`}>Confirm</button>) : <div />}
+            {choice !== "" ? (<button onClick={handleConfirm} className={`py-2 px-4 mt-4 mb-6 border-solid border-2 rounded-md border-gray-300 ${selectedPersona === "" ? "text-gray-300 cursor-default" : ""}`}>Confirm</button>) : <div />}
             <div>
                 {choice === "Personas" ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
@@ -100,7 +120,74 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
                         })}
                     </div>
                 ) : (
-                    <div />
+                    <div>
+                        <div>
+                            How do you find your language abilities?
+                            <div>
+                                <div className="grid grid-cols-2">
+                                    <div className="" />
+                                    <div className="">
+                                        Bad 👎 ↔ 👍Good
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2">
+                                    <label>Listening</label>
+                                    <div>
+                                        <input type="radio" id="1" name="listening" value="1" />
+                                        <input type="radio" id="2" name="listening" value="2" />
+                                        <input type="radio" id="3" name="listening" value="3" />
+                                        <input type="radio" id="4" name="listening" value="4" />
+                                        <input type="radio" id="5" name="listening" value="5" />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2">
+                                    <label>Speaking</label>
+                                    <div>
+                                        <input type="radio" id="1" name="speaking" value="1" />
+                                        <input type="radio" id="2" name="speaking" value="2" />
+                                        <input type="radio" id="3" name="speaking" value="3" />
+                                        <input type="radio" id="4" name="speaking" value="4" />
+                                        <input type="radio" id="5" name="speaking" value="5" />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2">
+                                    <label>Reading</label>
+                                    <div>
+                                        <input type="radio" id="1" name="reading" value="1" />
+                                        <input type="radio" id="2" name="reading" value="2" />
+                                        <input type="radio" id="3" name="reading" value="3" />
+                                        <input type="radio" id="4" name="reading" value="4" />
+                                        <input type="radio" id="5" name="reading" value="5" />
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-2">
+                                    <label>Writing</label>
+                                    <div>
+                                        <input type="radio" id="1" name="writing" value="1" />
+                                        <input type="radio" id="2" name="writing" value="2" />
+                                        <input type="radio" id="3" name="writing" value="3" />
+                                        <input type="radio" id="4" name="writing" value="4" />
+                                        <input type="radio" id="5" name="writing" value="5" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="mt-6">
+                            Which of these do you find challenging?
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+                                {challenges.map((challenge) => {
+                                    return (
+                                        <button key={challenge.text}>
+                                            <ChallengeCard
+                                                text={challenge.text}
+                                                icon={challenge.icon}
+                                            />
+                                        </button>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                    </div>
                 )}
             </div>
         </div>
