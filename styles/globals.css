@@ -19,3 +19,7 @@ body {
     text-wrap: balance;
   }
 }
+
+.custom-slider-track {
+  @apply bg-black;
+}
