@@ -3,19 +3,21 @@
 import Video from "next-video";
 import { useEffect, useState, useRef } from "react";
 import { Slider } from "@heroui/slider";
-import CastButton from "@/app/components/CastButton";
+// import CastButton from "@/app/components/CastButton";
 
 const TheSocialNetwork = () => {
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const voiceRef = useRef<HTMLAudioElement | null>(null);
     const musicRef = useRef<HTMLAudioElement | null>(null);
     const crowdRef = useRef<HTMLAudioElement | null>(null);
+    const videoContainerRef = useRef<HTMLDivElement | null>(null);
 
     const [playbackRate, setPlaybackRate] = useState(1);
     const [voiceVolume, setVoiceVolume] = useState(1);
     const [musicVolume, setMusicVolume] = useState(1);
     const [crowdVolume, setCrowdVolume] = useState(1);
     const [currentTimestamp, setCurrentTimestamp] = useState(0.1);
+    const [isFullScreen, setIsFullScreen] = useState(false);
 
     const handleSlowDown = () => {
         if (playbackRate > 0.2) setPlaybackRate((prev) => prev - 0.1);
@@ -62,7 +64,25 @@ const TheSocialNetwork = () => {
             crowd.currentTime = time;
             setCurrentTimestamp(time);
         }
-    }
+    };
+
+    const toggleFullscreen = () => {
+        if (videoContainerRef.current) {
+            if (!document.fullscreenElement) {
+                if (videoContainerRef.current.requestFullscreen) {
+                    videoContainerRef.current.requestFullscreen();
+                } else if (videoContainerRef.current.webkitRequestFullscreen) {
+                    videoContainerRef.current.webkitRequestFullscreen();
+                } else if (videoContainerRef.current.msRequestFullscreen) {
+                    videoContainerRef.current.msRequestFullscreen();
+                }
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+    };
 
     const formatTime = (seconds: number): string => {
         const mins = Math.floor(seconds / 60);
@@ -70,6 +90,17 @@ const TheSocialNetwork = () => {
 
         return `${mins}:${secs.toString().padStart(2, "0")}`;
     };
+
+    useEffect(() => {
+        const handleFullScreenChange = () => {
+            setIsFullScreen(!!document.fullscreenElement);
+        };
+
+        document.addEventListener("fullscreenchange", handleFullScreenChange);
+        return () => {
+            document.removeEventListener("fullscreenchange", handleFullScreenChange);
+        };
+    }, []);
 
     useEffect(() => {
         const video = videoRef.current;
@@ -147,7 +178,7 @@ const TheSocialNetwork = () => {
 
     return (
         <div className="m-auto text-center">
-            <div className="w-3/5 mx-auto">
+            <div className="w-3/5 mx-auto" ref={videoContainerRef}>
                 <Video id="video" ref={videoRef} controls={false} muted>
                     <source
                         id="videoSource"
@@ -158,10 +189,23 @@ const TheSocialNetwork = () => {
                 <audio id="voice" ref={voiceRef} src={"/theSocialNetwork/voice.mp3"} />
                 <audio id="music" ref={musicRef} src={"/theSocialNetwork/music.mp3"} />
                 <audio id="crowd" ref={crowdRef} src={"/theSocialNetwork/crowd.mp3"} />
-            </div>
-
-            <div className="w-3/5 mx-auto my-4">
-                <CastButton />
+                {isFullScreen && (
+                    <div
+                        className="absolute top-4 right-4 z-10"
+                        style={{
+                            pointerEvents: "none", // disable interaction for overlay background
+                        }}
+                    >
+                        <button
+                            onClick={toggleFullscreen}
+                            style={{ pointerEvents: "auto" }} // enable only button clicks
+                            className="py-2 px-4 bg-gray-800 text-white rounded"
+                        >
+                            Exit Full Screen
+                        </button>
+                    </div>
+                )}
+                <button onClick={toggleFullscreen}>Toggle Fullscreen</button>
             </div>
 
             <div className="w-3/5 mx-auto">

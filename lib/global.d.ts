@@ -26,6 +26,12 @@ declare global {
             };
         };
     }
+
+    interface HTMLDivElement {
+        requestFullscreen?: () => Promise<void>;
+        webkitRequestFullscreen?: () => Promise<void>;
+        msRequestFullscreen?: () => Promise<void>;
+    }
 }
 
 interface MediaInfo {
