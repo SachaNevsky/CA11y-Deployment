@@ -3,6 +3,7 @@
 import Video from "next-video";
 import { useEffect, useState, useRef } from "react";
 import { Slider } from "@heroui/slider";
+import CastButton from "@/app/components/CastButton";
 
 const TheSocialNetwork = () => {
     const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -91,20 +92,6 @@ const TheSocialNetwork = () => {
         }
     }, [currentTimestamp]);
 
-    // useEffect(() => {
-    //     const video = videoRef.current;
-    //     const voice = voiceRef.current;
-    //     const music = musicRef.current;
-    //     const crowd = crowdRef.current;
-
-    //     if (video && voice && music && crowd) {
-    //         video.currentTime = currentTimestamp;
-    //         voice.currentTime = currentTimestamp;
-    //         music.currentTime = currentTimestamp;
-    //         crowd.currentTime = currentTimestamp;
-    //     }
-    // }, [currentTimestamp]);
-
     useEffect(() => {
         const video = videoRef.current;
         const voice = voiceRef.current;
@@ -149,26 +136,12 @@ const TheSocialNetwork = () => {
             }
         };
 
-        // const syncSeeking = () => {
-        //     const time = video.currentTime;
-        //     voice.currentTime = time;
-        //     music.currentTime = time;
-        //     crowd.currentTime = time;
-        //     setCurrentTimestamp(time);
-        // };
-
         video.addEventListener("play", syncAudio);
         video.addEventListener("pause", syncAudio);
-        // video.addEventListener("seeked", syncSeeking);
-        // video.addEventListener("timeupdate", syncSeeking);
-        // video.addEventListener("seeking", syncSeeking);
 
         return () => {
             video.removeEventListener("play", syncAudio);
             video.removeEventListener("pause", syncAudio);
-            // video.removeEventListener("seeked", syncSeeking);
-            // video.removeEventListener("timeupdate", syncSeeking);
-            // video.removeEventListener("seeking", syncSeeking);
         };
     }, []);
 
@@ -185,6 +158,10 @@ const TheSocialNetwork = () => {
                 <audio id="voice" ref={voiceRef} src={"/theSocialNetwork/voice.mp3"} />
                 <audio id="music" ref={musicRef} src={"/theSocialNetwork/music.mp3"} />
                 <audio id="crowd" ref={crowdRef} src={"/theSocialNetwork/crowd.mp3"} />
+            </div>
+
+            <div className="w-3/5 mx-auto my-4">
+                <CastButton />
             </div>
 
             <div className="w-3/5 mx-auto">
