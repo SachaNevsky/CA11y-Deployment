@@ -1,43 +1,34 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const CastButton = () => {
+    const [castAvailable, setCastAvailable] = useState(false);
+
     useEffect(() => {
+        // Define the callback before loading the script.
+        window.__onGCastApiAvailable = function (isAvailable: boolean) {
+            if (isAvailable) {
+                setCastAvailable(true);
+                window.cast.framework.CastContext.getInstance().setOptions({
+                    receiverApplicationId: window.chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+                    autoJoinPolicy: window.chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED,
+                });
+            }
+        };
+
         const script = document.createElement("script");
-        script.src =
-            "https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1";
+        script.src = "https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1";
         script.async = true;
         script.crossOrigin = "anonymous";
         document.body.appendChild(script);
 
-        script.onload = () => {
-            window.__onGCastApiAvailable = (isAvailable: boolean) => {
-                if (
-                    isAvailable &&
-                    window.cast &&
-                    window.cast.framework &&
-                    window.chrome &&
-                    window.chrome.cast &&
-                    window.chrome.cast.media
-                ) {
-                    window.cast.framework.CastContext.getInstance().setOptions({
-                        receiverApplicationId: window.chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
-                        autoJoinPolicy: window.chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED,
-                    });
-                }
-            };
+        return () => {
+            document.body.removeChild(script);
         };
     }, []);
 
     const onCast = () => {
-        // Ensure the Cast globals are available via window
-        if (
-            typeof window.cast === "undefined" ||
-            !window.cast.framework ||
-            typeof window.chrome === "undefined" ||
-            !window.chrome.cast ||
-            !window.chrome.cast.media
-        ) {
+        if (!castAvailable) {
             alert("Casting is not supported on this browser. Please use a supported browser like Chrome or Edge.");
             return;
         }
@@ -53,8 +44,7 @@ const CastButton = () => {
                     const request = new window.chrome.cast.media.LoadRequest(mediaInfo);
                     session.loadMedia(request).then(
                         () => console.log("Media loaded successfully"),
-                        (error) =>
-                            console.error("Error loading media:", error)
+                        (error) => console.error("Error loading media:", error)
                     );
                 }
             })
