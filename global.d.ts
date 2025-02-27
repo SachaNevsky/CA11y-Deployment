@@ -1,4 +1,8 @@
+/* eslint-disable no-var */
+import mongoose from 'mongoose';
+
 declare global {
+    let mongoose: { conn: mongoose.Connection | null; promise: Promise<mongoose.Connection> | null };
 
     interface Window {
         __onGCastApiAvailable: (isAvailable: boolean) => void;
