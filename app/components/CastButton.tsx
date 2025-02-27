@@ -19,7 +19,7 @@ const CastButton = () => {
         const script = document.createElement("script");
         script.src = "https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1";
         script.async = true;
-        script.crossOrigin = "anonymous";
+        // script.crossOrigin = "anonymous";
         document.body.appendChild(script);
 
         return () => {
