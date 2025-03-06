@@ -9,15 +9,18 @@ const TheSocialNetwork = () => {
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const voiceRef = useRef<HTMLAudioElement | null>(null);
     const musicRef = useRef<HTMLAudioElement | null>(null);
-    const crowdRef = useRef<HTMLAudioElement | null>(null);
+    const otherRef = useRef<HTMLAudioElement | null>(null);
     const videoContainerRef = useRef<HTMLDivElement | null>(null);
 
     const [playbackRate, setPlaybackRate] = useState(1);
     const [voiceVolume, setVoiceVolume] = useState(1);
     const [musicVolume, setMusicVolume] = useState(1);
-    const [crowdVolume, setCrowdVolume] = useState(1);
+    const [otherVolume, setOtherVolume] = useState(1);
     const [currentTimestamp, setCurrentTimestamp] = useState(0.1);
     const [isFullScreen, setIsFullScreen] = useState(false);
+    const [muteSpeaker, setMuteSpeaker] = useState<{ mute: boolean, prevVolume: number }>({ mute: false, prevVolume: 1 });
+    const [muteMusic, setMuteMusic] = useState<{ mute: boolean, prevVolume: number }>({ mute: false, prevVolume: 1 });
+    const [muteOther, setMuteOther] = useState<{ mute: boolean, prevVolume: number }>({ mute: false, prevVolume: 1 });
 
     const handleSlowDown = () => {
         if (playbackRate > 0.2) setPlaybackRate((prev) => prev - 0.1);
@@ -31,20 +34,20 @@ const TheSocialNetwork = () => {
         const video = videoRef.current;
         const voice = voiceRef.current;
         const music = musicRef.current;
-        const crowd = crowdRef.current;
+        const other = otherRef.current;
 
-        if (video && voice && music && crowd) {
+        if (video && voice && music && other) {
             if (button === "play") {
                 video.play();
                 voice.play();
                 music.play();
-                crowd.play();
+                other.play();
                 setCurrentTimestamp(video.currentTime);
             } else {
                 video.pause();
                 voice.pause();
                 music.pause();
-                crowd.pause();
+                other.pause();
                 setCurrentTimestamp(video.currentTime);
             }
         }
@@ -54,17 +57,62 @@ const TheSocialNetwork = () => {
         const video = videoRef.current;
         const voice = voiceRef.current;
         const music = musicRef.current;
-        const crowd = crowdRef.current;
+        const other = otherRef.current;
         const time = value;
 
-        if (video && voice && music && crowd) {
+        if (video && voice && music && other) {
             video.currentTime = time;
             voice.currentTime = time;
             music.currentTime = time;
-            crowd.currentTime = time;
+            other.currentTime = time;
             setCurrentTimestamp(time);
         }
     };
+
+    const handleVoiceVolume = (val: number) => {
+        setMuteSpeaker({ mute: false, prevVolume: val })
+        setVoiceVolume(val);
+    }
+
+    const handleMusicVolume = (val: number) => {
+        setMuteMusic({ mute: false, prevVolume: val })
+        setMusicVolume(val);
+    }
+
+    const handleOtherVolume = (val: number) => {
+        setMuteOther({ mute: false, prevVolume: val })
+        setOtherVolume(val);
+    }
+
+    const handleSpeakerMute = () => {
+        if (muteSpeaker.mute === true) {
+            setVoiceVolume(muteSpeaker.prevVolume)
+            setMuteSpeaker({ mute: false, prevVolume: muteSpeaker.prevVolume });
+        } else {
+            setMuteSpeaker({ mute: true, prevVolume: voiceVolume });
+            setVoiceVolume(0);
+        }
+    }
+
+    const handleMusicMute = () => {
+        if (muteMusic.mute === true) {
+            setMusicVolume(muteMusic.prevVolume)
+            setMuteMusic({ mute: false, prevVolume: muteMusic.prevVolume });
+        } else {
+            setMuteMusic({ mute: true, prevVolume: musicVolume });
+            setMusicVolume(0);
+        }
+    }
+
+    const handleOtherMute = () => {
+        if (muteOther.mute === true) {
+            setOtherVolume(muteOther.prevVolume)
+            setMuteOther({ mute: false, prevVolume: muteOther.prevVolume });
+        } else {
+            setMuteOther({ mute: true, prevVolume: otherVolume });
+            setOtherVolume(0);
+        }
+    }
 
     const toggleFullscreen = () => {
         if (videoContainerRef.current) {
@@ -106,9 +154,9 @@ const TheSocialNetwork = () => {
         const video = videoRef.current;
         const voice = voiceRef.current;
         const music = musicRef.current;
-        const crowd = crowdRef.current;
+        const other = otherRef.current;
 
-        if (video && voice && music && crowd) {
+        if (video && voice && music && other) {
             const checkTime = () => {
                 if (video.currentTime !== currentTimestamp) {
                     setCurrentTimestamp(video.currentTime);
@@ -127,43 +175,43 @@ const TheSocialNetwork = () => {
         const video = videoRef.current;
         const voice = voiceRef.current;
         const music = musicRef.current;
-        const crowd = crowdRef.current;
+        const other = otherRef.current;
 
-        if (video && voice && music && crowd) {
+        if (video && voice && music && other) {
             video.playbackRate = playbackRate;
             voice.playbackRate = playbackRate;
             music.playbackRate = playbackRate;
-            crowd.playbackRate = playbackRate;
+            other.playbackRate = playbackRate;
         }
     }, [playbackRate]);
 
     useEffect(() => {
         if (voiceRef.current) voiceRef.current.volume = voiceVolume;
         if (musicRef.current) musicRef.current.volume = musicVolume;
-        if (crowdRef.current) crowdRef.current.volume = crowdVolume;
-    }, [voiceVolume, musicVolume, crowdVolume]);
+        if (otherRef.current) otherRef.current.volume = otherVolume;
+    }, [voiceVolume, musicVolume, otherVolume]);
 
     useEffect(() => {
         const video = videoRef.current;
         const voice = voiceRef.current;
         const music = musicRef.current;
-        const crowd = crowdRef.current;
+        const other = otherRef.current;
 
-        if (!video || !voice || !music || !crowd) return;
+        if (!video || !voice || !music || !other) return;
 
         voice.muted = false;
         music.muted = false;
-        crowd.muted = false;
+        other.muted = false;
 
         const syncAudio = () => {
             if (video.paused) {
                 voice.pause();
                 music.pause();
-                crowd.pause();
+                other.pause();
             } else {
                 voice.play().catch((e) => console.error("Voice play failed:", e));
                 music.play().catch((e) => console.error("Music play failed:", e));
-                crowd.play().catch((e) => console.error("Crowd play failed:", e));
+                other.play().catch((e) => console.error("Other play failed:", e));
             }
         };
 
@@ -188,7 +236,7 @@ const TheSocialNetwork = () => {
                 </Video>
                 <audio id="voice" ref={voiceRef} src={"/theSocialNetwork/voice.mp3"} />
                 <audio id="music" ref={musicRef} src={"/theSocialNetwork/music.mp3"} />
-                <audio id="crowd" ref={crowdRef} src={"/theSocialNetwork/crowd.mp3"} />
+                <audio id="other" ref={otherRef} src={"/theSocialNetwork/other.mp3"} />
                 {isFullScreen && (
                     <div
                         className="absolute top-4 right-4 z-10"
@@ -262,12 +310,17 @@ const TheSocialNetwork = () => {
                     <Slider
                         aria-label="SpeakerVolumeSlider"
                         name="voiceSlider"
+                        size="lg"
                         classNames={{ track: "custom-slider-track" }}
+                        color={muteSpeaker.mute ? "secondary" : "primary"}
                         defaultValue={voiceVolume}
                         minValue={0}
                         maxValue={1}
                         step={0.05}
-                        onChange={(val) => setVoiceVolume(val as number)}
+                        onChange={(val) => handleVoiceVolume(val as number)}
+                        endContent={
+                            <button onClick={() => { handleSpeakerMute() }}>{muteSpeaker.mute ? ("🔇") : ("🔊")}</button>
+                        }
                     />
                 </div>
                 <div className="w-1/3 m-auto">
@@ -275,25 +328,35 @@ const TheSocialNetwork = () => {
                     <Slider
                         aria-label="MusicVolumeSlider"
                         name="musicSlider"
+                        size="lg"
                         classNames={{ track: "custom-slider-track" }}
+                        color={muteMusic.mute ? "secondary" : "primary"}
                         defaultValue={musicVolume}
                         minValue={0}
                         maxValue={1}
                         step={0.05}
-                        onChange={(val) => setMusicVolume(val as number)}
+                        onChange={(val) => handleMusicVolume(val as number)}
+                        endContent={
+                            <button onClick={() => { handleMusicMute() }}>{muteMusic.mute ? ("🔇") : ("🔊")}</button>
+                        }
                     />
                 </div>
                 <div className="w-1/3 m-auto">
-                    <label>Other volume - {Math.floor(crowdVolume * 100)}%</label>
+                    <label>Other volume - {Math.floor(otherVolume * 100)}%</label>
                     <Slider
-                        aria-label="CrowdVolumeSlider"
-                        name="crowdSlider"
+                        aria-label="OtherVolumeSlider"
+                        name="otherSlider"
+                        size="lg"
                         classNames={{ track: "custom-slider-track" }}
-                        defaultValue={crowdVolume}
+                        color={muteOther.mute ? "secondary" : "primary"}
+                        defaultValue={otherVolume}
                         minValue={0}
                         maxValue={1}
                         step={0.05}
-                        onChange={(val) => setCrowdVolume(val as number)}
+                        onChange={(val) => handleOtherVolume(val as number)}
+                        endContent={
+                            <button onClick={() => { handleOtherMute() }}>{muteOther.mute ? ("🔇") : ("🔊")}</button>
+                        }
                     />
                 </div>
             </div>

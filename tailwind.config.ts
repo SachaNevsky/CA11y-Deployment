@@ -1,4 +1,4 @@
-import {heroui} from '@heroui/theme';
+import { heroui } from '@heroui/theme';
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -25,6 +25,16 @@ const config: Config = {
       },
     },
   },
-  plugins: [heroui()],
+  plugins: [heroui({
+    themes: {
+      light: {
+        colors: {
+          secondary: {
+            DEFAULT: "#52525B"
+          }
+        }
+      }
+    }
+  })],
 };
 export default config;
