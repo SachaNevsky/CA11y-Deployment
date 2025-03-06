@@ -12,6 +12,7 @@ const TheSocialNetwork = () => {
     const otherRef = useRef<HTMLAudioElement | null>(null);
     const videoContainerRef = useRef<HTMLDivElement | null>(null);
 
+    const duration = 78;
     const [playbackRate, setPlaybackRate] = useState(1);
     const [voiceVolume, setVoiceVolume] = useState(1);
     const [musicVolume, setMusicVolume] = useState(1);
@@ -111,6 +112,50 @@ const TheSocialNetwork = () => {
         } else {
             setMuteOther({ mute: true, prevVolume: otherVolume });
             setOtherVolume(0);
+        }
+    }
+
+    const handleSkipForwards = () => {
+        const video = videoRef.current;
+        const voice = voiceRef.current;
+        const music = musicRef.current;
+        const other = otherRef.current;
+
+        if (video && voice && music && other) {
+            const currentTime = video.currentTime;
+            if (currentTime + 10 > duration) {
+                video.currentTime = duration;
+                voice.currentTime = duration;
+                music.currentTime = duration;
+                other.currentTime = duration;
+            } else {
+                video.currentTime = currentTime + 10;
+                voice.currentTime = currentTime + 10;
+                music.currentTime = currentTime + 10;
+                other.currentTime = currentTime + 10;
+            }
+        }
+    }
+
+    const handleSkipBackwards = () => {
+        const video = videoRef.current;
+        const voice = voiceRef.current;
+        const music = musicRef.current;
+        const other = otherRef.current;
+
+        if (video && voice && music && other) {
+            const currentTime = video.currentTime;
+            if (currentTime - 10 <= 0) {
+                video.currentTime = 0;
+                voice.currentTime = 0;
+                music.currentTime = 0;
+                other.currentTime = 0;
+            } else {
+                video.currentTime = currentTime - 10;
+                voice.currentTime = currentTime - 10;
+                music.currentTime = currentTime - 10;
+                other.currentTime = currentTime - 10;
+            }
         }
     }
 
@@ -253,7 +298,7 @@ const TheSocialNetwork = () => {
                         </button>
                     </div>
                 )}
-                <button onClick={toggleFullscreen}>Toggle Fullscreen</button>
+                <button className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500" onClick={toggleFullscreen}>Toggle Fullscreen 📺</button>
             </div>
 
             <div className="w-3/5 mx-auto">
@@ -265,26 +310,32 @@ const TheSocialNetwork = () => {
                     classNames={{ track: "custom-slider-track" }}
                     defaultValue={currentTimestamp}
                     minValue={0}
-                    maxValue={78} // HARD CODED - needs to be extracted from metadata
+                    maxValue={duration} // HARD CODED - needs to be extracted from metadata
                     step={1}
                     value={currentTimestamp}
                     onChange={(val) => handleSeek(val as number)}
                 />
-                <p>{formatTime(currentTimestamp)} / {formatTime(78)}</p>
+                <p>{formatTime(currentTimestamp)} / {formatTime(duration)}</p>
             </div>
 
             <div>
+                <button className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500" onClick={() => handleSkipBackwards()}>
+                    ⏪ 10s
+                </button>
                 <button
                     className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500"
                     onClick={() => handlePlayPause("play")}
                 >
-                    Play
+                    Play ▶
                 </button>
                 <button
                     className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500"
                     onClick={() => handlePlayPause("pause")}
                 >
-                    Pause
+                    Pause ⏸
+                </button>
+                <button className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500" onClick={() => handleSkipForwards()}>
+                    10s ⏩
                 </button>
             </div>
 
