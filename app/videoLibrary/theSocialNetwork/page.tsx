@@ -308,7 +308,6 @@ const TheSocialNetwork = () => {
     return (
         <div className="m-auto text-center">
             <div className="w-3/5 mx-auto" ref={videoContainerRef}>
-                {currentTimestamp}
                 {showVideo && (
                     <Video id="video" ref={videoRef} controls={false} muted>
                         <source id="videoSource" src={videoSource} type="video/mp4" />
