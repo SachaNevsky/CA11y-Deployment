@@ -52,6 +52,7 @@ const TheSocialNetwork = () => {
             other.pause();
 
             video.currentTime = currentTimestamp;
+            video.playbackRate = playbackRate;
             voice.currentTime = currentTimestamp;
             music.currentTime = currentTimestamp;
             other.currentTime = currentTimestamp;
