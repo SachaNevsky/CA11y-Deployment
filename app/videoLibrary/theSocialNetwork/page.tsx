@@ -3,7 +3,6 @@
 import Video from "next-video";
 import { useEffect, useState, useRef } from "react";
 import { Slider } from "@heroui/slider";
-// import CastButton from "@/app/components/CastButton";
 
 const TheSocialNetwork = () => {
     const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -12,16 +11,53 @@ const TheSocialNetwork = () => {
     const otherRef = useRef<HTMLAudioElement | null>(null);
     const videoContainerRef = useRef<HTMLDivElement | null>(null);
 
-    const duration = 78;
-    const [playbackRate, setPlaybackRate] = useState(1);
-    const [voiceVolume, setVoiceVolume] = useState(1);
-    const [musicVolume, setMusicVolume] = useState(1);
-    const [otherVolume, setOtherVolume] = useState(1);
-    const [currentTimestamp, setCurrentTimestamp] = useState(0.1);
-    const [isFullScreen, setIsFullScreen] = useState(false);
+    const duration = 78; // needs to be extracted from metadata
+
+    const [playbackRate, setPlaybackRate] = useState<number>(1);
+    const [voiceVolume, setVoiceVolume] = useState<number>(1);
+    const [musicVolume, setMusicVolume] = useState<number>(1);
+    const [otherVolume, setOtherVolume] = useState<number>(1);
+    const [currentTimestamp, setCurrentTimestamp] = useState<number>(0.1);
+    const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
     const [muteSpeaker, setMuteSpeaker] = useState<{ mute: boolean, prevVolume: number }>({ mute: false, prevVolume: 1 });
     const [muteMusic, setMuteMusic] = useState<{ mute: boolean, prevVolume: number }>({ mute: false, prevVolume: 1 });
     const [muteOther, setMuteOther] = useState<{ mute: boolean, prevVolume: number }>({ mute: false, prevVolume: 1 });
+    const [highlight, setHighlight] = useState<boolean>(false);
+    const [videoSource, setVideoSource] = useState<string>("/theSocialNetwork/theSocialNetwork.mp4");
+    const [showVideo, setShowVideo] = useState<boolean>(true);
+
+    const handleHighlight = () => {
+        setShowVideo(false);
+        setTimeout(() => {
+            setHighlight(prev => !prev);
+            if (highlight) {
+                setVideoSource("/theSocialNetwork/theSocialNetwork.mp4");
+            } else {
+                setVideoSource("/theSocialNetwork/theSocialNetwork_highlight.mp4");
+            }
+            setShowVideo(true);
+        }, 0);
+    }
+
+    useEffect(() => {
+        const video = videoRef.current;
+        const voice = voiceRef.current;
+        const music = musicRef.current;
+        const other = otherRef.current;
+
+        if (video && voice && music && other) {
+            video.pause();
+            voice.pause();
+            music.pause();
+            other.pause();
+
+            video.currentTime = currentTimestamp;
+            voice.currentTime = currentTimestamp;
+            music.currentTime = currentTimestamp;
+            other.currentTime = currentTimestamp;
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [highlight]);
 
     const handleSlowDown = () => {
         if (playbackRate > 0.2) setPlaybackRate((prev) => prev - 0.1);
@@ -272,28 +308,18 @@ const TheSocialNetwork = () => {
     return (
         <div className="m-auto text-center">
             <div className="w-3/5 mx-auto" ref={videoContainerRef}>
-                <Video id="video" ref={videoRef} controls={false} muted>
-                    <source
-                        id="videoSource"
-                        src={"/theSocialNetwork/theSocialNetwork.mp4"}
-                        type="video/mp4"
-                    />
-                </Video>
+                {currentTimestamp}
+                {showVideo && (
+                    <Video id="video" ref={videoRef} controls={false} muted>
+                        <source id="videoSource" src={videoSource} type="video/mp4" />
+                    </Video>
+                )}
                 <audio id="voice" ref={voiceRef} src={"/theSocialNetwork/voice.mp3"} />
                 <audio id="music" ref={musicRef} src={"/theSocialNetwork/music.mp3"} />
                 <audio id="other" ref={otherRef} src={"/theSocialNetwork/other.mp3"} />
                 {isFullScreen && (
-                    <div
-                        className="absolute top-4 right-4 z-10"
-                        style={{
-                            pointerEvents: "none", // disable interaction for overlay background
-                        }}
-                    >
-                        <button
-                            onClick={toggleFullscreen}
-                            style={{ pointerEvents: "auto" }} // enable only button clicks
-                            className="py-2 px-4 bg-gray-800 text-white rounded"
-                        >
+                    <div className="absolute top-4 right-4 z-10" style={{ pointerEvents: "none" }}>
+                        <button onClick={toggleFullscreen} style={{ pointerEvents: "auto" }} className="py-2 px-4 bg-gray-800 text-white rounded">
                             Exit Full Screen
                         </button>
                     </div>
@@ -322,15 +348,11 @@ const TheSocialNetwork = () => {
                 <button className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500" onClick={() => handleSkipBackwards()}>
                     ⏪ 10s
                 </button>
-                <button
-                    className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500"
-                    onClick={() => handlePlayPause("play")}
+                <button className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500" onClick={() => handlePlayPause("play")}
                 >
                     Play ▶
                 </button>
-                <button
-                    className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500"
-                    onClick={() => handlePlayPause("pause")}
+                <button className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500" onClick={() => handlePlayPause("pause")}
                 >
                     Pause ⏸
                 </button>
@@ -340,17 +362,15 @@ const TheSocialNetwork = () => {
             </div>
 
             <div>
-                <button
-                    className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500"
-                    onClick={handleSlowDown}
-                >
+                <button className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500" onClick={() => handleHighlight()}>{highlight ? "Turn OFF spotlight ❌" : "Turn ON spotlight 💡"}</button>
+            </div>
+
+            <div>
+                <button className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500" onClick={handleSlowDown}>
                     Slow Down
                 </button>
                 <label className="px-2">{Math.floor(playbackRate * 100)}%</label>
-                <button
-                    className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500"
-                    onClick={handleSpeedUp}
-                >
+                <button className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500" onClick={handleSpeedUp}>
                     Speed Up
                 </button>
             </div>
