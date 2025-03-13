@@ -2,6 +2,7 @@ import subprocess
 import time
 import os
 import glob
+from mutagen.mp3 import MP3
 
 
 def isDockerRunning():
@@ -65,11 +66,9 @@ def renameFiles(directory, searchStr, newName):
         return
 
     for file_path in files:
-        # Extract directory and old filename
         dirName, oldName = os.path.split(file_path)
         newPath = os.path.join(dirName, newName)
 
-        # Rename the file
         os.rename(file_path, newPath)
         print(f"Renamed '{oldName}' to '{newName}'")
 
@@ -85,24 +84,31 @@ def deleteFiles(directory, searchStr):
 
 
 if __name__ == "__main__":
-    videos = ["video"]
+    video = "theSocialNetwork"
 
-    for video in videos:
-        print(f"Processing {video}.mp3")
-        dir = f"C:/Users/sacha/Desktop/ca11y-deployment/public/{video}"
-        strCrowded = "(Vocals)"
-        strMusic = "(Instrumental)"
-        strVoice = "(other)"
-        strCrowd = "(crowd)"
+    print(f"Processing {video}.mp3")
+    dir = f"C:/Users/sacha/Desktop/ca11y-deployment/public/{video}"
 
-        dockerSegmentMusic(name=video)
+    strCrowded = "(Vocals)"
+    strMusic = "(Instrumental)"
+    strVoice = "(other)"
+    strCrowd = "(crowd)"
 
-        renameFiles(directory=dir, searchStr=strCrowded, newName="crowded.mp3")
-        renameFiles(directory=dir, searchStr=strMusic, newName="music.mp3")
+    with open(f"{dir}/{video}.json", "w") as file:
+        audio = MP3(f"{dir}/{video}.mp3")
+        file.write(f"{{\n    \"duration\": {int(audio.info.length)}\n}}")
 
-        dockerSegmentCrowd(name=video)
+    dockerSegmentMusic(name=video)
 
-        renameFiles(directory=dir, searchStr=strVoice, newName="voice.mp3")
-        renameFiles(directory=dir, searchStr=strCrowd, newName="crowd.mp3")
+    renameFiles(directory=dir, searchStr=strCrowded, newName="crowded.mp3")
+    renameFiles(directory=dir, searchStr=strMusic,
+                newName=f"{video}_music.mp3")
 
-        deleteFiles(directory=dir, searchStr="crowded")
+    dockerSegmentCrowd(name=video)
+
+    renameFiles(directory=dir, searchStr=strVoice,
+                newName=f"{video}_speaker.mp3")
+    renameFiles(directory=dir, searchStr=strCrowd,
+                newName=f"{video}_other.mp3")
+
+    deleteFiles(directory=dir, searchStr="crowded")

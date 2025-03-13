@@ -23,7 +23,7 @@ interface SelectAphasiaProps {
 const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProps): JSX.Element => {
     const [choice, setChoice] = useState("");
     const [selectedPersona, setSelectedPersona] = useState("");
-    const [aphasiaCharacteristics, setAphasiaCharacteristics] = useState([])
+    const [aphasiaCharacteristics, setAphasiaCharacteristics] = useState([]);
 
     const handleSelect = (event: React.MouseEvent<HTMLElement> | React.TouchEvent<HTMLElement>): void => {
         const target: HTMLButtonElement = event.target as HTMLButtonElement;
@@ -42,11 +42,11 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 
     const handleConfirm = () => {
         if (choice === "Personas" && selectedPersona !== "") {
-            localStorage.setItem("ca11yPersona", selectedPersona)
-            window.open("/videoLibrary", "_self")
+            localStorage.setItem("ca11yAphasiaCharacteristics", selectedPersona);
+            window.open("/videoLibrary", "_self");
         } else if (choice === "Apahsia Characteristics" && (Array.isArray(aphasiaCharacteristics) && aphasiaCharacteristics.length !== 0)) {
-            localStorage.setItem("ca11yAphasiaCharacteristics", aphasiaCharacteristics.toString())
-            window.open("/videoLibrary", "_self")
+            localStorage.setItem("ca11yAphasiaCharacteristics", aphasiaCharacteristics.toString());
+            window.open("/videoLibrary", "_self");
         }
     }
 

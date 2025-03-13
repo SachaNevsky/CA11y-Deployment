@@ -1,12 +1,12 @@
 "use client"
 
 import { useEffect, useState } from "react";
-// import ButtonLogger from "./components/ButtonLogger";
+import { useRouter } from "next/navigation";
 import { logAction } from "@/lib/logger";
 import SelectAphasia from "./components/SelectAphasia";
 
 const Home = () => {
-	console.log("rendered")
+	const router = useRouter();
 	const [loaded, setLoaded] = useState<boolean>(false);
 	const [name, setName] = useState<string>("");
 
@@ -14,12 +14,15 @@ const Home = () => {
 		console.log("useEffect")
 		if (typeof window !== "undefined") {
 			const storedName = localStorage.getItem("ca11yDeploymentName");
-			if (storedName) {
-				setName(storedName);
-			}
+			const storedAphasiaCharacteristic = localStorage.getItem("ca11yAphasiaCharacteristics");
+
+			if (storedName) setName(storedName);
+
 			setLoaded(true);
+
+			if (storedName && storedAphasiaCharacteristic) router.push("/videoLibrary");
 		}
-	}, []);
+	}, [router]);
 
 	if (loaded === false) {
 		return <div>Loading...</div>;
@@ -36,7 +39,7 @@ const Home = () => {
 	 * 
 	 * @throws Will throw an error if `localStorage` is not defined.
 	 */
-	const handleNameSubmit = (event: React.SyntheticEvent<HTMLFormElement>) => {
+	const handleNameSubmit = (event: React.SyntheticEvent<HTMLFormElement>): void => {
 		event.preventDefault();
 		const form = event.currentTarget;
 		const formElements = form.elements as typeof form.elements & {
