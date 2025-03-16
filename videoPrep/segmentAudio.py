@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 import math
 import re
@@ -6,6 +7,9 @@ import time
 import os
 import glob
 from mutagen.mp3 import MP3
+import re
+import json
+import os
 
 
 def isDockerRunning():
@@ -86,107 +90,157 @@ def deleteFiles(directory, searchStr):
             print(f"Error deleting {file}: {e}")
 
 
-def parse_time(t):
-    t = t.replace(',', '.')
-    h, m, s = t.split(":")
-    return int(h) * 3600 + int(m) * 60 + float(s)
+def parse_vtt_time(time_str):
+    h, m, s = time_str.split(':')
+    seconds = float(h) * 3600 + float(m) * 60 + float(s)
+    return seconds
+
+
+def parse_vtt_file(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        content = file.read()
+
+    content = re.sub(r'^WEBVTT.*?(?=\n\n|\n\d)', '', content, flags=re.DOTALL)
+
+    pattern = r'(\d+:[\d:.]+)\s+-->\s+(\d+:[\d:.]+)\n([\s\S]*?)(?=\n\n|\n\d+:[\d:.]+|$)'
+    matches = re.findall(pattern, content)
+
+    subtitles = []
+    for start_time, end_time, text in matches:
+        cleaned_text = re.sub(r'<[^>]+>', '', text).strip()
+        cleaned_text = re.sub(r'\s+', ' ', cleaned_text)
+
+        if cleaned_text:
+            subtitles.append({
+                'start': parse_vtt_time(start_time),
+                'end': parse_vtt_time(end_time),
+                'text': cleaned_text
+            })
+
+    return subtitles
 
 
 def count_syllables(word):
     word = word.lower()
-    vowels = "aeiouy"
-    syllables = 0
-    if word and word[0] in vowels:
-        syllables += 1
-    for i in range(1, len(word)):
-        if word[i] in vowels and word[i-1] not in vowels:
-            syllables += 1
-    if word.endswith("e"):
-        syllables -= 1
-    return syllables if syllables > 0 else 1
+    word = re.sub(r'[^a-z]', '', word)
+
+    if not word:
+        return 0
+
+    vowels = 'aeiouy'
+    count = 0
+    prev_is_vowel = False
+
+    for char in word:
+        is_vowel = char in vowels
+        if is_vowel and not prev_is_vowel:
+            count += 1
+        prev_is_vowel = is_vowel
+
+    if word.endswith('e') and len(word) > 2 and word[-2] not in vowels:
+        count -= 1
+    if word.endswith('le') and len(word) > 2 and word[-3] not in vowels:
+        count += 1
+    if count == 0:
+        count = 1
+
+    return count
 
 
-def process_vtt_subtitles(file_path):
-    with open(file_path, 'r', encoding='utf-8') as f:
-        lines = f.read().splitlines()
+def flesch_reading_ease(text, num_subtitle_blocks):
+    text = re.sub(r'[^\w\s.]', '', text)
 
-    blocks = []
-    i = 0
-    while i < len(lines):
-        line = lines[i].strip()
-        if not line or line.startswith("WEBVTT"):
-            i += 1
-            continue
-        if "-->" in line:
-            start, end = [t.strip() for t in line.split("-->")]
-            i += 1
-        else:
-            i += 1
-            continue
+    words = re.findall(r'\b\w+\b', text.lower())
+    total_words = len(words)
 
-        text_lines = []
-        while i < len(lines) and lines[i].strip():
-            text_lines.append(lines[i].strip())
-            i += 1
-        text = " ".join(text_lines)
-        words = re.findall(r'\b\w+\b', text)
-        syllables = [count_syllables(w) for w in words]
-        start_sec = parse_time(start)
-        end_sec = parse_time(end)
-        duration = round(end_sec - start_sec, 2)
-        blocks.append({
-            "start": start,
-            "end": end,
-            "text": text,
-            "words": words,
-            "syllables": syllables,
-            "duration": duration,
-            "start_sec": start_sec,
-            "end_sec": end_sec
-        })
-        i += 1
+    if total_words < 100:
+        if total_words == 0:
+            return 100.0
 
+    total_syllables = sum(count_syllables(word) for word in words)
+
+    if total_words == 0 or num_subtitle_blocks == 0:
+        return 100.0
+
+    score = 206.835 - 1.015 * \
+        (total_words / num_subtitle_blocks) - \
+        84.6 * (total_syllables / total_words)
+
+    return int(round(score))
+
+
+def words_per_minute(text, duration_seconds):
+    if duration_seconds <= 0:
+        return 0
+
+    words = re.findall(r'\b\w+\b', text.lower())
+    word_count = len(words)
+
+    minutes = duration_seconds / 60
+    wpm = word_count / minutes if minutes > 0 else 0
+    return int(round(wpm))
+
+
+def calculate_complexity_score(fk_score, wpm):
+    if fk_score is None:
+        fk_score = 90.0
+
+    fk_component = 10 - max(0, min(9, math.floor((90 - fk_score) / 10)))
+
+    wpm_reduction = 0
+    if wpm > 150:
+        wpm_reduction = round(
+            (10 - math.log(math.floor((wpm - 150) / 25))) / 10, 2)
+
+    final_score = max(1, min(10, fk_component * wpm_reduction))
+
+    return final_score
+
+
+def analyze_subtitles_with_rolling_window(subtitles):
     results = []
-    last_complete = None
+    last_valid_fk_score = 100.0
 
-    for idx in range(len(blocks)):
-        total_words = 0
-        total_syllables = 0
-        num_blocks = 0
-        j = idx
+    for i in range(len(subtitles)):
+        original_start = subtitles[i]['start']
+        original_end = subtitles[i]['end']
+        original_text = subtitles[i]['text']
 
-        while j < len(blocks) and total_words < 100:
-            blk = blocks[j]
-            total_words += len(blk["words"])
-            total_syllables += sum(blk["syllables"])
-            num_blocks += 1
+        window_text = original_text
+        window_start = original_start
+        window_end = original_end
+
+        j = i + 1
+        words_in_window = len(re.findall(r'\b\w+\b', window_text.lower()))
+        num_blocks_in_window = 1
+
+        while words_in_window < 100 and j < len(subtitles):
+            window_text += " " + subtitles[j]['text']
+            window_end = subtitles[j]['end']
+            words_in_window = len(re.findall(r'\b\w+\b', window_text.lower()))
+            num_blocks_in_window += 1
             j += 1
 
-        if total_words >= 100:
-            fkScore = 206.835 - (1.015 * (total_words / num_blocks)) - \
-                (84.6 * (total_syllables / total_words))
-            last_complete = {"fkScore": fkScore}
+        window_duration = window_end - window_start
+
+        if words_in_window >= 100:
+            fk_score = flesch_reading_ease(window_text, num_blocks_in_window)
+            last_valid_fk_score = fk_score
         else:
-            if last_complete:
-                fkScore = last_complete["fkScore"]
-            else:
-                fkScore = None
+            fk_score = last_valid_fk_score
 
-        current_block = blocks[idx]
-        wpm = (len(current_block["words"]) * 60 / current_block["duration"]
-               ) if current_block["duration"] > 0 else 0
-
-        # TODO
-        complexity = fkScore * 100 / wpm
+        wpm = words_per_minute(window_text, window_duration)
+        complexity = calculate_complexity_score(fk_score, wpm)
 
         results.append({
-            "startTime": current_block["start"],
-            "endTime": current_block["end"],
-            "duration": current_block["duration"],
-            "fkScore": int(fkScore) if fkScore is not None else None,
-            "wordsPerMinute": int(wpm),
-            "complexityScore": complexity
+            'start_time': original_start,
+            'end_time': original_end,
+            'text': original_text,
+            'flesch_reading_ease': fk_score,
+            'words_per_minute': wpm,
+            'complexity_score': complexity
         })
+
     return results
 
 
@@ -228,8 +282,9 @@ if __name__ == "__main__":
 
     # deleteFiles(directory=dir, searchStr="crowded")
 
-    subtitles = process_vtt_subtitles(f"{dir}/{video}.vtt")
-    append_subtitles_to_existing_file(f"{dir}/{video}.json", subtitles)
+    subtitles = parse_vtt_file(f"{dir}/{video}.vtt")
+    results = analyze_subtitles_with_rolling_window(subtitles)
+    append_subtitles_to_existing_file(f"{dir}/{video}.json", results)
 
     # subtitles = process_vtt_subtitles(f"captions.vtt")
     # append_subtitles_to_existing_file(f"captions.json", subtitles)

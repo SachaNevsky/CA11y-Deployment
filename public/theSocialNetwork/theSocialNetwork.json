@@ -2,276 +2,276 @@
   "duration": 78,
   "subtitles": [
     {
-      "startTime": "00:00:15.680",
-      "endTime": "00:00:18.010",
-      "duration": 2.33,
-      "fkScore": 89,
-      "wordsPerMinute": 334,
-      "complexityScore": 26.657512154512155
+      "start_time": 15.68,
+      "end_time": 18.01,
+      "text": "Did you know there are more people with genius IQs living in China",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 302,
+      "complexity_score": 8.2
     },
     {
-      "startTime": "00:00:18.100",
-      "endTime": "00:00:20.140",
-      "duration": 2.04,
-      "fkScore": 88,
-      "wordsPerMinute": 352,
-      "complexityScore": 25.11528773718494
+      "start_time": 18.1,
+      "end_time": 20.14,
+      "text": "than there are people of any kind living in the United States?",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 304,
+      "complexity_score": 8.2
     },
     {
-      "startTime": "00:00:20.220",
-      "endTime": "00:00:22.020",
-      "duration": 1.8,
-      "fkScore": 91,
-      "wordsPerMinute": 266,
-      "complexityScore": 34.30823863636364
+      "start_time": 20.22,
+      "end_time": 22.02,
+      "text": "- That can't possibly be true. - It is.",
+      "flesch_reading_ease": 91,
+      "words_per_minute": 292,
+      "complexity_score": 8.4
     },
     {
-      "startTime": "00:00:22.100",
-      "endTime": "00:00:23.140",
-      "duration": 1.04,
-      "fkScore": 91,
-      "wordsPerMinute": 288,
-      "complexityScore": 31.716060606060612
+      "start_time": 22.1,
+      "end_time": 23.14,
+      "text": "What would account for that?",
+      "flesch_reading_ease": 91,
+      "words_per_minute": 300,
+      "complexity_score": 8.2
     },
     {
-      "startTime": "00:00:23.230",
-      "endTime": "00:00:26.230",
-      "duration": 3.0,
-      "fkScore": 90,
-      "wordsPerMinute": 300,
-      "complexityScore": 30.301678101772442
+      "start_time": 23.23,
+      "end_time": 26.23,
+      "text": "Well, first, an awful lot of people live in China, but here's my question.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 301,
+      "complexity_score": 8.2
     },
     {
-      "startTime": "00:00:26.310",
-      "endTime": "00:00:28.440",
-      "duration": 2.13,
-      "fkScore": 87,
-      "wordsPerMinute": 281,
-      "complexityScore": 31.080545833333332
+      "start_time": 26.31,
+      "end_time": 28.44,
+      "text": "How do you distinguish yourself in a population of people",
+      "flesch_reading_ease": 88,
+      "words_per_minute": 307,
+      "complexity_score": 8.2
     },
     {
-      "startTime": "00:00:28.520",
-      "endTime": "00:00:30.360",
-      "duration": 1.84,
-      "fkScore": 90,
-      "wordsPerMinute": 228,
-      "complexityScore": 39.501175757575766
+      "start_time": 28.52,
+      "end_time": 30.36,
+      "text": "who all got 1600 on their SATs?",
+      "flesch_reading_ease": 92,
+      "words_per_minute": 311,
+      "complexity_score": 8.2
     },
     {
-      "startTime": "00:00:30.440",
-      "endTime": "00:00:32.240",
-      "duration": 1.8,
-      "fkScore": 90,
-      "wordsPerMinute": 400,
-      "complexityScore": 22.56390284267913
+      "start_time": 30.44,
+      "end_time": 32.24,
+      "text": "- I didn't know they take SATs in China. - They don't.",
+      "flesch_reading_ease": 91,
+      "words_per_minute": 321,
+      "complexity_score": 8.2
     },
     {
-      "startTime": "00:00:32.320",
-      "endTime": "00:00:34.450",
-      "duration": 2.13,
-      "fkScore": 90,
-      "wordsPerMinute": 338,
-      "complexityScore": 26.695591154427948
+      "start_time": 32.32,
+      "end_time": 34.45,
+      "text": "I wasn't talking about China anymore, I was talking about me.",
+      "flesch_reading_ease": 91,
+      "words_per_minute": 301,
+      "complexity_score": 8.2
     },
     {
-      "startTime": "00:00:34.530",
-      "endTime": "00:00:35.990",
-      "duration": 1.46,
-      "fkScore": 95,
-      "wordsPerMinute": 164,
-      "complexityScore": 57.8426962427012
+      "start_time": 34.53,
+      "end_time": 35.99,
+      "text": "You got a 1600?",
+      "flesch_reading_ease": 96,
+      "words_per_minute": 291,
+      "complexity_score": 8.4
     },
     {
-      "startTime": "00:00:36.070",
-      "endTime": "00:00:37.910",
-      "duration": 1.84,
-      "fkScore": 94,
-      "wordsPerMinute": 456,
-      "complexityScore": 20.766618771165945
+      "start_time": 36.07,
+      "end_time": 37.91,
+      "text": "Yes. I could sing in an a Capella group, but I can't sing.",
+      "flesch_reading_ease": 95,
+      "words_per_minute": 301,
+      "complexity_score": 8.2
     },
     {
-      "startTime": "00:00:37.990",
-      "endTime": "00:00:39.200",
-      "duration": 1.21,
-      "fkScore": 94,
-      "wordsPerMinute": 396,
-      "complexityScore": 23.757911494034023
+      "start_time": 37.99,
+      "end_time": 39.2,
+      "text": "Does that mean you actually got nothing wrong?",
+      "flesch_reading_ease": 95,
+      "words_per_minute": 287,
+      "complexity_score": 8.4
     },
     {
-      "startTime": "00:00:39.290",
-      "endTime": "00:00:41.580",
-      "duration": 2.29,
-      "fkScore": 92,
-      "wordsPerMinute": 235,
-      "complexityScore": 39.3144010809452
+      "start_time": 39.29,
+      "end_time": 41.58,
+      "text": "I could row crew or invent a $25 PC.",
+      "flesch_reading_ease": 93,
+      "words_per_minute": 276,
+      "complexity_score": 8.4
     },
     {
-      "startTime": "00:00:41.660",
-      "endTime": "00:00:42.910",
-      "duration": 1.25,
-      "fkScore": 91,
-      "wordsPerMinute": 384,
-      "complexityScore": 23.785957532051285
+      "start_time": 41.66,
+      "end_time": 42.91,
+      "text": "Or you could get into a final club.",
+      "flesch_reading_ease": 91,
+      "words_per_minute": 285,
+      "complexity_score": 8.4
     },
     {
-      "startTime": "00:00:43.000",
-      "endTime": "00:00:44.330",
-      "duration": 1.33,
-      "fkScore": 91,
-      "wordsPerMinute": 315,
-      "complexityScore": 28.885180192895795
+      "start_time": 43.0,
+      "end_time": 44.33,
+      "text": "Or I get into a final club.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 295,
+      "complexity_score": 8.4
     },
     {
-      "startTime": "00:00:44.620",
-      "endTime": "00:00:45.830",
-      "duration": 1.21,
-      "fkScore": 91,
-      "wordsPerMinute": 347,
-      "complexityScore": 26.27814110644258
+      "start_time": 44.62,
+      "end_time": 45.83,
+      "text": "You know, from a woman's perspective,",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 298,
+      "complexity_score": 8.4
     },
     {
-      "startTime": "00:00:45.920",
-      "endTime": "00:00:47.790",
-      "duration": 1.87,
-      "fkScore": 93,
-      "wordsPerMinute": 385,
-      "complexityScore": 24.391879095441602
+      "start_time": 45.92,
+      "end_time": 47.79,
+      "text": "sometimes not singing in an a Capella group is a good thing.",
+      "flesch_reading_ease": 93,
+      "words_per_minute": 294,
+      "complexity_score": 8.4
     },
     {
-      "startTime": "00:00:47.880",
-      "endTime": "00:00:48.920",
-      "duration": 1.04,
-      "fkScore": 96,
-      "wordsPerMinute": 173,
-      "complexityScore": 55.646476190476214
+      "start_time": 47.88,
+      "end_time": 48.92,
+      "text": "This is serious.",
+      "flesch_reading_ease": 94,
+      "words_per_minute": 279,
+      "complexity_score": 8.4
     },
     {
-      "startTime": "00:00:49.000",
-      "endTime": "00:00:50.460",
-      "duration": 1.46,
-      "fkScore": 96,
-      "wordsPerMinute": 452,
-      "complexityScore": 21.27836140819965
+      "start_time": 49.0,
+      "end_time": 50.46,
+      "text": "On the other hand, I do like guys who row crew.",
+      "flesch_reading_ease": 94,
+      "words_per_minute": 285,
+      "complexity_score": 8.4
     },
     {
-      "startTime": "00:00:50.550",
-      "endTime": "00:00:52.420",
-      "duration": 1.87,
-      "fkScore": 95,
-      "wordsPerMinute": 192,
-      "complexityScore": 49.582537700017994
+      "start_time": 50.55,
+      "end_time": 52.42,
+      "text": "Well, I can't do that.",
+      "flesch_reading_ease": 94,
+      "words_per_minute": 288,
+      "complexity_score": 8.4
     },
     {
-      "startTime": "00:00:52.720",
-      "endTime": "00:00:54.090",
-      "duration": 1.37,
-      "fkScore": 93,
-      "wordsPerMinute": 131,
-      "complexityScore": 71.47994515669518
+      "start_time": 52.72,
+      "end_time": 54.09,
+      "text": "I was kidding.",
+      "flesch_reading_ease": 92,
+      "words_per_minute": 306,
+      "complexity_score": 8.2
     },
     {
-      "startTime": "00:00:54.180",
-      "endTime": "00:00:55.340",
-      "duration": 1.16,
-      "fkScore": 93,
-      "wordsPerMinute": 465,
-      "complexityScore": 20.117430609727645
+      "start_time": 54.18,
+      "end_time": 55.34,
+      "text": "And, yes, I got nothing wrong on the test.",
+      "flesch_reading_ease": 92,
+      "words_per_minute": 320,
+      "complexity_score": 8.2
     },
     {
-      "startTime": "00:00:55.430",
-      "endTime": "00:00:57.220",
-      "duration": 1.79,
-      "fkScore": 92,
-      "wordsPerMinute": 301,
-      "complexityScore": 30.80744908544909
+      "start_time": 55.43,
+      "end_time": 57.22,
+      "text": "- Have you ever tried? - I'm trying right now.",
+      "flesch_reading_ease": 91,
+      "words_per_minute": 306,
+      "complexity_score": 8.2
     },
     {
-      "startTime": "00:00:57.300",
-      "endTime": "00:00:59.140",
-      "duration": 1.84,
-      "fkScore": 91,
-      "wordsPerMinute": 293,
-      "complexityScore": 31.340010457516346
+      "start_time": 57.3,
+      "end_time": 59.14,
+      "text": "- To row crew? - To get into a final club.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 308,
+      "complexity_score": 8.2
     },
     {
-      "startTime": "00:00:59.220",
-      "endTime": "00:01:01.470",
-      "duration": 2.25,
-      "fkScore": 91,
-      "wordsPerMinute": 240,
-      "complexityScore": 38.32338235294118
+      "start_time": 59.22,
+      "end_time": 61.47,
+      "text": "To row crew? No. Are you, like, whatever, delusional?",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 288,
+      "complexity_score": 8.4
     },
     {
-      "startTime": "00:01:01.560",
-      "endTime": "00:01:03.520",
-      "duration": 1.96,
-      "fkScore": 91,
-      "wordsPerMinute": 336,
-      "complexityScore": 27.31411978609626
+      "start_time": 61.56,
+      "end_time": 63.52,
+      "text": "Maybe it's just sometimes you say two things at once.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 296,
+      "complexity_score": 8.4
     },
     {
-      "startTime": "00:01:03.600",
-      "endTime": "00:01:05.140",
-      "duration": 1.54,
-      "fkScore": 91,
-      "wordsPerMinute": 506,
-      "complexityScore": 18.159387330316747
+      "start_time": 63.6,
+      "end_time": 65.14,
+      "text": "I'm not sure which one I'm supposed to be aiming at.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 292,
+      "complexity_score": 8.4
     },
     {
-      "startTime": "00:01:05.230",
-      "endTime": "00:01:07.150",
-      "duration": 1.92,
-      "fkScore": 91,
-      "wordsPerMinute": 281,
-      "complexityScore": 32.70261960784314
+      "start_time": 65.23,
+      "end_time": 67.15,
+      "text": "But you've seen guys who row crew, right?",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 270,
+      "complexity_score": 8.6
     },
     {
-      "startTime": "00:01:07.230",
-      "endTime": "00:01:08.270",
-      "duration": 1.04,
-      "fkScore": 91,
-      "wordsPerMinute": 57,
-      "complexityScore": 159.42527058823532
+      "start_time": 67.23,
+      "end_time": 68.27,
+      "text": "No.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 270,
+      "complexity_score": 8.6
     },
     {
-      "startTime": "00:01:08.360",
-      "endTime": "00:01:10.440",
-      "duration": 2.08,
-      "fkScore": 91,
-      "wordsPerMinute": 346,
-      "complexityScore": 26.570878431372556
+      "start_time": 68.36,
+      "end_time": 70.44,
+      "text": "Okay, well, they're bigger than me. They're world-class athletes.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 294,
+      "complexity_score": 8.4
     },
     {
-      "startTime": "00:01:10.520",
-      "endTime": "00:01:11.980",
-      "duration": 1.46,
-      "fkScore": 91,
-      "wordsPerMinute": 493,
-      "complexityScore": 18.65071274509804
+      "start_time": 70.52,
+      "end_time": 71.98,
+      "text": "And a second ago, you said you like guys who row crew",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 283,
+      "complexity_score": 8.4
     },
     {
-      "startTime": "00:01:12.070",
-      "endTime": "00:01:13.110",
-      "duration": 1.04,
-      "fkScore": 91,
-      "wordsPerMinute": 403,
-      "complexityScore": 22.77503865546219
+      "start_time": 72.07,
+      "end_time": 73.11,
+      "text": "so I assumed you had met one.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 241,
+      "complexity_score": 8.9
     },
     {
-      "startTime": "00:01:13.190",
-      "endTime": "00:01:17.200",
-      "duration": 4.01,
-      "fkScore": 91,
-      "wordsPerMinute": 284,
-      "complexityScore": 32.353002786377715
+      "start_time": 73.19,
+      "end_time": 77.2,
+      "text": "I guess I just meant I like the idea of it. You know, the way a girl likes cowboys.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 215,
+      "complexity_score": 9.3
     },
     {
-      "startTime": "00:01:17.740",
-      "endTime": "00:01:18.780",
-      "duration": 1.04,
-      "fkScore": 91,
-      "wordsPerMinute": 57,
-      "complexityScore": 159.42527058823532
+      "start_time": 77.74,
+      "end_time": 78.78,
+      "text": "Okay.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 58,
+      "complexity_score": 1
     }
   ]
 }
