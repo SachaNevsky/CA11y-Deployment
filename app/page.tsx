@@ -11,7 +11,6 @@ const Home = () => {
 	const [name, setName] = useState<string>("");
 
 	useEffect(() => {
-		console.log("useEffect")
 		if (typeof window !== "undefined") {
 			const storedName = localStorage.getItem("ca11yDeploymentName");
 			const storedAphasiaCharacteristic = localStorage.getItem("ca11yAphasiaCharacteristics");

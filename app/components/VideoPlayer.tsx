@@ -22,6 +22,8 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const [metadata, setMetadata] = useState<VideoMetadata | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isLeftHanded, setIsLeftHanded] = useState<boolean>(false);
+    const [isMobile, setIsMobile] = useState<boolean>(false);
 
     const basePath = `/${videoName}/${videoName}`;
     const videoSrc = `${basePath}.mp4`;
@@ -65,6 +67,25 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     };
 
     useEffect(() => {
+        if (typeof window !== "undefined") {
+            const aphasiaCharacteristics = localStorage.getItem("ca11yAphasiaCharacteristics");
+
+            if (aphasiaCharacteristics) {
+                const handedness = JSON.parse(aphasiaCharacteristics).handedness || "rightHanded";
+                setIsLeftHanded(handedness === "leftHanded");
+            }
+
+            const checkIsMobile = () => {
+                setIsMobile(window.innerWidth < 768);
+            };
+
+            checkIsMobile();
+            window.addEventListener("resize", checkIsMobile);
+            return () => window.removeEventListener("resize", checkIsMobile);
+        }
+    }, []);
+
+    useEffect(() => {
         const fetchMetadata = async () => {
             try {
                 const res = await fetch(`/${videoName}/${videoName}.json`);
@@ -98,7 +119,6 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
         } else if (captionMode === "simplified") {
             updateCaptionsMode("default");
         } else {
-            // If captions are off, turn on simplified captions.
             updateCaptionsMode("simplified");
         }
     };
@@ -185,21 +205,6 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
         }
     };
 
-    // const handleSpeakerVolume = (val: number) => {
-    //     setMuteSpeaker({ mute: false, prevVolume: val })
-    //     setSpeakerVolume(val);
-    // }
-
-    // const handleMusicVolume = (val: number) => {
-    //     setMuteMusic({ mute: false, prevVolume: val })
-    //     setMusicVolume(val);
-    // }
-
-    // const handleOtherVolume = (val: number) => {
-    //     setMuteOther({ mute: false, prevVolume: val })
-    //     setOtherVolume(val);
-    // }
-
     const handleSpeakerVolume = (val: number) => {
         setSpeakerControl((prev: AudioControls) => ({ ...prev, volume: val, muted: false, prevVolume: val }));
     };
@@ -211,36 +216,6 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const handleOtherVolume = (val: number) => {
         setOtherControl((prev: AudioControls) => ({ ...prev, volume: val, muted: false, prevVolume: val }));
     };
-
-    // const handleSpeakerMute = (): void => {
-    //     if (muteSpeaker.mute === true) {
-    //         setSpeakerVolume(muteSpeaker.prevVolume)
-    //         setMuteSpeaker({ mute: false, prevVolume: muteSpeaker.prevVolume });
-    //     } else {
-    //         setMuteSpeaker({ mute: true, prevVolume: speakerVolume });
-    //         setSpeakerVolume(0);
-    //     }
-    // }
-
-    // const handleMusicMute = (): void => {
-    //     if (muteMusic.mute === true) {
-    //         setMusicVolume(muteMusic.prevVolume)
-    //         setMuteMusic({ mute: false, prevVolume: muteMusic.prevVolume });
-    //     } else {
-    //         setMuteMusic({ mute: true, prevVolume: musicVolume });
-    //         setMusicVolume(0);
-    //     }
-    // }
-
-    // const handleOtherMute = (): void => {
-    //     if (muteOther.mute === true) {
-    //         setOtherVolume(muteOther.prevVolume)
-    //         setMuteOther({ mute: false, prevVolume: muteOther.prevVolume });
-    //     } else {
-    //         setMuteOther({ mute: true, prevVolume: otherVolume });
-    //         setOtherVolume(0);
-    //     }
-    // }
 
     const handleSpeakerMute = (): void => {
         setSpeakerControl((prev: AudioControls) =>
@@ -367,12 +342,6 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
         }
     }, [playbackRate]);
 
-    // useEffect(() => {
-    //     if (speakerRef.current) speakerRef.current.volume = speakerVolume;
-    //     if (musicRef.current) musicRef.current.volume = musicVolume;
-    //     if (otherRef.current) otherRef.current.volume = otherVolume;
-    // }, [speakerVolume, musicVolume, otherVolume]);
-
     useEffect(() => {
         const video = videoRef.current;
         const speaker = speakerRef.current;
@@ -407,145 +376,197 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     }, []);
 
     return (
-        <div className="m-auto text-center">
+        <div className="m-auto">
             {error && <p>Error: {error}</p>}
             {loading ? (
                 <p>Loading metadata...</p>
             ) : (
                 <>
-                    <div className="w-3/5 mx-auto" ref={videoContainerRef}>
-                        {showVideo && (
-                            <Video id="video" ref={videoRef} controls={false} muted>
-                                <source id="videoSource" src={videoSource} type="video/mp4" />
-                                <track label="Default English" kind="subtitles" srcLang="en" src={defaultCaptionsSrc} />
-                                <track label="Simplified English" kind="subtitles" srcLang="en" src={simplifiedCaptionsSrc} />
-                            </Video>
-                        )}
-                        <audio id="speaker" ref={speakerRef} src={speakerSrc} />
-                        <audio id="music" ref={musicRef} src={musicSrc} />
-                        <audio id="other" ref={otherRef} src={otherSrc} />
-                        {isFullScreen && (
-                            <div className="absolute top-4 right-4 z-10" style={{ pointerEvents: "none" }}>
-                                <button onClick={toggleFullscreen} style={{ pointerEvents: "auto" }} className="py-2 px-4 bg-gray-800 text-white rounded">
-                                    Exit Full Screen
+                    <div className={`w-full mx-auto ${!isMobile ? 'flex' : ''} ${isLeftHanded && !isMobile ? 'flex-row-reverse' : ''}`}>
+                        <div className={`${!isMobile ? (isLeftHanded ? 'ml-4' : 'mr-4') : 'mx-auto'} ${!isMobile ? 'w-2/3 m-3' : 'w-full'}`} ref={videoContainerRef}>
+                            {showVideo && (
+                                <Video id="video" ref={videoRef} controls={false} muted>
+                                    <source id="videoSource" src={videoSource} type="video/mp4" />
+                                    <track label="Default English" kind="subtitles" srcLang="en" src={defaultCaptionsSrc} />
+                                    <track label="Simplified English" kind="subtitles" srcLang="en" src={simplifiedCaptionsSrc} />
+                                </Video>
+                            )}
+                            <audio id="speaker" ref={speakerRef} src={speakerSrc} />
+                            <audio id="music" ref={musicRef} src={musicSrc} />
+                            <audio id="other" ref={otherRef} src={otherSrc} />
+
+                            <div className="mt-2 text-center">
+                                <button
+                                    className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500"
+                                    onClick={toggleFullscreen}
+                                >
+                                    Toggle Fullscreen 📺
                                 </button>
                             </div>
-                        )}
-                    </div>
 
-                    <div className="w-3/5 mx-auto">
-                        <Slider
-                            aria-label="SeekbarSlider"
-                            name="seekSlider"
-                            color="success"
-                            size="lg"
-                            classNames={{ track: "custom-slider-track" }}
-                            defaultValue={currentTimestamp}
-                            minValue={0}
-                            maxValue={metadata!.duration} // HARD CODED - needs to be extracted from metadata
-                            step={1}
-                            value={currentTimestamp}
-                            onChange={(val) => handleSeek(val as number)}
-                        />
-                        <p>{formatTime(currentTimestamp)} / {formatTime(metadata!.duration)}</p>
-                    </div>
+                            <div className="w-full mx-auto mt-2">
+                                <Slider
+                                    aria-label="SeekbarSlider"
+                                    name="seekSlider"
+                                    color="success"
+                                    size="lg"
+                                    classNames={{ track: "custom-slider-track" }}
+                                    defaultValue={currentTimestamp}
+                                    minValue={0}
+                                    maxValue={metadata!.duration}
+                                    step={1}
+                                    value={currentTimestamp}
+                                    onChange={(val) => handleSeek(val as number)}
+                                />
+                                <p>{formatTime(currentTimestamp)} / {formatTime(metadata!.duration)}</p>
+                            </div>
 
-                    <div>
-                        <button className={buttonClass} onClick={() => { handleCaptions() }}>{captionMode === "none" ? "Turn ON captions ©©" : "Turn OFF captions ❌"}</button>
-                        {captionMode !== "none" && (
-                            <button className={buttonClass} onClick={() => handleSimpleCaptions()}>{captionMode === "default" ? "Make Simple" : "Return Default"}</button>
-                        )}
-                    </div>
-
-                    <div>
-                        <button className={buttonClass} onClick={toggleFullscreen}>Toggle Fullscreen 📺</button>
-                    </div>
-
-                    <div>
-                        <button className={buttonClass} onClick={() => handleSkipBackwards()}>
-                            ⏪ 10s
-                        </button>
-                        <button className={buttonClass} onClick={() => handlePlayPause("play")}
-                        >
-                            Play ▶
-                        </button>
-                        <button className={buttonClass} onClick={() => handlePlayPause("pause")}
-                        >
-                            Pause ⏸
-                        </button>
-                        <button className={buttonClass} onClick={() => handleSkipForwards()}>
-                            10s ⏩
-                        </button>
-                    </div>
-
-                    <div>
-                        <button className={buttonClass} onClick={() => handleHighlight()}>{highlight ? "Turn OFF spotlight ❌" : "Turn ON spotlight 💡"}</button>
-                    </div>
-
-                    <div>
-                        <button className={buttonClass} onClick={handleSlowDown}>
-                            Slow Down
-                        </button>
-                        <label className="px-2">{Math.floor(playbackRate * 100)}%</label>
-                        <button className={buttonClass} onClick={handleSpeedUp}>
-                            Speed Up
-                        </button>
-                    </div>
-
-                    <div className="m-auto">
-                        <div className="w-1/3 m-auto">
-                            <label>Speaker volume - {Math.floor(speakerControl.volume * 100)}%</label>
-                            <Slider
-                                aria-label="SpeakerVolumeSlider"
-                                name="speakerSlider"
-                                size="lg"
-                                classNames={{ track: "custom-slider-track" }}
-                                color={speakerControl.muted ? "secondary" : "primary"}
-                                defaultValue={speakerControl.volume}
-                                minValue={0}
-                                maxValue={1}
-                                step={0.05}
-                                onChange={(val) => handleSpeakerVolume(val as number)}
-                                endContent={
-                                    <button onClick={() => { handleSpeakerMute() }}>{speakerControl.muted ? ("🔇") : ("🔊")}</button>
-                                }
-                            />
+                            {isFullScreen && (
+                                <div className="absolute top-4 right-4 z-10" style={{ pointerEvents: "none" }}>
+                                    <button onClick={toggleFullscreen} style={{ pointerEvents: "auto" }} className="py-2 px-4 bg-gray-800 text-white rounded">
+                                        Exit Full Screen
+                                    </button>
+                                </div>
+                            )}
                         </div>
-                        <div className="w-1/3 m-auto">
-                            <label>Music volume - {Math.floor(musicControl.volume * 100)}%</label>
-                            <Slider
-                                aria-label="MusicVolumeSlider"
-                                name="musicSlider"
-                                size="lg"
-                                classNames={{ track: "custom-slider-track" }}
-                                color={musicControl.muted ? "secondary" : "primary"}
-                                defaultValue={musicControl.volume}
-                                minValue={0}
-                                maxValue={1}
-                                step={0.05}
-                                onChange={(val) => handleMusicVolume(val as number)}
-                                endContent={
-                                    <button onClick={() => { handleMusicMute() }}>{musicControl.muted ? ("🔇") : ("🔊")}</button>
-                                }
-                            />
-                        </div>
-                        <div className="w-1/3 m-auto">
-                            <label>Other volume - {Math.floor(otherControl.volume * 100)}%</label>
-                            <Slider
-                                aria-label="OtherVolumeSlider"
-                                name="otherSlider"
-                                size="lg"
-                                classNames={{ track: "custom-slider-track" }}
-                                color={otherControl.muted ? "secondary" : "primary"}
-                                defaultValue={otherControl.volume}
-                                minValue={0}
-                                maxValue={1}
-                                step={0.05}
-                                onChange={(val) => handleOtherVolume(val as number)}
-                                endContent={
-                                    <button onClick={() => { handleOtherMute() }}>{otherControl.muted ? ("🔇") : ("🔊")}</button>
-                                }
-                            />
+
+                        <div className={`${!isMobile ? 'w-1/3 m-3' : 'w-full mt-4'} flex flex-col space-y-4`}>
+                            <div className="bg-gray-100 p-3 rounded-md">
+                                <h3 className="font-medium mb-2">Captions</h3>
+                                <button
+                                    className={buttonClass}
+                                    onClick={() => { handleCaptions() }}
+                                >
+                                    {captionMode === "none" ? "Turn ON captions ©©" : "Turn OFF captions ❌"}
+                                </button>
+                                {captionMode !== "none" && (
+                                    <button
+                                        className={buttonClass}
+                                        onClick={() => handleSimpleCaptions()}
+                                    >
+                                        {captionMode === "default" ? "Make Simple" : "Return Default"}
+                                    </button>
+                                )}
+                            </div>
+
+                            <div className="bg-gray-100 p-3 rounded-md">
+                                <h3 className="font-medium mb-2">Playback</h3>
+                                <div className="flex flex-wrap justify-center">
+                                    <button className={buttonClass} onClick={() => handleSkipBackwards()}>
+                                        ⏪ 10s
+                                    </button>
+                                    <button className={buttonClass} onClick={() => handlePlayPause("play")}>
+                                        Play ▶
+                                    </button>
+                                    <button className={buttonClass} onClick={() => handlePlayPause("pause")}>
+                                        Pause ⏸
+                                    </button>
+                                    <button className={buttonClass} onClick={() => handleSkipForwards()}>
+                                        10s ⏩
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="bg-gray-100 p-3 rounded-md">
+                                <h3 className="font-medium mb-2">Spotlight</h3>
+                                <button
+                                    className={buttonClass}
+                                    onClick={() => handleHighlight()}
+                                >
+                                    {highlight ? "Turn OFF spotlight ❌" : "Turn ON spotlight 💡"}
+                                </button>
+                            </div>
+
+                            <div className="bg-gray-100 p-3 rounded-md">
+                                <h3 className="font-medium mb-2">Playback Speed</h3>
+                                <div className="flex items-center justify-center">
+                                    <button className={buttonClass} onClick={handleSlowDown}>
+                                        Slow Down
+                                    </button>
+                                    <label className="px-2">{Math.floor(playbackRate * 100)}%</label>
+                                    <button className={buttonClass} onClick={handleSpeedUp}>
+                                        Speed Up
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="bg-gray-100 p-3 rounded-md">
+                                <h3 className="font-medium mb-2">Volume Controls</h3>
+                                <div className="mb-2">
+                                    <label>Speaker - {Math.floor(speakerControl.volume * 100)}%</label>
+                                    <div className="flex items-center">
+                                        <Slider
+                                            aria-label="SpeakerVolumeSlider"
+                                            name="speakerSlider"
+                                            size="md"
+                                            classNames={{ track: "custom-slider-track" }}
+                                            color={speakerControl.muted ? "secondary" : "primary"}
+                                            defaultValue={speakerControl.volume}
+                                            minValue={0}
+                                            maxValue={1}
+                                            step={0.05}
+                                            value={speakerControl.volume}
+                                            onChange={(val) => handleSpeakerVolume(val as number)}
+                                        />
+                                        <button
+                                            className="ml-2"
+                                            onClick={() => { handleSpeakerMute() }}
+                                        >
+                                            {speakerControl.muted ? ("🔇") : ("🔊")}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="mb-2">
+                                    <label>Music - {Math.floor(musicControl.volume * 100)}%</label>
+                                    <div className="flex items-center">
+                                        <Slider
+                                            aria-label="MusicVolumeSlider"
+                                            name="musicSlider"
+                                            size="md"
+                                            classNames={{ track: "custom-slider-track" }}
+                                            color={musicControl.muted ? "secondary" : "primary"}
+                                            defaultValue={musicControl.volume}
+                                            minValue={0}
+                                            maxValue={1}
+                                            step={0.05}
+                                            value={musicControl.volume}
+                                            onChange={(val) => handleMusicVolume(val as number)}
+                                        />
+                                        <button
+                                            className="ml-2"
+                                            onClick={() => { handleMusicMute() }}
+                                        >
+                                            {musicControl.muted ? ("🔇") : ("🔊")}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label>Other - {Math.floor(otherControl.volume * 100)}%</label>
+                                    <div className="flex items-center">
+                                        <Slider
+                                            aria-label="OtherVolumeSlider"
+                                            name="otherSlider"
+                                            size="md"
+                                            classNames={{ track: "custom-slider-track" }}
+                                            color={otherControl.muted ? "secondary" : "primary"}
+                                            defaultValue={otherControl.volume}
+                                            minValue={0}
+                                            maxValue={1}
+                                            step={0.05}
+                                            value={otherControl.volume}
+                                            onChange={(val) => handleOtherVolume(val as number)}
+                                        />
+                                        <button
+                                            className="ml-2"
+                                            onClick={() => { handleOtherMute() }}
+                                        >
+                                            {otherControl.muted ? ("🔇") : ("🔊")}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </>

@@ -1,10 +1,27 @@
 "use client"
 
+import { useEffect, useState } from "react";
 import VideoCard from "../components/VideoCard";
 
 const VideoLibrary = () => {
-
     const videoNames = ["theSocialNetwork"];
+
+    const [name, setName] = useState("");
+    const [aphasiaCharacteristics, setAphasiaCharacteristics] = useState();
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            const storedName = localStorage.getItem("ca11yDeploymentName");
+            const storedAphasiaCharacteristic = localStorage.getItem("ca11yAphasiaCharacteristics");
+
+            if (storedName) setName(storedName);
+            if (storedAphasiaCharacteristic) setAphasiaCharacteristics(JSON.parse(storedAphasiaCharacteristic));
+        }
+    }, []);
+
+    useEffect(() => {
+        console.log(aphasiaCharacteristics);
+    }, [aphasiaCharacteristics]);
 
     const handleVideoClick = (video: string): void => {
         window.open(`/videoLibrary/${video}`, "_self")
@@ -17,9 +34,9 @@ const VideoLibrary = () => {
 
     return (
         <div className="m-auto text-center">
-            Video Library
+            Hello {name}, this is our video library.<br />Choose something to watch.
             <div>
-                <button className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500" onClick={() => { handleDeleteCharacteristics() }}>Delete aphasia characteristics</button>
+                <button className="py-2 px-4 m-4 border-solid border-2 rounded-md border-gray-500" onClick={() => { handleDeleteCharacteristics() }}>Delete aphasia characteristics</button>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
                 {videoNames.map(video => {
