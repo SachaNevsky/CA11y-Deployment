@@ -1,11 +1,31 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Video from "next-video";
 import { Slider } from "@heroui/slider";
 
 interface VideoMetadata {
     duration: number;
+    subtitles?: {
+        start_time: number;
+        end_time: number;
+        text: string;
+        flesch_reading_ease: number;
+        words_per_minute: number;
+        complexity_score: number;
+    }[];
+}
+
+interface VideoPlayerSettings {
+    isLeftHanded: boolean;
+    captionMode: "none" | "default" | "simplified";
+    playbackRate: number;
+    manualPlaybackRate: number;
+    isSpeedAutomated: boolean;
+    highlight: boolean;
+    speakerControl: AudioControls;
+    musicControl: AudioControls;
+    otherControl: AudioControls;
 }
 
 interface VideoPlayerProps {
@@ -24,6 +44,8 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const [error, setError] = useState<string | null>(null);
     const [isLeftHanded, setIsLeftHanded] = useState<boolean>(false);
     const [isMobile, setIsMobile] = useState<boolean>(false);
+    const [isSpeedAutomated, setIsSpeedAutomated] = useState<boolean>(false);
+    const [manualPlaybackRate, setManualPlaybackRate] = useState<number>(1);
 
     const basePath = `/${videoName}/${videoName}`;
     const videoSrc = `${basePath}.mp4`;
@@ -104,38 +126,115 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     }, [videoName]);
 
     useEffect(() => {
+        if (typeof window !== "undefined") {
+            const savedSettings = localStorage.getItem("ca11ySettings");
+
+            if (savedSettings) {
+                const settings: VideoPlayerSettings = JSON.parse(savedSettings);
+                setIsLeftHanded(settings.isLeftHanded);
+                setCaptionMode(settings.captionMode);
+                setPlaybackRate(settings.playbackRate);
+                setManualPlaybackRate(settings.manualPlaybackRate);
+                setIsSpeedAutomated(settings.isSpeedAutomated);
+                setSpeakerControl(settings.speakerControl);
+                setMusicControl(settings.musicControl);
+                setOtherControl(settings.otherControl);
+
+                // Apply highlight if it was enabled
+                if (settings.highlight) {
+                    setHighlight(true);
+                    setVideoSource(highlightSrc);
+                } else {
+                    setHighlight(false);
+                    setVideoSource(videoSrc);
+                }
+
+                // Apply caption mode
+                setTimeout(() => {
+                    updateCaptionsMode(settings.captionMode);
+                }, 100);
+            } else {
+                // Load just the handedness setting from the aphasiaCharacteristics if it exists
+                const aphasiaCharacteristics = localStorage.getItem("ca11yAphasiaCharacteristics");
+                if (aphasiaCharacteristics) {
+                    const handedness = JSON.parse(aphasiaCharacteristics).handedness || "rightHanded";
+                    setIsLeftHanded(handedness === "leftHanded");
+                }
+            }
+
+            const checkIsMobile = () => {
+                setIsMobile(window.innerWidth < 768);
+            };
+
+            checkIsMobile();
+            window.addEventListener("resize", checkIsMobile);
+            return () => window.removeEventListener("resize", checkIsMobile);
+        }
+    }, [videoSrc, highlightSrc]);
+
+    // Function to save settings to localStorage
+    const saveSettings = useCallback(() => {
+        const settings: VideoPlayerSettings = {
+            isLeftHanded,
+            captionMode,
+            playbackRate,
+            manualPlaybackRate,
+            isSpeedAutomated,
+            highlight,
+            speakerControl,
+            musicControl,
+            otherControl
+        };
+        localStorage.setItem("ca11ySettings", JSON.stringify(settings));
+    }, [isLeftHanded, captionMode, playbackRate, manualPlaybackRate, isSpeedAutomated, highlight, speakerControl, musicControl, otherControl]);
+
+    useEffect(() => {
         if (speakerRef.current) speakerRef.current.volume = speakerControl.volume;
         if (musicRef.current) musicRef.current.volume = musicControl.volume;
         if (otherRef.current) otherRef.current.volume = otherControl.volume;
     }, [speakerControl.volume, musicControl.volume, otherControl.volume]);
 
     const handleCaptions = (): void => {
-        updateCaptionsMode(captionMode === "none" ? "default" : "none");
-    }
+        const newMode = captionMode === "none" ? "default" : "none";
+        updateCaptionsMode(newMode);
+        setCaptionMode(newMode);
+        setTimeout(saveSettings, 0);
+    };
 
     const handleSimpleCaptions = (): void => {
+        let newMode: "none" | "default" | "simplified";
         if (captionMode === "default") {
-            updateCaptionsMode("simplified");
+            newMode = "simplified";
         } else if (captionMode === "simplified") {
-            updateCaptionsMode("default");
+            newMode = "default";
         } else {
-            updateCaptionsMode("simplified");
+            newMode = "simplified";
         }
+        updateCaptionsMode(newMode);
+        setCaptionMode(newMode);
+        setTimeout(saveSettings, 0);
     };
 
 
     const handleHighlight = (): void => {
         setShowVideo(false);
         setTimeout(() => {
-            setHighlight(prev => !prev);
-            if (highlight) {
-                setVideoSource(videoSrc);
-            } else {
-                setVideoSource(highlightSrc);
-            }
+            setHighlight(prev => {
+                const newValue = !prev;
+                if (newValue) {
+                    setVideoSource(highlightSrc);
+                } else {
+                    setVideoSource(videoSrc);
+                }
+
+                // Save settings after state update
+                setTimeout(saveSettings, 0);
+
+                return newValue;
+            });
             setShowVideo(true);
         }, 0);
-    }
+    };
 
     useEffect(() => {
         const video = videoRef.current;
@@ -159,12 +258,62 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     }, [highlight]);
 
     const handleSlowDown = (): void => {
-        if (playbackRate > 0.2) setPlaybackRate((prev) => prev - 0.1);
+        if (isSpeedAutomated) return;
+        if (playbackRate > 0.2) {
+            const newRate = playbackRate - 0.1;
+            setPlaybackRate(newRate);
+            setManualPlaybackRate(newRate);
+            setTimeout(saveSettings, 0);
+        }
     };
 
     const handleSpeedUp = (): void => {
-        if (playbackRate < 2) setPlaybackRate((prev) => prev + 0.1);
+        if (isSpeedAutomated) return;
+        if (playbackRate < 2) {
+            const newRate = playbackRate + 0.1;
+            setPlaybackRate(newRate);
+            setManualPlaybackRate(newRate);
+            setTimeout(saveSettings, 0);
+        }
     };
+
+    const handleToggleAutomateSpeed = (): void => {
+        setIsSpeedAutomated(prev => {
+            const newValue = !prev;
+            if (!newValue) {
+                setPlaybackRate(manualPlaybackRate);
+            } else {
+                setManualPlaybackRate(playbackRate);
+                updateAutomatedSpeed(currentTimestamp);
+            }
+
+            // Save settings after state update
+            setTimeout(saveSettings, 0);
+
+            return newValue;
+        });
+    };
+
+    const updateAutomatedSpeed = useCallback((timestamp: number): void => {
+        if (!metadata?.subtitles || !isSpeedAutomated) return;
+
+        const currentSubtitle = metadata.subtitles.find(
+            subtitle => timestamp >= subtitle.start_time && timestamp <= subtitle.end_time
+        );
+
+        if (currentSubtitle) {
+            setPlaybackRate(currentSubtitle.complexity_score);
+        } else {
+            setPlaybackRate(1);
+        }
+    }, [metadata, isSpeedAutomated]);
+
+    // Add an effect to save settings when playbackRate changes
+    useEffect(() => {
+        if (typeof window !== "undefined" && metadata) {
+            saveSettings();
+        }
+    }, [playbackRate, saveSettings, metadata]);
 
     const handlePlayPause = (button: "play" | "pause"): void => {
         const video = videoRef.current;
@@ -202,43 +351,65 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             music.currentTime = time;
             other.currentTime = time;
             setCurrentTimestamp(time);
+
+            if (isSpeedAutomated) {
+                updateAutomatedSpeed(time);
+            }
         }
     };
 
     const handleSpeakerVolume = (val: number) => {
-        setSpeakerControl((prev: AudioControls) => ({ ...prev, volume: val, muted: false, prevVolume: val }));
+        setSpeakerControl((prev: AudioControls) => {
+            const updated = { ...prev, volume: val, muted: false, prevVolume: val };
+            setTimeout(saveSettings, 0);
+            return updated;
+        });
     };
 
     const handleMusicVolume = (val: number) => {
-        setMusicControl((prev: AudioControls) => ({ ...prev, volume: val, muted: false, prevVolume: val }));
+        setMusicControl((prev: AudioControls) => {
+            const updated = { ...prev, volume: val, muted: false, prevVolume: val };
+            setTimeout(saveSettings, 0);
+            return updated;
+        });
     };
 
     const handleOtherVolume = (val: number) => {
-        setOtherControl((prev: AudioControls) => ({ ...prev, volume: val, muted: false, prevVolume: val }));
+        setOtherControl((prev: AudioControls) => {
+            const updated = { ...prev, volume: val, muted: false, prevVolume: val };
+            setTimeout(saveSettings, 0);
+            return updated;
+        });
     };
 
     const handleSpeakerMute = (): void => {
-        setSpeakerControl((prev: AudioControls) =>
-            prev.muted
+        setSpeakerControl((prev: AudioControls) => {
+            const updated = prev.muted
                 ? { ...prev, muted: false, volume: prev.prevVolume }
-                : { ...prev, muted: true, prevVolume: prev.volume, volume: 0 }
-        );
+                : { ...prev, muted: true, prevVolume: prev.volume, volume: 0 };
+            setTimeout(saveSettings, 0);
+            return updated;
+        });
     };
 
     const handleMusicMute = (): void => {
-        setMusicControl((prev: AudioControls) =>
-            prev.muted
+        setMusicControl((prev: AudioControls) => {
+            const updated = prev.muted
                 ? { ...prev, muted: false, volume: prev.prevVolume }
-                : { ...prev, muted: true, prevVolume: prev.volume, volume: 0 }
-        );
+                : { ...prev, muted: true, prevVolume: prev.volume, volume: 0 };
+            setTimeout(saveSettings, 0);
+            return updated;
+        });
     };
 
     const handleOtherMute = (): void => {
-        setOtherControl((prev: AudioControls) =>
-            prev.muted
+        setOtherControl((prev: AudioControls) => {
+            const updated = prev.muted
                 ? { ...prev, muted: false, volume: prev.prevVolume }
-                : { ...prev, muted: true, prevVolume: prev.volume, volume: 0 }
-        );
+                : { ...prev, muted: true, prevVolume: prev.volume, volume: 0 };
+            setTimeout(saveSettings, 0);
+            return updated;
+        });
     };
 
     const handleSkipForwards = (): void => {
@@ -253,6 +424,12 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             speaker.currentTime = newTime;
             music.currentTime = newTime;
             other.currentTime = newTime;
+
+            setCurrentTimestamp(newTime);
+
+            if (isSpeedAutomated) {
+                updateAutomatedSpeed(newTime);
+            }
         }
     };
 
@@ -268,6 +445,12 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             speaker.currentTime = newTime;
             music.currentTime = newTime;
             other.currentTime = newTime;
+
+            setCurrentTimestamp(newTime);
+
+            if (isSpeedAutomated) {
+                updateAutomatedSpeed(newTime);
+            }
         }
     };
 
@@ -317,6 +500,10 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             const checkTime = (): void => {
                 if (video.currentTime !== currentTimestamp) {
                     setCurrentTimestamp(video.currentTime);
+
+                    if (isSpeedAutomated) {
+                        updateAutomatedSpeed(video.currentTime);
+                    }
                 }
             };
 
@@ -326,7 +513,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                 clearInterval(interval);
             };
         }
-    }, [currentTimestamp]);
+    }, [currentTimestamp, isSpeedAutomated, metadata, updateAutomatedSpeed]);
 
     useEffect(() => {
         const video = videoRef.current;
@@ -480,12 +667,26 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                             <div className="bg-gray-100 p-3 rounded-md">
                                 <h3 className="font-medium mb-2">Playback Speed</h3>
                                 <div className="flex items-center justify-center">
-                                    <button className={buttonClass} onClick={handleSlowDown}>
-                                        Slow Down
-                                    </button>
-                                    <label className="px-2">{Math.floor(playbackRate * 100)}%</label>
-                                    <button className={buttonClass} onClick={handleSpeedUp}>
-                                        Speed Up
+                                    {isSpeedAutomated ? (
+                                        <button className={buttonClass + " text-gray-500 cursor-not-allowed"}>
+                                            Slow Down
+                                        </button>
+                                    ) : (
+                                        <button className={buttonClass} onClick={handleSlowDown}>
+                                            Slow Down
+                                        </button>
+                                    )}
+                                    {isSpeedAutomated ? (
+                                        <button className={buttonClass + " text-gray-500 cursor-not-allowed"}>
+                                            Speed Up
+                                        </button>
+                                    ) : (
+                                        <button className={buttonClass} onClick={handleSpeedUp}>
+                                            Speed Up
+                                        </button>
+                                    )}
+                                    <button className={buttonClass} onClick={handleToggleAutomateSpeed}>
+                                        {isSpeedAutomated ? "Automated Speed ✅" : "Automated Speed ❎"}
                                     </button>
                                 </div>
                             </div>

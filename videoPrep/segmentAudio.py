@@ -187,14 +187,14 @@ def calculate_complexity_score(fk_score, wpm):
 
     fk_component = 10 - max(0, min(9, math.floor((90 - fk_score) / 10)))
 
-    wpm_reduction = 0
+    wpm_reduction = 1
     if wpm > 150:
         wpm_reduction = round(
             (10 - math.log(math.floor((wpm - 150) / 25))) / 10, 2)
 
     final_score = max(1, min(10, fk_component * wpm_reduction))
 
-    return final_score
+    return round(final_score/10, 2)
 
 
 def analyze_subtitles_with_rolling_window(subtitles):
