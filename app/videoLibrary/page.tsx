@@ -15,7 +15,13 @@ const VideoLibrary = () => {
             const storedAphasiaCharacteristic = localStorage.getItem("ca11yAphasiaCharacteristics");
 
             if (storedName) setName(storedName);
-            if (storedAphasiaCharacteristic) setAphasiaCharacteristics(JSON.parse(storedAphasiaCharacteristic));
+
+            try {
+                if (storedAphasiaCharacteristic) setAphasiaCharacteristics(JSON.parse(storedAphasiaCharacteristic));
+            } catch {
+                localStorage.removeItem("ca11yAphasiaCharacteristics");
+                window.open("/", "_self");
+            }
         }
     }, []);
 
