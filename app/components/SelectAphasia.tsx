@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ChallengeCard from "./ChallengeCard";
+import { logAction } from "@/lib/logger";
 
 /**
  * Interface for the `SelectAphasia` props
@@ -43,6 +44,7 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 
 	const handleConfirm = () => {
 		localStorage.setItem("ca11yAphasiaCharacteristics", JSON.stringify(aphasiaCharacteristics));
+		logAction(name, "The user confirmed their aphasia characteristics.")
 		router.push("/videoLibrary");
 	}
 
@@ -54,6 +56,7 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 	]
 
 	const handleAbilityChange = (ability: string, value: number) => {
+		logAction(name, `Set ${ability} ability to ${value}`);
 		setAphasiaCharacteristics(prev => ({
 			...prev,
 			[ability.toLowerCase()]: value
@@ -101,13 +104,19 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 						<div className="md:hidden flex flex-row space-x-2">
 							<button
 								className={`py-4 px-6 rounded-md border-2 flex-1 ${aphasiaCharacteristics.handedness === "leftHanded" ? "border-blue-500 bg-blue-100" : "border-gray-300"}`}
-								onClick={() => setAphasiaCharacteristics({ ...aphasiaCharacteristics, handedness: "leftHanded" })}
+								onClick={() => {
+									logAction(name, "Selected left-handed.")
+									setAphasiaCharacteristics({ ...aphasiaCharacteristics, handedness: "leftHanded" })
+								}}
 							>
 								Left-Handed
 							</button>
 							<button
 								className={`py-4 px-6 rounded-md border-2 flex-1 ${aphasiaCharacteristics.handedness === "rightHanded" ? "border-blue-500 bg-blue-100" : "border-gray-300"}`}
-								onClick={() => setAphasiaCharacteristics({ ...aphasiaCharacteristics, handedness: "rightHanded" })}
+								onClick={() => {
+									logAction(name, "Selected right-handed.")
+									setAphasiaCharacteristics({ ...aphasiaCharacteristics, handedness: "rightHanded" })
+								}}
 							>
 								Right-Handed
 							</button>

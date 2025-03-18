@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import VideoCard from "../components/VideoCard";
+import { logAction } from "@/lib/logger";
 
 const VideoLibrary = () => {
     const videoNames = ["theSocialNetwork"];
@@ -30,10 +31,18 @@ const VideoLibrary = () => {
     }, [aphasiaCharacteristics]);
 
     const handleVideoClick = (video: string): void => {
+        const name = localStorage.getItem("ca11yDeploymentName")
+
+        if (name) logAction(name, `Selected the video ${video}`);
+
         window.open(`/videoLibrary/${video}`, "_self")
     }
 
     const handleDeleteCharacteristics = () => {
+        const name = localStorage.getItem("ca11yDeploymentName")
+
+        if (name) logAction(name, "Deleted their aphasia characteristics.");
+
         localStorage.removeItem("ca11yAphasiaCharacteristics");
         window.open("/", "_self");
     }
