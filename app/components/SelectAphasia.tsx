@@ -97,24 +97,49 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 						<p className="text-lg font-semibold mb-2">
 							What hand do you prefer using?
 						</p>
-						<button
-							className={`mx-2 py-4 px-8 rounded-md border-2 ${aphasiaCharacteristics.handedness === "leftHanded" ? "border-blue-500 bg-blue-100" : "border-gray-300"}`}
-							onClick={() => setAphasiaCharacteristics({ ...aphasiaCharacteristics, handedness: "leftHanded" })}
-						>
-							Left-Handed
-						</button>
-						<button
-							className={`mx-2 py-4 px-8 rounded-md border-2 ${aphasiaCharacteristics.handedness === "rightHanded" ? "border-blue-500 bg-blue-100" : "border-gray-300"}`}
-							onClick={() => setAphasiaCharacteristics({ ...aphasiaCharacteristics, handedness: "rightHanded" })}
-						>
-							Right-Handed
-						</button>
+						{/* Mobile View - Added flex-row to force buttons to stay side by side */}
+						<div className="md:hidden flex flex-row space-x-2">
+							<button
+								className={`py-4 px-6 rounded-md border-2 flex-1 ${aphasiaCharacteristics.handedness === "leftHanded" ? "border-blue-500 bg-blue-100" : "border-gray-300"}`}
+								onClick={() => setAphasiaCharacteristics({ ...aphasiaCharacteristics, handedness: "leftHanded" })}
+							>
+								Left-Handed
+							</button>
+							<button
+								className={`py-4 px-6 rounded-md border-2 flex-1 ${aphasiaCharacteristics.handedness === "rightHanded" ? "border-blue-500 bg-blue-100" : "border-gray-300"}`}
+								onClick={() => setAphasiaCharacteristics({ ...aphasiaCharacteristics, handedness: "rightHanded" })}
+							>
+								Right-Handed
+							</button>
+						</div>
+						{/* Desktop View - Original buttons */}
+						<div className="hidden md:block">
+							<button
+								className={`mx-2 py-4 px-8 rounded-md border-2 ${aphasiaCharacteristics.handedness === "leftHanded" ? "border-blue-500 bg-blue-100" : "border-gray-300"}`}
+								onClick={() => setAphasiaCharacteristics({ ...aphasiaCharacteristics, handedness: "leftHanded" })}
+							>
+								Left-Handed
+							</button>
+							<button
+								className={`mx-2 py-4 px-8 rounded-md border-2 ${aphasiaCharacteristics.handedness === "rightHanded" ? "border-blue-500 bg-blue-100" : "border-gray-300"}`}
+								onClick={() => setAphasiaCharacteristics({ ...aphasiaCharacteristics, handedness: "rightHanded" })}
+							>
+								Right-Handed
+							</button>
+						</div>
 					</div>
 					<div className="my-6">
 						<p className="text-lg font-semibold mb-2">
 							How do you find your language abilities?
 						</p>
-						<div className="grid grid-cols-2 gap-y-2 mb-4 items-center">
+						{/* Mobile View */}
+						<div className="md:hidden mb-4">
+							<div className="w-full text-center font-medium text-lg">
+								👎&nbsp;Bad → Good&nbsp;👍
+							</div>
+						</div>
+						{/* Desktop View */}
+						<div className="hidden md:grid grid-cols-2 gap-y-2 mb-4 items-center">
 							<div></div>
 							<div className="w-fit">
 								<div className="w-full text-center font-medium text-lg">
@@ -134,27 +159,58 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 								</div>
 							</div>
 						</div>
-						{["Listening", "Speaking", "Reading", "Writing"].map((ability) => (
-							<div key={ability} className="grid grid-cols-2 items-center gap-y-4 mb-3">
-								<label className="text-right pr-4 text-lg self-center">
-									{ability}:
-								</label>
-								<div className="flex justify-start space-x-4 w-fit">
-									{[1, 2, 3, 4, 5].map((value) => (
-										<input
-											key={`${ability}-${value}`}
-											type="radio"
-											id={`${ability.toLowerCase()}-${value}`}
-											name={ability.toLowerCase()}
-											value={value}
-											checked={aphasiaCharacteristics[ability.toLowerCase() as keyof typeof aphasiaCharacteristics] === value}
-											onChange={() => handleAbilityChange(ability, value)}
-											className="w-6 h-6 cursor-pointer"
-										/>
-									))}
+
+						{/* Mobile View - Radio buttons */}
+						<div className="md:hidden">
+							{["Listening", "Speaking", "Reading", "Writing"].map((ability) => (
+								<div key={ability} className="mb-8">
+									<label className="block text-lg mb-4 text-center">
+										{ability}:
+									</label>
+									<div className="flex justify-center space-x-6 w-full">
+										{[1, 2, 3, 4, 5].map((value) => (
+											<div key={`${ability}-${value}`} className="flex flex-col items-center">
+												<input
+													type="radio"
+													id={`${ability.toLowerCase()}-mobile-${value}`}
+													name={`${ability.toLowerCase()}-mobile`}
+													value={value}
+													checked={aphasiaCharacteristics[ability.toLowerCase() as keyof typeof aphasiaCharacteristics] === value}
+													onChange={() => handleAbilityChange(ability, value)}
+													className="w-8 h-8 cursor-pointer"
+												/>
+												<label htmlFor={`${ability.toLowerCase()}-mobile-${value}`} className="text-sm font-medium mt-2">{value}</label>
+											</div>
+										))}
+									</div>
 								</div>
-							</div>
-						))}
+							))}
+						</div>
+
+						{/* Desktop View - Original radio buttons */}
+						<div className="hidden md:block">
+							{["Listening", "Speaking", "Reading", "Writing"].map((ability) => (
+								<div key={ability} className="grid grid-cols-2 items-center gap-y-4 mb-3">
+									<label className="text-right pr-4 text-lg self-center">
+										{ability}:
+									</label>
+									<div className="flex justify-start space-x-4 w-fit">
+										{[1, 2, 3, 4, 5].map((value) => (
+											<input
+												key={`${ability}-${value}`}
+												type="radio"
+												id={`${ability.toLowerCase()}-${value}`}
+												name={ability.toLowerCase()}
+												value={value}
+												checked={aphasiaCharacteristics[ability.toLowerCase() as keyof typeof aphasiaCharacteristics] === value}
+												onChange={() => handleAbilityChange(ability, value)}
+												className="w-6 h-6 cursor-pointer"
+											/>
+										))}
+									</div>
+								</div>
+							))}
+						</div>
 					</div>
 				</div>
 
