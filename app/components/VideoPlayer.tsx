@@ -408,7 +408,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             speaker.currentTime = newTime;
             music.currentTime = newTime;
             other.currentTime = newTime;
-            handleLogging("Skipped forward 10 seconds.");
+            handleLogging(`Skipped forward 10 seconds from ${formatTime(currentTime)} to ${formatTime(newTime)}.`);
 
             setCurrentTimestamp(newTime);
 
@@ -430,7 +430,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             speaker.currentTime = newTime;
             music.currentTime = newTime;
             other.currentTime = newTime;
-            handleLogging("Skipped backwards 10 seconds.");
+            handleLogging(`Skipped backwards 10 seconds from ${formatTime(currentTime)} to ${formatTime(newTime)}.`);
 
             setCurrentTimestamp(newTime);
 

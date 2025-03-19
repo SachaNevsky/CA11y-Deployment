@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { logAction } from "@/lib/logger";
 
 /**
  * Interface for the `ChallengeCard` props
@@ -28,17 +27,8 @@ interface ChallengeCardProps {
  * />
  */
 const ChallengeCard: React.FC<ChallengeCardProps> = ({ text, icon, isSelected = false }: ChallengeCardProps): JSX.Element => {
-    const handleLog = () => {
-        const name = localStorage.getItem("ca11yDeplotmentName");
-
-        if (name) {
-            const action = "The barrier " + text + " was " + isSelected ? "selected." : "unselected.";
-            logAction(name, action)
-        }
-    }
-
     return (
-        <ul onClick={() => handleLog()} className={`p-2 border rounded-md list-none ${isSelected ? 'border-blue-500 bg-blue-100 border-2' : 'border-gray-300'}`}>
+        <ul className={`p-2 border rounded-md list-none ${isSelected ? 'border-blue-500 bg-blue-100 border-2' : 'border-gray-300'}`}>
             <li key={text}>{text}</li>
             <br />
             {icon && (

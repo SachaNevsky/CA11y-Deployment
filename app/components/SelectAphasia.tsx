@@ -65,6 +65,9 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 
 	const handleChallengeToggle = (challengeText: string) => {
 		const formattedText = challengeText.replace(/\s+/g, '');
+		const isCurrentlySelected = aphasiaCharacteristics.barriers.includes(formattedText);
+
+		logAction(name, `${isCurrentlySelected ? 'Unselected' : 'Selected'} challenge: ${challengeText}`);
 
 		setAphasiaCharacteristics(prev => {
 			if (prev.barriers.includes(formattedText)) {
