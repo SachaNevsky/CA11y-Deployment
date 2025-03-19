@@ -45,7 +45,12 @@ const Home = () => {
 			nameInput: { value: string }
 		}
 
-		const inputName = formElements.nameInput.value;
+		const inputName = formElements.nameInput.value
+			.trim()
+			.replace(/<[^>]*>/g, '')
+			.replace(/['";`\\]/g, '')
+			.replace(/javascript:/gi, '')
+			.substring(0, 50);
 
 		if (typeof localStorage !== "undefined") {
 			setName(inputName);
