@@ -31,7 +31,7 @@ const LinkLogger: React.FC<LinkLoggerProps> = ({ action, user, href, text }: Lin
     const handleEvent = async (event: React.MouseEvent | React.TouchEvent) => {
         event?.stopPropagation();
         try {
-            await logAction(action, user);
+            await logAction(user, action);
         } catch (error) {
             console.error("Error logging action:", error);
         }

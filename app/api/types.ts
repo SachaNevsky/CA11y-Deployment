@@ -18,7 +18,6 @@ export interface VideoMetadata {
 }
 
 export interface VideoPlayerSettings {
-    // isLeftHanded: boolean;
     captionMode: "none" | "default" | "simplified";
     playbackRate: number;
     manualPlaybackRate: number;
@@ -31,4 +30,29 @@ export interface VideoPlayerSettings {
 
 export interface VideoPlayerProps {
     videoName: string;
+}
+
+export interface EMAQuestion {
+    id: string;
+    text: string;
+    condition: string;
+}
+
+export interface EMAState {
+    isOpen: boolean;
+    currentQuestion: EMAQuestion | null;
+    lastAction: string;
+}
+
+export interface EMAResponse {
+    questionId: string;
+    question: string;
+    response: number;
+    timestamp: Date;
+}
+
+export interface EMADocument {
+    user: string;
+    responses: EMAResponse[];
+    createdAt: Date;
 }

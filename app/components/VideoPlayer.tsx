@@ -3,9 +3,10 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import Video from "next-video";
 import { Slider } from "@heroui/slider";
-
-import { AudioControls, VideoMetadata, VideoPlayerProps, VideoPlayerSettings } from "../api/types";
+import EMACard from "./EMACard";
+import { AudioControls, VideoMetadata, VideoPlayerProps, VideoPlayerSettings, EMAQuestion, EMAState } from "../api/types";
 import { logAction } from "@/lib/logger";
+import { EMA_QUESTIONS } from "../api/EMAQuestions";
 
 const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const [metadata, setMetadata] = useState<VideoMetadata | null>(null);
@@ -43,11 +44,36 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const [musicControl, setMusicControl] = useState<AudioControls>({ volume: 1, muted: false, prevVolume: 1 });
     const [otherControl, setOtherControl] = useState<AudioControls>({ volume: 1, muted: false, prevVolume: 1 });
 
-    const handleLogging = (action: string) => {
-        const name = localStorage.getItem("ca11yDeploymentName");
+    const [ema, setEma] = useState<EMAState>({
+        isOpen: false,
+        currentQuestion: null,
+        lastAction: "general"
+    });
+    const [userName, setUserName] = useState<string>("");
+    const [lastAction, setLastAction] = useState<string>("general");
 
-        if (name) logAction(name, action);
+    const handleLogging = (action: string, category: string = "general") => {
+        const name = localStorage.getItem("ca11yDeploymentName");
+        setLastAction(category);
+
+        if (name) {
+            setUserName(name);
+            logAction(name, action)
+        };
     }
+
+    const getEMAQuestion = (actionCategory: string): EMAQuestion => {
+        const matchingQuestions = EMA_QUESTIONS.filter(q => q.condition === actionCategory);
+        if (matchingQuestions.length > 0) {
+            return matchingQuestions[Math.floor(Math.random() * matchingQuestions.length)];
+        }
+
+        return EMA_QUESTIONS.find(q => q.condition === "general") || EMA_QUESTIONS[0];
+    };
+
+    const handleEMAClose = () => {
+        setEma(prev => ({ ...prev, isOpen: false }));
+    };
 
     const updateCaptionsMode = (mode: "none" | "default" | "simplified") => {
         const video = videoRef.current;
@@ -169,7 +195,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
         const newMode = captionMode === "none" ? "default" : "none";
         updateCaptionsMode(newMode);
         setCaptionMode(newMode);
-        handleLogging(`Captions turned ${newMode === "none" ? "off" : "on"}.`);
+        handleLogging(`Captions turned ${newMode === "none" ? "off" : "on"}.`, "captions");
         setTimeout(saveSettings, 0);
     };
 
@@ -184,7 +210,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
         }
         updateCaptionsMode(newMode);
         setCaptionMode(newMode);
-        handleLogging(`Caption mode changed to ${newMode}.`)
+        handleLogging(`Caption mode changed to ${newMode}.`, "captions");
         setTimeout(saveSettings, 0);
     };
 
@@ -195,10 +221,10 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                 const newValue = !prev;
                 if (newValue) {
                     setVideoSource(highlightSrc);
-                    handleLogging("Highlight was turned on.")
+                    handleLogging("Highlight was turned on.", "highlight")
                 } else {
                     setVideoSource(videoSrc);
-                    handleLogging("Highlight was turned off.")
+                    handleLogging("Highlight was turned off.", "highlight")
                 }
 
                 setTimeout(saveSettings, 0);
@@ -236,7 +262,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             const newRate = playbackRate - 0.1;
             setPlaybackRate(newRate);
             setManualPlaybackRate(newRate);
-            handleLogging(`Playback speed was decreased to ${newRate}.`)
+            handleLogging(`Playback speed was decreased to ${newRate}.`, "speed");
             setTimeout(saveSettings, 0);
         }
     };
@@ -247,7 +273,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             const newRate = playbackRate + 0.1;
             setPlaybackRate(newRate);
             setManualPlaybackRate(newRate);
-            handleLogging(`Playback speed was increased to ${newRate}.`)
+            handleLogging(`Playback speed was increased to ${newRate}.`, "speed");
             setTimeout(saveSettings, 0);
         }
     };
@@ -257,11 +283,11 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             const newValue = !prev;
             if (!newValue) {
                 setPlaybackRate(manualPlaybackRate);
-                handleLogging("Automated speed was turned off.")
+                handleLogging("Automated speed was turned off.", "speed");
             } else {
                 setManualPlaybackRate(playbackRate);
                 updateAutomatedSpeed(currentTimestamp);
-                handleLogging("Automated speed was turned on.")
+                handleLogging("Automated speed was turned on.", "speed");
             }
 
             setTimeout(saveSettings, 0);
@@ -339,7 +365,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const handleSpeakerVolume = (val: number) => {
         setSpeakerControl((prev: AudioControls) => {
             const updated = { ...prev, volume: val, muted: false, prevVolume: val };
-            handleLogging(`Speaker volume was set to ${val}.`)
+            handleLogging(`Speaker volume was set to ${val}.`, "volume");
             setTimeout(saveSettings, 0);
             return updated;
         });
@@ -348,7 +374,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const handleMusicVolume = (val: number) => {
         setMusicControl((prev: AudioControls) => {
             const updated = { ...prev, volume: val, muted: false, prevVolume: val };
-            handleLogging(`Music volume was set to ${val}.`)
+            handleLogging(`Music volume was set to ${val}.`, "volume");
             setTimeout(saveSettings, 0);
             return updated;
         });
@@ -357,7 +383,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const handleOtherVolume = (val: number) => {
         setOtherControl((prev: AudioControls) => {
             const updated = { ...prev, volume: val, muted: false, prevVolume: val };
-            handleLogging(`Other volume was set to ${val}.`)
+            handleLogging(`Other volume was set to ${val}.`, "volume");
             setTimeout(saveSettings, 0);
             return updated;
         });
@@ -368,7 +394,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             const updated = prev.muted
                 ? { ...prev, muted: false, volume: prev.prevVolume }
                 : { ...prev, muted: true, prevVolume: prev.volume, volume: 0 };
-            handleLogging(`Speaker audio ${prev.muted ? "unmuted" : "muted"}`);
+            handleLogging(`Speaker audio ${prev.muted ? "unmuted" : "muted"}`, "volume");
             setTimeout(saveSettings, 0);
             return updated;
         });
@@ -379,7 +405,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             const updated = prev.muted
                 ? { ...prev, muted: false, volume: prev.prevVolume }
                 : { ...prev, muted: true, prevVolume: prev.volume, volume: 0 };
-            handleLogging(`Music audio ${prev.muted ? "unmuted" : "muted"}`);
+            handleLogging(`Music audio ${prev.muted ? "unmuted" : "muted"}`, "volume");
             setTimeout(saveSettings, 0);
             return updated;
         });
@@ -390,7 +416,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             const updated = prev.muted
                 ? { ...prev, muted: false, volume: prev.prevVolume }
                 : { ...prev, muted: true, prevVolume: prev.volume, volume: 0 };
-            handleLogging(`Other audio ${prev.muted ? "unmuted" : "muted"}`);
+            handleLogging(`Other audio ${prev.muted ? "unmuted" : "muted"}`, "volume");
             setTimeout(saveSettings, 0);
             return updated;
         });
@@ -445,18 +471,18 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             if (!document.fullscreenElement) {
                 if (videoContainerRef.current.requestFullscreen) {
                     videoContainerRef.current.requestFullscreen();
-                    handleLogging("Entered fullscreen mode.");
+                    handleLogging("Entered fullscreen mode.", lastAction);
                 } else if (videoContainerRef.current.webkitRequestFullscreen) {
                     videoContainerRef.current.webkitRequestFullscreen();
-                    handleLogging("Entered fullscreen mode.");
+                    handleLogging("Entered fullscreen mode.", lastAction);
                 } else if (videoContainerRef.current.msRequestFullscreen) {
                     videoContainerRef.current.msRequestFullscreen();
-                    handleLogging("Entered fullscreen mode.");
+                    handleLogging("Entered fullscreen mode.", lastAction);
                 }
             } else {
                 if (document.exitFullscreen) {
                     document.exitFullscreen();
-                    handleLogging("Exited fullscreen mode.");
+                    handleLogging("Exited fullscreen mode.", lastAction);
                 }
             }
         }
@@ -471,14 +497,24 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
 
     useEffect(() => {
         const handleFullScreenChange = (): void => {
-            setIsFullScreen(!!document.fullscreenElement);
+            const isNowFullScreen = !!document.fullscreenElement;
+            setIsFullScreen(isNowFullScreen);
+
+            if (!isNowFullScreen && isFullScreen) {
+                const question = getEMAQuestion(lastAction);
+                setEma({
+                    isOpen: true,
+                    currentQuestion: question,
+                    lastAction: lastAction
+                });
+            }
         };
 
         document.addEventListener("fullscreenchange", handleFullScreenChange);
         return () => {
             document.removeEventListener("fullscreenchange", handleFullScreenChange);
         };
-    }, []);
+    }, [isFullScreen, lastAction]);
 
     useEffect(() => {
         const video = videoRef.current;
@@ -773,6 +809,14 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                             </div>
                         </div>
                     </div>
+                    {ema.currentQuestion && (
+                        <EMACard
+                            isOpen={ema.isOpen}
+                            onClose={handleEMAClose}
+                            question={ema.currentQuestion}
+                            userName={userName}
+                        />
+                    )}
                 </>
             )}
         </div>
