@@ -96,7 +96,6 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             if (aphasiaCharacteristics) {
                 const handedness = JSON.parse(aphasiaCharacteristics).handedness || "rightHanded";
                 setIsLeftHanded(handedness === "leftHanded");
-                console.log("66", handedness)
             }
 
             const checkIsMobile = () => {
