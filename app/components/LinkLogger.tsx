@@ -1,6 +1,6 @@
 "use client"
 
-import { logAction } from "@/lib/logger";
+import { logAction } from "@/lib/logAction";
 
 /**
  * Interface for the `LinkLogger` props.

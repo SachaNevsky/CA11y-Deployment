@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import VideoCard from "../components/VideoCard";
-import { logAction } from "@/lib/logger";
+import { logAction } from "@/lib/logAction";
 
 const VideoLibrary = () => {
     const videoNames = ["theSocialNetwork"];

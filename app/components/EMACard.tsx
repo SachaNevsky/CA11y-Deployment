@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { EMAQuestion } from "../api/types";
-import { logAction } from "@/lib/logger";
+import { logAction } from "@/lib/logAction";
 import { logEMAResponse } from "@/lib/emaLogger";
 
 interface EMACardProps {
@@ -16,13 +16,15 @@ const EMACard = ({ isOpen, onClose, question, userName }: EMACardProps): JSX.Ele
     if (!isOpen || !question) return null;
 
     const handleEMALogging = async (value: number) => {
-        if (!userName) return;
+        if (typeof window !== 'undefined') {
+            if (!userName) return;
 
-        try {
-            await logEMAResponse(userName, question.id, question.text, value);
-            logAction(userName, `EMA Response: "${question.text}" - Rating: ${value}/5`);
-        } catch (error) {
-            console.error("Error submitting EMA response:", error);
+            try {
+                await logEMAResponse(userName, question.id, question.text, value);
+                logAction(userName, `EMA Response: "${question.text}" - Rating: ${value}/5`);
+            } catch (error) {
+                console.error("Error submitting EMA response:", error);
+            }
         }
     }
 

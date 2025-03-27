@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ChallengeCard from "./ChallengeCard";
-import { logAction } from "@/lib/logger";
+import { logAction } from "@/lib/logAction";
 
 /**
  * Interface for the `SelectAphasia` props

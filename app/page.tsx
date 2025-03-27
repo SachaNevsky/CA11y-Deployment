@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { logAction } from "@/lib/logger";
+import { logAction } from "@/lib/logAction";
 import SelectAphasia from "./components/SelectAphasia";
 
 const Home = () => {

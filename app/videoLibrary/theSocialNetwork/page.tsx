@@ -1,15 +1,28 @@
-"use client"
+// ./app/videoLibrary/theSocialNetwork/page.tsx
+"use client";
 
-import VideoPlayer from "@/app/components/VideoPlayer"
-import { logAction } from "@/lib/logger";
-import { useEffect } from "react"
+import VideoPlayer from "@/app/components/VideoPlayer";
+import { logAction } from "@/lib/logAction";
+import { useEffect } from "react";
 
 const TheSocialNetwork = () => {
     useEffect(() => {
+        // Ensure this runs only on the client side
         if (typeof window !== "undefined") {
-            const name = localStorage.getItem("ca11yDeploymentName");
+            try {
+                const name = localStorage.getItem("ca11yDeploymentName");
 
-            if (name) logAction(name, "Watching the video theSocialNetwork.")
+                if (name) {
+                    logAction(name, "Watching the video theSocialNetwork.")
+                        .catch((error) => {
+                            console.error("Failed to log action:", error);
+                        });
+                } else {
+                    console.error("No ca11yDeploymentName stored.")
+                }
+            } catch (error) {
+                console.error("Error in useEffect:", error);
+            }
         }
     }, []);
 
@@ -18,4 +31,4 @@ const TheSocialNetwork = () => {
     )
 }
 
-export default TheSocialNetwork
+export default TheSocialNetwork;

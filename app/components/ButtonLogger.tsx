@@ -1,7 +1,7 @@
 "use client";
 
 import React, { ReactNode, useState } from "react";
-import { logAction } from "@/lib/logger";
+import { logAction } from "@/lib/logAction";
 
 /**
  * A utility function that returns a debounced version of the provided function.

@@ -1,3 +1,4 @@
+// ./app/components/VideoPlayer.tsx
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
@@ -5,7 +6,7 @@ import Video from "next-video";
 import { Slider } from "@heroui/slider";
 import EMACard from "./EMACard";
 import { AudioControls, VideoMetadata, VideoPlayerProps, VideoPlayerSettings, EMAQuestion, EMAState } from "../api/types";
-import { logAction } from "@/lib/logger";
+import { logAction } from "@/lib/logAction";
 import { EMA_QUESTIONS } from "../api/EMAQuestions";
 
 const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
@@ -53,13 +54,17 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const [lastAction, setLastAction] = useState<string>("general");
 
     const handleLogging = (action: string, category: string = "general") => {
-        const name = localStorage.getItem("ca11yDeploymentName");
-        setLastAction(category);
+        if (typeof window !== 'undefined') {
+            const name = localStorage.getItem("ca11yDeploymentName");
+            setLastAction(category);
 
-        if (name) {
-            setUserName(name);
-            logAction(name, action)
-        };
+            if (name) {
+                setUserName(name);
+                logAction(name, action)
+            } else {
+                console.error("No ca11yDeploymentName stored.")
+            };
+        }
     }
 
     const getEMAQuestion = (actionCategory: string): EMAQuestion => {
@@ -77,7 +82,9 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
 
     const updateCaptionsMode = (mode: "none" | "default" | "simplified") => {
         const video = videoRef.current;
-        if (!video) return;
+        if (!video) {
+            return;
+        };
         for (let i = 0; i < video.textTracks.length; i++) {
             const track = video.textTracks[i];
             if (track.label === "Default English") {
@@ -96,6 +103,8 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             if (aphasiaCharacteristics) {
                 const handedness = JSON.parse(aphasiaCharacteristics).handedness || "rightHanded";
                 setIsLeftHanded(handedness === "leftHanded");
+            } else {
+                console.error("No ca11yAphasiaCharacteristics stored.")
             }
 
             const checkIsMobile = () => {
@@ -130,6 +139,8 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
         if (typeof window !== "undefined") {
             const savedSettings = localStorage.getItem("ca11ySettings");
 
+            if (!savedSettings) console.error("No ca11ySettings stored.")
+
             if (savedSettings) {
                 const settings: VideoPlayerSettings = JSON.parse(savedSettings);
                 setCaptionMode(settings.captionMode);
@@ -156,7 +167,8 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                 if (aphasiaCharacteristics) {
                     const handedness = JSON.parse(aphasiaCharacteristics).handedness || "rightHanded";
                     setIsLeftHanded(handedness === "leftHanded");
-                    console.log("132", handedness)
+                } else {
+                    console.error("No ca11yAphasiaCharacteristics stored.")
                 }
             }
 
@@ -171,17 +183,19 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     }, [videoSrc, highlightSrc]);
 
     const saveSettings = useCallback(() => {
-        const settings: VideoPlayerSettings = {
-            captionMode,
-            playbackRate,
-            manualPlaybackRate,
-            isSpeedAutomated,
-            highlight,
-            speakerControl,
-            musicControl,
-            otherControl
-        };
-        localStorage.setItem("ca11ySettings", JSON.stringify(settings));
+        if (typeof window !== 'undefined') {
+            const settings: VideoPlayerSettings = {
+                captionMode,
+                playbackRate,
+                manualPlaybackRate,
+                isSpeedAutomated,
+                highlight,
+                speakerControl,
+                musicControl,
+                otherControl
+            };
+            localStorage.setItem("ca11ySettings", JSON.stringify(settings));
+        }
     }, [captionMode, playbackRate, manualPlaybackRate, isSpeedAutomated, highlight, speakerControl, musicControl, otherControl]);
 
     useEffect(() => {
@@ -560,7 +574,9 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
         const music = musicRef.current;
         const other = otherRef.current;
 
-        if (!video || !speaker || !music || !other) return;
+        if (!video || !speaker || !music || !other) {
+            return;
+        }
 
         speaker.muted = false;
         music.muted = false;
@@ -608,45 +624,103 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                             <audio id="speaker" ref={speakerRef} src={speakerSrc} />
                             <audio id="music" ref={musicRef} src={musicSrc} />
                             <audio id="other" ref={otherRef} src={otherSrc} />
-
-                            <div className="w-full mx-auto mt-2">
-                                <Slider
-                                    aria-label="SeekbarSlider"
-                                    name="seekSlider"
-                                    color="success"
-                                    size="lg"
-                                    classNames={{ track: "custom-slider-track" }}
-                                    defaultValue={currentTimestamp}
-                                    minValue={0}
-                                    maxValue={metadata!.duration}
-                                    step={1}
-                                    value={currentTimestamp}
-                                    onChange={(val) => handleSeek(val as number)}
-                                />
-                                <p className="text-center mt-1">{formatTime(currentTimestamp)} / {formatTime(metadata!.duration)}</p>
-                            </div>
-
-                            <div className="mt-2 text-center">
-                                <button
-                                    // className="py-2 px-4 m-1 border-solid border-2 rounded-md border-gray-500 text-base font-medium"
-                                    className={buttonClass}
-                                    onClick={toggleFullscreen}
-                                >
-                                    Toggle Fullscreen 📺
-                                </button>
-                            </div>
+                            {!isFullScreen && (
+                                <>
+                                    <div className="w-full mx-auto mt-2">
+                                        <Slider
+                                            aria-label="SeekbarSlider"
+                                            name="seekSlider"
+                                            color="success"
+                                            size="lg"
+                                            classNames={{ track: "custom-slider-track" }}
+                                            defaultValue={currentTimestamp}
+                                            minValue={0}
+                                            maxValue={metadata!.duration}
+                                            step={1}
+                                            value={currentTimestamp}
+                                            onChange={(val) => handleSeek(val as number)}
+                                        />
+                                        <p className="text-center mt-1">{formatTime(currentTimestamp)} / {formatTime(metadata!.duration)}</p>
+                                    </div>
+                                    <div className="mt-2 text-center">
+                                        <button
+                                            className={buttonClass}
+                                            onClick={toggleFullscreen}
+                                        >
+                                            Toggle Fullscreen 📺
+                                        </button>
+                                    </div>
+                                </>
+                            )}
 
                             {isFullScreen && (
-                                <div className="absolute top-4 right-4 z-10" style={{ pointerEvents: "none" }}>
-                                    <button onClick={toggleFullscreen} style={{ pointerEvents: "auto" }} className="py-2 px-4 bg-gray-800 text-white rounded">
-                                        Exit Full Screen
-                                    </button>
-                                </div>
+                                <>
+                                    <div className="absolute top-4 right-4 z-10" style={{ pointerEvents: "none" }}>
+                                        <button onClick={toggleFullscreen} style={{ pointerEvents: "auto" }} className="py-2 px-4 bg-gray-800 text-white rounded">
+                                            Exit Full Screen
+                                        </button>
+                                    </div>
+                                    <div className="absolute bottom-4 left-4 right-4 z-10">
+                                        <div className="bg-black/50 rounded-lg p-4">
+                                            <div className="grid grid-cols-4 gap-1 mb-2 text-white ">
+                                                <button className={buttonClass} onClick={() => handleSkipBackwards()}>
+                                                    ⏪ 10s
+                                                </button>
+                                                <button className={buttonClass} onClick={() => handlePlayPause("play")}>
+                                                    Play ▶
+                                                </button>
+                                                <button className={buttonClass} onClick={() => handlePlayPause("pause")}>
+                                                    Pause ⏸
+                                                </button>
+                                                <button className={buttonClass} onClick={() => handleSkipForwards()}>
+                                                    10s ⏩
+                                                </button>
+                                            </div>
+                                            <div className="w-full">
+                                                <Slider
+                                                    aria-label="SeekbarSlider"
+                                                    name="seekSlider"
+                                                    color="success"
+                                                    size="lg"
+                                                    classNames={{ track: "custom-slider-track" }}
+                                                    defaultValue={currentTimestamp}
+                                                    minValue={0}
+                                                    maxValue={metadata!.duration}
+                                                    step={1}
+                                                    value={currentTimestamp}
+                                                    onChange={(val) => handleSeek(val as number)}
+                                                />
+                                                <p className="text-center mt-1 text-white">{formatTime(currentTimestamp)} / {formatTime(metadata!.duration)}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
                             )}
                         </div>
 
                         <div className={`${!isMobile ? 'w-1/2 px-6' : 'w-full mt-2'}`}>
                             <div className="flex flex-col space-y-2">
+                                {/* To remove */}
+                                <div className="bg-gray-100 p-2 rounded-md">
+                                    <h3 className="font-medium text-base mb-1">Playback</h3>
+                                    <div className="grid grid-cols-4 gap-1">
+                                        <button className={buttonClass} onClick={() => handleSkipBackwards()}>
+                                            ⏪ 10s
+                                        </button>
+
+                                        <button className={buttonClass} onClick={() => handlePlayPause("play")}>
+                                            Play ▶
+                                        </button>
+
+                                        <button className={buttonClass} onClick={() => handlePlayPause("pause")}>
+                                            Pause ⏸
+                                        </button>
+                                        <button className={buttonClass} onClick={() => handleSkipForwards()}>
+                                            10s ⏩
+                                        </button>
+                                    </div>
+                                </div>
+
                                 <div className="bg-gray-100 p-2 rounded-md">
                                     <h3 className="font-medium text-base mb-1">Captions</h3>
                                     <div className="flex flex-row justify-between gap-2">
@@ -664,24 +738,6 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                                 {captionMode === "default" ? "Make Simple" : "Return Default"}
                                             </button>
                                         )}
-                                    </div>
-                                </div>
-
-                                <div className="bg-gray-100 p-2 rounded-md">
-                                    <h3 className="font-medium text-base mb-1">Playback</h3>
-                                    <div className="grid grid-cols-4 gap-1">
-                                        <button className={buttonClass} onClick={() => handleSkipBackwards()}>
-                                            ⏪ 10s
-                                        </button>
-                                        <button className={buttonClass} onClick={() => handlePlayPause("play")}>
-                                            Play ▶
-                                        </button>
-                                        <button className={buttonClass} onClick={() => handlePlayPause("pause")}>
-                                            Pause ⏸
-                                        </button>
-                                        <button className={buttonClass} onClick={() => handleSkipForwards()}>
-                                            10s ⏩
-                                        </button>
                                     </div>
                                 </div>
 
