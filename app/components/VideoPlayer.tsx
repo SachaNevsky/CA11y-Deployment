@@ -682,7 +682,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                                     name="seekSlider"
                                                     color="success"
                                                     size="lg"
-                                                    classNames={{ track: "custom-slider-track" }}
+                                                    classNames={{ track: "custom-slider-track-fullscreen" }}
                                                     defaultValue={currentTimestamp}
                                                     minValue={0}
                                                     maxValue={metadata!.duration}

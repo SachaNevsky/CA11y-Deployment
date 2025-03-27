@@ -4,27 +4,27 @@ import { EMAQuestion } from "./types";
 export const EMA_QUESTIONS: EMAQuestion[] = [
     {
         id: "volume",
-        text: "How satisfied were you with the audio levels during your viewing?",
+        text: "<strong>How easy</strong> was it to <b>understand</b> the <b>speech</b>?",
         condition: "volume"
     },
     {
         id: "speed",
-        text: "How comfortable were you with the playback speed?",
+        text: "<strong>How easy</strong> was it to watch at <strong>this speed</strong>?",
         condition: "speed"
     },
     {
         id: "captions",
-        text: "How helpful did you find the captions?",
+        text: "<strong>How easy</strong> was it to <stong>understand with</strong> the <strong>captions</strong>?",
         condition: "captions"
     },
     {
         id: "highlight",
-        text: "How useful was the spotlight feature for your understanding?",
+        text: "<strong>How easy</strong> was it to <strong>follow</strong> the <strong>speakers</strong>?",
         condition: "highlight"
     },
     {
         id: "general",
-        text: "How was your overall video experience?",
+        text: "<strong>How easy</strong> was your <strong>overall</strong> viewing <strong>experience</strong>?",
         condition: "general"
     }
 ];

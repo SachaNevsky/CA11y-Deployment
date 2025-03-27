@@ -31,3 +31,7 @@ body {
 .custom-slider-track {
   @apply bg-black;
 }
+
+.custom-slider-track-fullscreen {
+  @apply bg-gray-900;
+}
