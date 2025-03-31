@@ -737,7 +737,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                 </div> */}
 
                                 <div className="bg-purple-100 px-6 py-4 rounded-md">
-                                    <h3 className="font-bold text-base mb-4">Captions</h3>
+                                    <h3 className="font-bold text-base mb-4">Captions <span className="inline bg-purple-300 mx-2 px-2 py-1 rounded">{captionMode === "none" ? "Off" : captionMode === "default" ? "On" : "Simplified"}</span></h3>
                                     <div className="flex flex-row gap-3">
                                         {captionMode === "none" ? (
                                             <IconButton text="Turn ON captions" icon="captionsOn" color="purple" onClickFunction={handleCaptions} />
@@ -755,7 +755,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                 </div>
 
                                 <div className="bg-warmAmber-100 px-6 py-4 rounded-md">
-                                    <h3 className="font-bold text-base mb-4">Spotlight</h3>
+                                    <h3 className="font-bold text-base mb-4">Spotlight <span className="inline bg-warmAmber-300 mx-2 px-2 py-1 rounded">{highlight ? "On" : "Off"}</span></h3>
                                     {highlight ? (
                                         <IconButton text="Turn OFF spotlight" icon="spotlightOff" color="amber" onClickFunction={handleHighlight} />
                                     ) : (
@@ -764,7 +764,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                 </div>
 
                                 <div className="bg-warmGreen-100 px-6 py-4 rounded-md">
-                                    <h3 className="font-bold text-base mb-4">Playback Speed</h3>
+                                    <h3 className="font-bold text-base mb-4">Playback Speed <span className="inline bg-warmGreen-300 mx-2 px-2 py-1 rounded">{isSpeedAutomated ? "Auto" : `${Math.floor(playbackRate * 100)}%`}</span></h3>
                                     <div className="grid grid-cols-2 gap-3 mb-3">
                                         {isSpeedAutomated ? (
                                             <IconButton text="Slow Down" icon="slowDown" color="green" disabled />
@@ -787,8 +787,8 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                 <div className="bg-blue-100 px-6 py-4 rounded-md">
                                     <h3 className="font-bold text-base mb-4">Volume Controls</h3>
                                     <div className="mb-2">
-                                        <label className="font-semibold block mb-1">Speaker - {Math.floor(speakerControl.volume * 100)}%</label>
-                                        <div className="flex items-center">
+                                        <label className="font-semibold block mb-1">Speaker <span className="inline bg-blue-300 mx-2 px-2 py-1 rounded">{speakerControl.muted ? "Muted" : `${Math.floor(speakerControl.volume * 100)}%`}</span></label>
+                                        <div className="flex items-center py-2">
                                             <div className="flex-grow">
                                                 <Slider
                                                     aria-label="SpeakerVolumeSlider"
@@ -814,8 +814,8 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                     </div>
 
                                     <div className="mb-2">
-                                        <label className="font-semibold block mb-1">Music - {Math.floor(musicControl.volume * 100)}%</label>
-                                        <div className="flex items-center">
+                                        <label className="font-semibold block mb-1">Music <span className="inline bg-blue-300 mx-2 px-2 py-1 rounded">{musicControl.muted ? "Muted" : `${Math.floor(musicControl.volume * 100)}%`}</span></label>
+                                        <div className="flex items-center py-2">
                                             <div className="flex-grow">
                                                 <Slider
                                                     aria-label="MusicVolumeSlider"
@@ -841,8 +841,8 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                     </div>
 
                                     <div>
-                                        <label className="font-semibold block mb-1">Other - {Math.floor(otherControl.volume * 100)}%</label>
-                                        <div className="flex items-center">
+                                        <label className="font-semibold block mb-1">Background <span className="inline bg-blue-300 mx-2 px-2 py-1 rounded">{otherControl.muted ? "Muted" : `${Math.floor(otherControl.volume * 100)}%`}</span></label>
+                                        <div className="flex items-center pt-2">
                                             <div className="flex-grow">
                                                 <Slider
                                                     aria-label="OtherVolumeSlider"
