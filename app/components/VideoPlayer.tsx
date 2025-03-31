@@ -676,7 +676,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                         <Slider
                                             aria-label="SeekbarSlider"
                                             name="seekSlider"
-                                            color="success"
+                                            color="primary"
                                             size="lg"
                                             classNames={{ track: "custom-slider-track" }}
                                             defaultValue={currentTimestamp}
@@ -711,7 +711,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                                 <Slider
                                                     aria-label="SeekbarSlider"
                                                     name="seekSlider"
-                                                    color="success"
+                                                    color="primary"
                                                     size="lg"
                                                     classNames={{ track: "custom-slider-track-fullscreen" }}
                                                     defaultValue={currentTimestamp}
@@ -763,9 +763,9 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                 <div className="bg-amber-100 px-6 py-4 rounded-md">
                                     <h3 className="font-bold text-base mb-2">Spotlight</h3>
                                     {highlight ? (
-                                        <IconButton text="Turn ON spotlight" icon="spotlight" color="amber" onClickFunction={handleHighlight} />
-                                    ) : (
                                         <IconButton text="Turn OFF spotlight" icon="spotlightOff" color="amber" onClickFunction={handleHighlight} />
+                                    ) : (
+                                        <IconButton text="Turn ON spotlight" icon="spotlight" color="amber" onClickFunction={handleHighlight} />
                                     )}
                                 </div>
 
@@ -780,7 +780,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                         {isSpeedAutomated ? (
                                             <IconButton text="Speed Up" icon="speedUp" color="green" disabled />
                                         ) : (
-                                            <IconButton text="Spped Up" icon="speedUp" color="green" onClickFunction={handleSpeedUp} />
+                                            <IconButton text="Speed Up" icon="speedUp" color="green" onClickFunction={handleSpeedUp} />
                                         )}
                                     </div>
                                     {isSpeedAutomated ? (
