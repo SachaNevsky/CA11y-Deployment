@@ -49,7 +49,7 @@ const EMACard = ({ isOpen, onClose, question, userName }: EMACardProps): JSX.Ele
                             key={rating}
                             onClick={() => setSelectedRating(rating)}
                             className={`w-16 h-16 rounded-full flex items-center justify-center text-lg font-medium ${selectedRating === rating
-                                ? "bg-blue-500 text-white"
+                                ? "bg-blue-700 text-white"
                                 : "bg-gray-200 hover:bg-gray-300"}`}
                         >
                             {rating}
@@ -67,7 +67,7 @@ const EMACard = ({ isOpen, onClose, question, userName }: EMACardProps): JSX.Ele
                     disabled={selectedRating === null}
                     className={`w-full py-2 rounded-md ${selectedRating === null
                         ? "bg-gray-300 cursor-not-allowed"
-                        : "bg-blue-500 text-white hover:bg-blue-600"}`}
+                        : "bg-blue-700 text-white hover:bg-blue-800"}`}
                 >
                     Submit
                 </button>

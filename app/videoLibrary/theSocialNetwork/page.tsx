@@ -7,7 +7,6 @@ import { useEffect } from "react";
 
 const TheSocialNetwork = () => {
     useEffect(() => {
-        // Ensure this runs only on the client side
         if (typeof window !== "undefined") {
             try {
                 const name = localStorage.getItem("ca11yDeploymentName");

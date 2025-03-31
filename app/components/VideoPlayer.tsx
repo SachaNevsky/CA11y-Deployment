@@ -8,6 +8,7 @@ import EMACard from "./EMACard";
 import { AudioControls, VideoMetadata, VideoPlayerProps, VideoPlayerSettings, EMAQuestion, EMAState } from "../api/types";
 import { logAction } from "@/lib/logAction";
 import { EMA_QUESTIONS } from "../api/EMAQuestions";
+import IconButton from "./IconButton";
 
 const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const [metadata, setMetadata] = useState<VideoMetadata | null>(null);
@@ -18,6 +19,9 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const [isSpeedAutomated, setIsSpeedAutomated] = useState<boolean>(false);
     const [manualPlaybackRate, setManualPlaybackRate] = useState<number>(1);
 
+    const [isUserActive, setIsUserActive] = useState<boolean>(true);
+    const activityTimerRef = useRef<NodeJS.Timeout | null>(null);
+
     const basePath = `/${videoName}/${videoName}`;
     const videoSrc = `${basePath}.mp4`;
     const highlightSrc = `${basePath}_highlight.mp4`;
@@ -26,7 +30,6 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const otherSrc = `${basePath}_other.mp3`;
     const defaultCaptionsSrc = `${basePath}.vtt`;
     const simplifiedCaptionsSrc = `${basePath}_simplified.vtt`;
-    const buttonClass = "py-2 px-3 m-1 border-solid border-2 rounded-md border-gray-500 w-full text-base font-medium";
 
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const speakerRef = useRef<HTMLAudioElement | null>(null);
@@ -45,11 +48,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const [musicControl, setMusicControl] = useState<AudioControls>({ volume: 1, muted: false, prevVolume: 1 });
     const [otherControl, setOtherControl] = useState<AudioControls>({ volume: 1, muted: false, prevVolume: 1 });
 
-    const [ema, setEma] = useState<EMAState>({
-        isOpen: false,
-        currentQuestion: null,
-        lastAction: "general"
-    });
+    const [ema, setEma] = useState<EMAState>({ isOpen: false, currentQuestion: null, lastAction: "general" });
     const [userName, setUserName] = useState<string>("");
     const [lastAction, setLastAction] = useState<string>("general");
 
@@ -66,6 +65,53 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             };
         }
     }
+
+    useEffect(() => {
+        const handleUserActivity = () => {
+            setIsUserActive(true);
+
+            // Clear any existing timer
+            if (activityTimerRef.current) {
+                clearTimeout(activityTimerRef.current);
+            }
+
+            // Set a new timer to mark user as inactive after 3 seconds
+            activityTimerRef.current = setTimeout(() => {
+                setIsUserActive(false);
+            }, 3000);
+        };
+
+        // Add event listeners for user activity when in fullscreen
+        if (isFullScreen) {
+            // Initial activity state
+            handleUserActivity();
+
+            document.addEventListener('mousemove', handleUserActivity);
+            document.addEventListener('keydown', handleUserActivity);
+            document.addEventListener('click', handleUserActivity);
+            document.addEventListener('touchstart', handleUserActivity);
+
+            return () => {
+                // Clean up
+                document.removeEventListener('mousemove', handleUserActivity);
+                document.removeEventListener('keydown', handleUserActivity);
+                document.removeEventListener('click', handleUserActivity);
+                document.removeEventListener('touchstart', handleUserActivity);
+
+                if (activityTimerRef.current) {
+                    clearTimeout(activityTimerRef.current);
+                    activityTimerRef.current = null;
+                }
+            };
+        } else {
+            // Make sure controls are visible when exiting fullscreen
+            setIsUserActive(true);
+            if (activityTimerRef.current) {
+                clearTimeout(activityTimerRef.current);
+                activityTimerRef.current = null;
+            }
+        }
+    }, [isFullScreen]);
 
     const getEMAQuestion = (actionCategory: string): EMAQuestion => {
         const matchingQuestions = EMA_QUESTIONS.filter(q => q.condition === actionCategory);
@@ -643,38 +689,23 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                         <p className="text-center mt-1">{formatTime(currentTimestamp)} / {formatTime(metadata!.duration)}</p>
                                     </div>
                                     <div className="mt-2 text-center">
-                                        <button
-                                            className={buttonClass}
-                                            onClick={toggleFullscreen}
-                                        >
-                                            Toggle Fullscreen 📺
-                                        </button>
+                                        <IconButton text="Enter Fullscreen" icon="fullscreen" onClickFunction={toggleFullscreen} />
                                     </div>
                                 </>
                             )}
 
                             {isFullScreen && (
                                 <>
-                                    <div className="absolute top-4 right-4 z-10" style={{ pointerEvents: "none" }}>
-                                        <button onClick={toggleFullscreen} style={{ pointerEvents: "auto" }} className="py-2 px-4 bg-gray-800 text-white rounded">
-                                            Exit Full Screen
-                                        </button>
+                                    <div className="absolute top-4 right-4 z-10" style={{ pointerEvents: "none", opacity: isUserActive ? 1 : 0, transition: "opacity 200ms ease-in-out" }}>
+                                        <IconButton text="Exit Fullscreen" icon="exitFullscreen" onClickFunction={toggleFullscreen} style={{ pointerEvents: "auto" }} />
                                     </div>
-                                    <div className="absolute bottom-4 left-4 right-4 z-10">
+                                    <div className="absolute bottom-4 left-4 right-4 z-10" style={{ opacity: isUserActive ? 1 : 0, transition: "opacity 200ms ease-in-out" }}>
                                         <div className="bg-black/50 rounded-lg p-4">
                                             <div className="grid grid-cols-4 gap-1 mb-2 text-white ">
-                                                <button className={buttonClass} onClick={() => handleSkipBackwards()}>
-                                                    ⏪ 10s
-                                                </button>
-                                                <button className={buttonClass} onClick={() => handlePlayPause("play")}>
-                                                    Play ▶
-                                                </button>
-                                                <button className={buttonClass} onClick={() => handlePlayPause("pause")}>
-                                                    Pause ⏸
-                                                </button>
-                                                <button className={buttonClass} onClick={() => handleSkipForwards()}>
-                                                    10s ⏩
-                                                </button>
+                                                <IconButton text="10s" icon="rewind" onClickFunction={handleSkipBackwards} />
+                                                <IconButton text="Play" icon="play" onClickFunction={() => handlePlayPause("play")} />
+                                                <IconButton text="Pause" icon="pause" onClickFunction={() => handlePlayPause("pause")} />
+                                                <IconButton text="10s" icon="forwards" onClickFunction={handleSkipForwards} />
                                             </div>
                                             <div className="w-full">
                                                 <Slider
@@ -698,90 +729,71 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                             )}
                         </div>
 
-                        <div className={`${!isMobile ? 'w-1/2 px-6' : 'w-full mt-2'}`}>
+                        <div className={`pt-2 ${!isMobile ? 'w-1/2 px-6' : 'w-full mt-2'}`}>
                             <div className="flex flex-col space-y-2">
                                 {/* To remove */}
-                                <div className="bg-gray-100 p-2 rounded-md">
-                                    <h3 className="font-medium text-base mb-1">Playback</h3>
-                                    <div className="grid grid-cols-4 gap-1">
-                                        <button className={buttonClass} onClick={() => handleSkipBackwards()}>
-                                            ⏪ 10s
-                                        </button>
-
-                                        <button className={buttonClass} onClick={() => handlePlayPause("play")}>
-                                            Play ▶
-                                        </button>
-
-                                        <button className={buttonClass} onClick={() => handlePlayPause("pause")}>
-                                            Pause ⏸
-                                        </button>
-                                        <button className={buttonClass} onClick={() => handleSkipForwards()}>
-                                            10s ⏩
-                                        </button>
+                                {/* <div className="bg-blue-100 p-6 rounded-md">
+                                    <h3 className="font-bold text-base mb-2">Playback</h3>
+                                    <div className="grid grid-cols-4 gap-3">
+                                        <IconButton text="10s" icon="rewind" onClickFunction={handleSkipBackwards} />
+                                        <IconButton text="Play" icon="play" onClickFunction={() => handlePlayPause("play")} />
+                                        <IconButton text="Pause" icon="pause" onClickFunction={() => handlePlayPause("pause")} />
+                                        <IconButton text="10s" icon="forwards" onClickFunction={handleSkipForwards} />
                                     </div>
-                                </div>
+                                </div> */}
 
-                                <div className="bg-gray-100 p-2 rounded-md">
-                                    <h3 className="font-medium text-base mb-1">Captions</h3>
-                                    <div className="flex flex-row justify-between gap-2">
-                                        <button
-                                            className={buttonClass}
-                                            onClick={() => { handleCaptions() }}
-                                        >
-                                            {captionMode === "none" ? "Turn ON captions ©©" : "Turn OFF captions ❌"}
-                                        </button>
+                                <div className="bg-purple-100 px-6 py-4 rounded-md">
+                                    <h3 className="font-bold text-base mb-2">Captions</h3>
+                                    <div className="flex flex-row gap-3">
+                                        {captionMode === "none" ? (
+                                            <IconButton text="Turn ON captions" icon="captionsOn" color="purple" onClickFunction={handleCaptions} />
+                                        ) : (
+                                            <IconButton text="Turn OFF captions" icon="captionsOff" color="purple" onClickFunction={handleCaptions} />
+                                        )}
                                         {captionMode !== "none" && (
-                                            <button
-                                                className={buttonClass}
-                                                onClick={() => handleSimpleCaptions()}
-                                            >
-                                                {captionMode === "default" ? "Make Simple" : "Return Default"}
-                                            </button>
+                                            captionMode === "default" ? (
+                                                <IconButton text="Make simple" icon="captionsEasier" color="purple" onClickFunction={handleSimpleCaptions} />
+                                            ) : (
+                                                <IconButton text="Return default" icon="captionsDefault" color="purple" onClickFunction={handleSimpleCaptions} />
+                                            )
                                         )}
                                     </div>
                                 </div>
 
-                                <div className="bg-gray-100 p-2 rounded-md">
-                                    <h3 className="font-medium text-base mb-1">Spotlight</h3>
-                                    <button
-                                        className={buttonClass}
-                                        onClick={() => handleHighlight()}
-                                    >
-                                        {highlight ? "Turn OFF spotlight ❌" : "Turn ON spotlight 💡"}
-                                    </button>
+                                <div className="bg-amber-100 px-6 py-4 rounded-md">
+                                    <h3 className="font-bold text-base mb-2">Spotlight</h3>
+                                    {highlight ? (
+                                        <IconButton text="Turn ON spotlight" icon="spotlight" color="amber" onClickFunction={handleHighlight} />
+                                    ) : (
+                                        <IconButton text="Turn OFF spotlight" icon="spotlightOff" color="amber" onClickFunction={handleHighlight} />
+                                    )}
                                 </div>
 
-                                <div className="bg-gray-100 p-2 rounded-md">
-                                    <h3 className="font-medium text-base mb-1">Playback Speed</h3>
-                                    <div className="grid grid-cols-2 gap-1 mb-1">
+                                <div className="bg-green-100 px-6 py-4 rounded-md">
+                                    <h3 className="font-medium text-base mb-2">Playback Speed</h3>
+                                    <div className="grid grid-cols-2 gap-3 mb-3">
                                         {isSpeedAutomated ? (
-                                            <button className={buttonClass + " text-gray-500 cursor-not-allowed"}>
-                                                Slow Down
-                                            </button>
+                                            <IconButton text="Slow Down" icon="slowDown" color="green" disabled />
                                         ) : (
-                                            <button className={buttonClass} onClick={handleSlowDown}>
-                                                Slow Down
-                                            </button>
+                                            <IconButton text="Slow Down" icon="slowDown" color="green" onClickFunction={handleSlowDown} />
                                         )}
                                         {isSpeedAutomated ? (
-                                            <button className={buttonClass + " text-gray-500 cursor-not-allowed"}>
-                                                Speed Up
-                                            </button>
+                                            <IconButton text="Speed Up" icon="speedUp" color="green" disabled />
                                         ) : (
-                                            <button className={buttonClass} onClick={handleSpeedUp}>
-                                                Speed Up
-                                            </button>
+                                            <IconButton text="Spped Up" icon="speedUp" color="green" onClickFunction={handleSpeedUp} />
                                         )}
                                     </div>
-                                    <button className={buttonClass} onClick={handleToggleAutomateSpeed}>
-                                        {isSpeedAutomated ? "Automated Speed ✅" : "Automated Speed ❎"}
-                                    </button>
+                                    {isSpeedAutomated ? (
+                                        <IconButton text="Automated Speed" icon="check" color="green" onClickFunction={handleToggleAutomateSpeed} />
+                                    ) : (
+                                        <IconButton text="Automated Speed" icon="cross" color="green" onClickFunction={handleToggleAutomateSpeed} />
+                                    )}
                                 </div>
 
-                                <div className="bg-gray-100 p-2 rounded-md">
-                                    <h3 className="font-medium text-base mb-1">Volume Controls</h3>
+                                <div className="bg-blue-100 px-6 py-4 rounded-md">
+                                    <h3 className="font-bold text-base mb-2">Volume Controls</h3>
                                     <div className="mb-2">
-                                        <label className="block mb-1">Speaker - {Math.floor(speakerControl.volume * 100)}%</label>
+                                        <label className="font-semibold block mb-1">Speaker - {Math.floor(speakerControl.volume * 100)}%</label>
                                         <div className="flex items-center">
                                             <div className="flex-grow">
                                                 <Slider
@@ -808,7 +820,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                     </div>
 
                                     <div className="mb-2">
-                                        <label className="block mb-1">Music - {Math.floor(musicControl.volume * 100)}%</label>
+                                        <label className="font-semibold block mb-1">Music - {Math.floor(musicControl.volume * 100)}%</label>
                                         <div className="flex items-center">
                                             <div className="flex-grow">
                                                 <Slider
@@ -835,7 +847,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                     </div>
 
                                     <div>
-                                        <label className="block mb-1">Other - {Math.floor(otherControl.volume * 100)}%</label>
+                                        <label className="font-semibold block mb-1">Other - {Math.floor(otherControl.volume * 100)}%</label>
                                         <div className="flex items-center">
                                             <div className="flex-grow">
                                                 <Slider

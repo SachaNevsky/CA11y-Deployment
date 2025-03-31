@@ -11,6 +11,7 @@ export const logAction = (() => {
 
     return async function (user: string, action: string) {
         try {
+            console.log(">", typeof user, typeof action)
             const now = Date.now();
             const key = `${user}-${action}`;
 
@@ -49,6 +50,7 @@ export const logAction = (() => {
                 throw fetchError;
             }
         } catch (error) {
+            console.log(">>", typeof error)
             console.error('Complete error logging action:', error);
             throw error;
         }
