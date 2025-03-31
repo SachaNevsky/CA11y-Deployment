@@ -70,20 +70,16 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
         const handleUserActivity = () => {
             setIsUserActive(true);
 
-            // Clear any existing timer
             if (activityTimerRef.current) {
                 clearTimeout(activityTimerRef.current);
             }
 
-            // Set a new timer to mark user as inactive after 3 seconds
             activityTimerRef.current = setTimeout(() => {
                 setIsUserActive(false);
-            }, 3000);
+            }, 2000);
         };
 
-        // Add event listeners for user activity when in fullscreen
         if (isFullScreen) {
-            // Initial activity state
             handleUserActivity();
 
             document.addEventListener('mousemove', handleUserActivity);
@@ -92,7 +88,6 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             document.addEventListener('touchstart', handleUserActivity);
 
             return () => {
-                // Clean up
                 document.removeEventListener('mousemove', handleUserActivity);
                 document.removeEventListener('keydown', handleUserActivity);
                 document.removeEventListener('click', handleUserActivity);
@@ -104,7 +99,6 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                 }
             };
         } else {
-            // Make sure controls are visible when exiting fullscreen
             setIsUserActive(true);
             if (activityTimerRef.current) {
                 clearTimeout(activityTimerRef.current);
@@ -770,7 +764,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                 </div>
 
                                 <div className="bg-green-100 px-6 py-4 rounded-md">
-                                    <h3 className="font-medium text-base mb-2">Playback Speed</h3>
+                                    <h3 className="font-bold text-base mb-2">Playback Speed</h3>
                                     <div className="grid grid-cols-2 gap-3 mb-3">
                                         {isSpeedAutomated ? (
                                             <IconButton text="Slow Down" icon="slowDown" color="green" disabled />

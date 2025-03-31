@@ -64,7 +64,7 @@ const IconButton: React.FC<IconButtonProps> = ({
         >
             <span className="flex items-center justify-center w-full">
                 <span>{text}</span>
-                <IconComponent strokeWidth={2.75} className="ml-2 h-[1em] w-[1em]" />
+                <IconComponent strokeWidth={2.75} className="ml-2 h-[1.3em] w-[1.3em]" />
             </span>
         </button>
     );
