@@ -651,7 +651,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             ) : (
                 <>
                     <div className={`w-full flex ${isMobile ? 'flex-col' : ''} ${isLeftHanded && !isMobile ? 'flex-row-reverse' : ''}`}>
-                        <div className={`${!isMobile ? (isLeftHanded ? 'px-6 py-2' : 'px-6 py-2') : ''} ${!isMobile ? 'w-1/2' : 'w-full'}`} ref={videoContainerRef}>
+                        <div className={`${!isMobile ? (isLeftHanded ? 'px-6 py-4' : 'px-6 py-4') : ''} ${!isMobile ? 'w-1/2' : 'w-full'}`} ref={videoContainerRef}>
                             {showVideo && (
                                 <div className="w-full">
                                     <Video id="video" ref={videoRef} controls={false} muted>
@@ -723,8 +723,8 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                             )}
                         </div>
 
-                        <div className={`pt-2 ${!isMobile ? 'w-1/2 px-6' : 'w-full mt-2'}`}>
-                            <div className="flex flex-col space-y-2">
+                        <div className={`pt-4 ${!isMobile ? 'w-1/2 px-6' : 'w-full mt-2'}`}>
+                            <div className="flex flex-col space-y-4">
                                 {/* To remove */}
                                 {/* <div className="bg-blue-100 p-6 rounded-md">
                                     <h3 className="font-bold text-base mb-2">Playback</h3>
@@ -737,7 +737,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                 </div> */}
 
                                 <div className="bg-purple-100 px-6 py-4 rounded-md">
-                                    <h3 className="font-bold text-base mb-2">Captions</h3>
+                                    <h3 className="font-bold text-base mb-4">Captions</h3>
                                     <div className="flex flex-row gap-3">
                                         {captionMode === "none" ? (
                                             <IconButton text="Turn ON captions" icon="captionsOn" color="purple" onClickFunction={handleCaptions} />
@@ -754,8 +754,8 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                     </div>
                                 </div>
 
-                                <div className="bg-amber-100 px-6 py-4 rounded-md">
-                                    <h3 className="font-bold text-base mb-2">Spotlight</h3>
+                                <div className="bg-warmAmber-100 px-6 py-4 rounded-md">
+                                    <h3 className="font-bold text-base mb-4">Spotlight</h3>
                                     {highlight ? (
                                         <IconButton text="Turn OFF spotlight" icon="spotlightOff" color="amber" onClickFunction={handleHighlight} />
                                     ) : (
@@ -763,8 +763,8 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                     )}
                                 </div>
 
-                                <div className="bg-green-100 px-6 py-4 rounded-md">
-                                    <h3 className="font-bold text-base mb-2">Playback Speed</h3>
+                                <div className="bg-warmGreen-100 px-6 py-4 rounded-md">
+                                    <h3 className="font-bold text-base mb-4">Playback Speed</h3>
                                     <div className="grid grid-cols-2 gap-3 mb-3">
                                         {isSpeedAutomated ? (
                                             <IconButton text="Slow Down" icon="slowDown" color="green" disabled />
@@ -785,7 +785,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                 </div>
 
                                 <div className="bg-blue-100 px-6 py-4 rounded-md">
-                                    <h3 className="font-bold text-base mb-2">Volume Controls</h3>
+                                    <h3 className="font-bold text-base mb-4">Volume Controls</h3>
                                     <div className="mb-2">
                                         <label className="font-semibold block mb-1">Speaker - {Math.floor(speakerControl.volume * 100)}%</label>
                                         <div className="flex items-center">

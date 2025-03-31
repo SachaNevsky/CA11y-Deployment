@@ -21,10 +21,10 @@ const iconMap: Record<string, LucideIcon> = {
 };
 
 const colorMap: Record<string, string> = {
-    blue: "bg-blue-700 hover:bg-blue-800",
-    amber: "bg-amber-600 hover:bg-amber-700",
-    green: "bg-green-700 hover:bg-green-800",
-    purple: "bg-purple-700 hover:bg-purple-800"
+    blue: "bg-blue-400 hover:bg-blue-500",
+    amber: "bg-warmAmber-300 hover:bg-warmAmber-400",
+    green: "bg-warmGreen-300 hover:bg-warmGreen-400",
+    purple: "bg-purple-300 hover:bg-purple-400"
 };
 
 interface IconButtonProps {
@@ -62,7 +62,7 @@ const IconButton: React.FC<IconButtonProps> = ({
             disabled={isDisabled}
             style={style}
         >
-            <span className="flex items-center justify-center w-full">
+            <span className="flex items-center justify-center w-full text-black">
                 <span>{text}</span>
                 <IconComponent strokeWidth={2.75} className="ml-2 h-[1.3em] w-[1.3em]" />
             </span>
