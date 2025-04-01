@@ -9,6 +9,8 @@ import { AudioControls, VideoMetadata, VideoPlayerProps, VideoPlayerSettings, EM
 import { logAction } from "@/lib/logAction";
 import { EMA_QUESTIONS } from "../api/EMAQuestions";
 import IconButton from "./IconButton";
+import { HelpCircle } from "lucide-react";
+import HelpPopup from "./HelpPopup";
 
 const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const [metadata, setMetadata] = useState<VideoMetadata | null>(null);
@@ -18,7 +20,6 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const [isMobile, setIsMobile] = useState<boolean>(false);
     const [isSpeedAutomated, setIsSpeedAutomated] = useState<boolean>(false);
     const [manualPlaybackRate, setManualPlaybackRate] = useState<number>(1);
-
     const [isUserActive, setIsUserActive] = useState<boolean>(true);
     const activityTimerRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -51,6 +52,54 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const [ema, setEma] = useState<EMAState>({ isOpen: false, currentQuestion: null, lastAction: "general" });
     const [userName, setUserName] = useState<string>("");
     const [lastAction, setLastAction] = useState<string>("general");
+
+    const [helpPopup, setHelpPopup] = useState<{ isOpen: boolean; title: string; content: string; section: string }>({
+        isOpen: false,
+        title: '',
+        content: '',
+        section: ''
+    });
+
+    const handleOpenHelp = (section: string) => {
+        let title = '';
+        let content = '';
+
+        switch (section) {
+            case 'captions':
+                title = 'Captions Help';
+                content = 'Captions display the spoken dialogue as text. You can turn captions on/off or switch to simplified language for easier understanding.';
+                break;
+            case 'spotlight':
+                title = 'Spotlight Help';
+                content = 'Spotlight highlights the most important parts of the video, making it easier to focus on the main content.';
+                break;
+            case 'speed':
+                title = 'Playback Speed Help';
+                content = 'Adjust how fast the video plays. You can slow it down for better comprehension or use automated speed that adjusts based on content complexity.';
+                break;
+            case 'volume':
+                title = 'Volume Controls Help';
+                content = 'Adjust the volume levels for different audio components: Speaker (voices), Music (background music), and Background (ambient sounds).';
+                break;
+            default:
+                title = 'Help';
+                content = 'Need assistance with the video player controls?';
+        }
+
+        setHelpPopup({
+            isOpen: true,
+            title,
+            content,
+            section
+        });
+
+        handleLogging(`Opened help for ${section} controls.`);
+    };
+
+    const handleCloseHelp = () => {
+        setHelpPopup(prev => ({ ...prev, isOpen: false }));
+        handleLogging(`Closed help popup for ${helpPopup.section} controls.`);
+    };
 
     const handleLogging = (action: string, category: string = "general") => {
         if (typeof window !== 'undefined') {
@@ -736,8 +785,17 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                     </div>
                                 </div> */}
 
-                                <div className="bg-purple-100 px-6 py-4 rounded-md">
-                                    <h3 className="font-bold text-base mb-4">Captions <span className="inline bg-purple-300 mx-2 px-2 py-1 rounded">{captionMode === "none" ? "Off" : captionMode === "default" ? "On" : "Simplified"}</span></h3>
+                                <div className="bg-purple-100 px-6 py-4 rounded-xl">
+                                    <h3 className="font-bold text-base mb-4 flex justify-between items-center">
+                                        <span>Captions <span className="inline bg-purple-300 mx-2 px-2 py-1 rounded">{captionMode === "none" ? "Off" : captionMode === "default" ? "On" : "Simplified"}</span></span>
+                                        <button
+                                            onClick={() => handleOpenHelp("captions")}
+                                            className="p-1 ml-2 text-purple-600 hover:text-purple-800 transition-colors"
+                                            aria-label="Captions help"
+                                        >
+                                            <HelpCircle size={"1.5em"} />
+                                        </button>
+                                    </h3>
                                     <div className="flex flex-row gap-3">
                                         {captionMode === "none" ? (
                                             <IconButton text="Turn ON captions" icon="captionsOn" color="purple" onClickFunction={handleCaptions} />
@@ -754,8 +812,17 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                     </div>
                                 </div>
 
-                                <div className="bg-warmAmber-100 px-6 py-4 rounded-md">
-                                    <h3 className="font-bold text-base mb-4">Spotlight <span className="inline bg-warmAmber-300 mx-2 px-2 py-1 rounded">{highlight ? "On" : "Off"}</span></h3>
+                                <div className="bg-warmAmber-100 px-6 py-4 rounded-xl">
+                                    <h3 className="font-bold text-base mb-4 flex justify-between items-center">
+                                        <span>Spotlight <span className="inline bg-warmAmber-300 mx-2 px-2 py-1 rounded">{highlight ? "On" : "Off"}</span></span>
+                                        <button
+                                            onClick={() => handleOpenHelp('spotlight')}
+                                            className="p-1 ml-2 text-warmAmber-600 hover:text-warmAmber-800 transition-colors"
+                                            aria-label="Spotlight help"
+                                        >
+                                            <HelpCircle size={"1.5em"} />
+                                        </button>
+                                    </h3>
                                     {highlight ? (
                                         <IconButton text="Turn OFF spotlight" icon="spotlightOff" color="amber" onClickFunction={handleHighlight} />
                                     ) : (
@@ -763,8 +830,17 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                     )}
                                 </div>
 
-                                <div className="bg-warmGreen-100 px-6 py-4 rounded-md">
-                                    <h3 className="font-bold text-base mb-4">Playback Speed <span className="inline bg-warmGreen-300 mx-2 px-2 py-1 rounded">{isSpeedAutomated ? "Auto" : `${Math.floor(playbackRate * 100)}%`}</span></h3>
+                                <div className="bg-warmGreen-100 px-6 py-4 rounded-xl">
+                                    <h3 className="font-bold text-base mb-4 flex justify-between items-center">
+                                        <span>Playback Speed <span className="inline bg-warmGreen-300 mx-2 px-2 py-1 rounded">{isSpeedAutomated ? "Auto" : `${Math.floor(playbackRate * 100)}%`}</span></span>
+                                        <button
+                                            onClick={() => handleOpenHelp('speed')}
+                                            className="p-1 ml-2 text-warmGreen-600 hover:text-warmGreen-800 transition-colors"
+                                            aria-label="Playback speed help"
+                                        >
+                                            <HelpCircle size={"1.5em"} />
+                                        </button>
+                                    </h3>
                                     <div className="grid grid-cols-2 gap-3 mb-3">
                                         {isSpeedAutomated ? (
                                             <IconButton text="Slow Down" icon="slowDown" color="green" disabled />
@@ -784,8 +860,17 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                     )}
                                 </div>
 
-                                <div className="bg-blue-100 px-6 py-4 rounded-md">
-                                    <h3 className="font-bold text-base mb-4">Volume Controls</h3>
+                                <div className="bg-blue-100 px-6 py-4 rounded-xl">
+                                    <h3 className="font-bold text-base mb-4 flex justify-between items-center">
+                                        <span>Volume Controls</span>
+                                        <button
+                                            onClick={() => handleOpenHelp('volume')}
+                                            className="p-1 ml-2 text-blue-600 hover:text-blue-800 transition-colors"
+                                            aria-label="Volume controls help"
+                                        >
+                                            <HelpCircle size={"1.5em"} />
+                                        </button>
+                                    </h3>
                                     <div className="mb-2">
                                         <label className="font-semibold block mb-1">Speaker <span className="inline bg-blue-300 mx-2 px-2 py-1 rounded">{speakerControl.muted ? "Muted" : `${Math.floor(speakerControl.volume * 100)}%`}</span></label>
                                         <div className="flex items-center py-2">
@@ -880,6 +965,12 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                     )}
                 </>
             )}
+            <HelpPopup
+                isOpen={helpPopup.isOpen}
+                onClose={handleCloseHelp}
+                title={helpPopup.title}
+                content={helpPopup.content}
+            />
         </div>
     );
 };

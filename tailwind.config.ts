@@ -17,13 +17,17 @@ const config: Config = {
 					DEFAULT: "#BDEAA7",
 					400: "#9EE07E",
 					300: "#BDEAA7",
-					100: "#E4F6DB"
+					100: "#E4F6DB",
+					600: "#62C830",
+					800: "#4E9F26"
 				},
 				warmAmber: {
 					DEFAULT: "#FFECB3",
 					100: "#fff2cc",
 					300: "#FFE599",
-					400: "#FFD967"
+					400: "#FFD967",
+					600: "#E7AD00",
+					800: "#CE9A00"
 				}
 			},
 			keyframes: {

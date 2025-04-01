@@ -1,5 +1,5 @@
 import React, { CSSProperties } from 'react';
-import { Play, Pause, LucideIcon, Rewind, FastForward, Captions, CaptionsOff, SmilePlus, Undo2, Lightbulb, LightbulbOff, Snail, Rabbit, CircleX, CircleCheck, Expand, Shrink } from 'lucide-react';
+import { Play, Pause, LucideIcon, Rewind, FastForward, Captions, CaptionsOff, SmilePlus, Undo2, Lightbulb, LightbulbOff, Snail, Rabbit, CircleX, CircleCheck, Expand, Shrink, HelpCircle } from 'lucide-react';
 
 const iconMap: Record<string, LucideIcon> = {
     "play": Play,
@@ -17,7 +17,8 @@ const iconMap: Record<string, LucideIcon> = {
     "check": CircleCheck,
     "cross": CircleX,
     "fullscreen": Expand,
-    "exitfullscreen": Shrink
+    "exitfullscreen": Shrink,
+    "help": HelpCircle
 };
 
 const colorMap: Record<string, string> = {
