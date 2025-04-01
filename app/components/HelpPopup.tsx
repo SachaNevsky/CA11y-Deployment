@@ -1,5 +1,6 @@
 // .app/components/HelpPopup.tsx
 import React from 'react';
+import parse from "html-react-parser";
 import { X } from 'lucide-react';
 import Image from 'next/image';
 
@@ -25,7 +26,7 @@ const HelpPopup: React.FC<HelpPopupProps> = ({ isOpen, onClose, title, content, 
                     </button>
                 </div>
                 <div className="mb-4">
-                    <p>{content}</p>
+                    <p className="font-semibold text-lg">{parse(content)}</p>
                 </div>
                 {imageSrc && (
                     <div className="mb-4">

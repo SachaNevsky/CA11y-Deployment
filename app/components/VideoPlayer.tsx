@@ -55,35 +55,35 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
 
     const [helpPopup, setHelpPopup] = useState<{ isOpen: boolean; title: string; content: string; section: string }>({
         isOpen: false,
-        title: '',
-        content: '',
-        section: ''
+        title: "",
+        content: "",
+        section: ""
     });
 
     const handleOpenHelp = (section: string) => {
-        let title = '';
-        let content = '';
+        let title = "";
+        let content = "";
 
         switch (section) {
-            case 'captions':
-                title = 'Captions Help';
-                content = 'Captions display the spoken dialogue as text. You can turn captions on/off or switch to simplified language for easier understanding.';
+            case "captions":
+                title = "Captions Help";
+                content = "Captions show <strong>dialogue</strong> as <strong>text</strong>. You can turn captions <strong>ON</strong> or <strong>OFF</strong>, or switch to a <strong>simplified version</strong>.";
                 break;
-            case 'spotlight':
-                title = 'Spotlight Help';
-                content = 'Spotlight highlights the most important parts of the video, making it easier to focus on the main content.';
+            case "spotlight":
+                title = "Spotlight Help";
+                content = "Spotlight <strong>highlights</strong> the <strong>current speaker</strong>. You can turn spotlight <strong>ON</strong> or <strong>OFF</strong>.";
                 break;
-            case 'speed':
-                title = 'Playback Speed Help';
-                content = 'Adjust how fast the video plays. You can slow it down for better comprehension or use automated speed that adjusts based on content complexity.';
+            case "speed":
+                title = "Playback Speed Help";
+                content = "Playback speed controls <strong>how fast</strong> the <strong>video</strong> is playing. You can <strong>speed up</strong> or <strong>slow down</strong> the video. You can also make the <strong>system automate</strong> the <strong>speed</strong>.";
                 break;
-            case 'volume':
-                title = 'Volume Controls Help';
-                content = 'Adjust the volume levels for different audio components: Speaker (voices), Music (background music), and Background (ambient sounds).';
+            case "volume":
+                title = "Volume Controls Help";
+                content = "Volume controls <strong>how loud</strong> different <strong>audio</strong> is. You can <strong>control</strong> the <strong>speaker</strong>, <strong>music</strong> and <strong>background</strong> audio. You can also <strong>mute</strong> audio you do not want.";
                 break;
             default:
-                title = 'Help';
-                content = 'Need assistance with the video player controls?';
+                title = "Help";
+                content = "Need assistance with the video player controls?";
         }
 
         setHelpPopup({
@@ -102,7 +102,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     };
 
     const handleLogging = (action: string, category: string = "general") => {
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
             const name = localStorage.getItem("ca11yDeploymentName");
             setLastAction(category);
 
@@ -131,16 +131,16 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
         if (isFullScreen) {
             handleUserActivity();
 
-            document.addEventListener('mousemove', handleUserActivity);
-            document.addEventListener('keydown', handleUserActivity);
-            document.addEventListener('click', handleUserActivity);
-            document.addEventListener('touchstart', handleUserActivity);
+            document.addEventListener("mousemove", handleUserActivity);
+            document.addEventListener("keydown", handleUserActivity);
+            document.addEventListener("click", handleUserActivity);
+            document.addEventListener("touchstart", handleUserActivity);
 
             return () => {
-                document.removeEventListener('mousemove', handleUserActivity);
-                document.removeEventListener('keydown', handleUserActivity);
-                document.removeEventListener('click', handleUserActivity);
-                document.removeEventListener('touchstart', handleUserActivity);
+                document.removeEventListener("mousemove", handleUserActivity);
+                document.removeEventListener("keydown", handleUserActivity);
+                document.removeEventListener("click", handleUserActivity);
+                document.removeEventListener("touchstart", handleUserActivity);
 
                 if (activityTimerRef.current) {
                     clearTimeout(activityTimerRef.current);
@@ -272,7 +272,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     }, [videoSrc, highlightSrc]);
 
     const saveSettings = useCallback(() => {
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
             const settings: VideoPlayerSettings = {
                 captionMode,
                 playbackRate,
@@ -699,8 +699,8 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                 <p className="text-center p-2">Loading metadata...</p>
             ) : (
                 <>
-                    <div className={`w-full flex ${isMobile ? 'flex-col' : ''} ${isLeftHanded && !isMobile ? 'flex-row-reverse' : ''}`}>
-                        <div className={`${!isMobile ? (isLeftHanded ? 'px-6 py-4' : 'px-6 py-4') : ''} ${!isMobile ? 'w-1/2' : 'w-full'}`} ref={videoContainerRef}>
+                    <div className={`w-full flex ${isMobile ? "flex-col" : ""} ${isLeftHanded && !isMobile ? "flex-row-reverse" : ""}`}>
+                        <div className={`${!isMobile ? (isLeftHanded ? "px-6 py-4" : "px-6 py-4") : ""} ${!isMobile ? "w-1/2" : "w-full"}`} ref={videoContainerRef}>
                             {showVideo && (
                                 <div className="w-full">
                                     <Video id="video" ref={videoRef} controls={false} muted>
@@ -772,7 +772,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                             )}
                         </div>
 
-                        <div className={`pt-4 ${!isMobile ? 'w-1/2 px-6' : 'w-full mt-2'}`}>
+                        <div className={`pt-4 ${!isMobile ? "w-1/2 px-6" : "w-full mt-2"}`}>
                             <div className="flex flex-col space-y-4">
                                 {/* To remove */}
                                 {/* <div className="bg-blue-100 p-6 rounded-md">
@@ -816,7 +816,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                     <h3 className="font-bold text-base mb-4 flex justify-between items-center">
                                         <span>Spotlight <span className="inline bg-warmAmber-300 mx-2 px-2 py-1 rounded">{highlight ? "On" : "Off"}</span></span>
                                         <button
-                                            onClick={() => handleOpenHelp('spotlight')}
+                                            onClick={() => handleOpenHelp("spotlight")}
                                             className="p-1 ml-2 text-warmAmber-600 hover:text-warmAmber-800 transition-colors"
                                             aria-label="Spotlight help"
                                         >
@@ -834,7 +834,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                     <h3 className="font-bold text-base mb-4 flex justify-between items-center">
                                         <span>Playback Speed <span className="inline bg-warmGreen-300 mx-2 px-2 py-1 rounded">{isSpeedAutomated ? "Auto" : `${Math.floor(playbackRate * 100)}%`}</span></span>
                                         <button
-                                            onClick={() => handleOpenHelp('speed')}
+                                            onClick={() => handleOpenHelp("speed")}
                                             className="p-1 ml-2 text-warmGreen-600 hover:text-warmGreen-800 transition-colors"
                                             aria-label="Playback speed help"
                                         >
@@ -864,7 +864,7 @@ const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                     <h3 className="font-bold text-base mb-4 flex justify-between items-center">
                                         <span>Volume Controls</span>
                                         <button
-                                            onClick={() => handleOpenHelp('volume')}
+                                            onClick={() => handleOpenHelp("volume")}
                                             className="p-1 ml-2 text-blue-600 hover:text-blue-800 transition-colors"
                                             aria-label="Volume controls help"
                                         >
