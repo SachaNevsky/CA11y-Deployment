@@ -35,3 +35,7 @@ body {
 .custom-slider-track-fullscreen {
   @apply bg-gray-900;
 }
+
+mux-player {
+  --controls: none;
+}

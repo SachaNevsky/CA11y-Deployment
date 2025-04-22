@@ -2,7 +2,9 @@
 "use client";
 
 import { useEffect, useState, useRef, useCallback } from "react";
-import Video from "next-video";
+import MuxPlayer from "@mux/mux-player-react";
+import MuxPlayerElement from "@mux/mux-player";
+// import Video from "next-video";
 import { Slider } from "@heroui/slider";
 import EMACard from "./EMACard";
 import { AudioControls, VideoMetadata, VideoPlayerProps, VideoPlayerSettings, EMAQuestion, EMAState } from "../api/types";
@@ -12,7 +14,7 @@ import IconButton from "./IconButton";
 import { HelpCircle } from "lucide-react";
 import HelpPopup from "./HelpPopup";
 
-const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
+const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element => {
     const [metadata, setMetadata] = useState<VideoMetadata | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -22,8 +24,10 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const activityTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     const basePath = `/${videoName}/${videoName}`;
-    const videoSrc = `${basePath}.mp4`;
-    const highlightSrc = `${basePath}_highlight.mp4`;
+    // const videoSrc = `${basePath}.mp4`;
+    // const highlightSrc = `${basePath}_highlight.mp4`;
+    const videoSrc = muxAssetId.original;
+    const highlightSrc = muxAssetId.highlight;
     const speakerSrc = `${basePath}_speaker.mp3`;
     const musicSrc = `${basePath}_music.mp3`;
     const otherSrc = `${basePath}_other.mp3`;
@@ -35,17 +39,19 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const musicRef = useRef<HTMLAudioElement | null>(null);
     const otherRef = useRef<HTMLAudioElement | null>(null);
     const videoContainerRef = useRef<HTMLDivElement | null>(null);
+    const muxPlayerRef = useRef<MuxPlayerElement | null>(null); // mux
 
     const [playbackRate, setPlaybackRate] = useState<number>(1);
     const [currentTimestamp, setCurrentTimestamp] = useState<number>(0.1);
     const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
     const [highlight, setHighlight] = useState<boolean>(false);
-    const [videoSource, setVideoSource] = useState<string>(videoSrc);
+    // const [videoSource, setVideoSource] = useState<string>(videoSrc);
     const [showVideo, setShowVideo] = useState<boolean>(true);
     const [captionMode, setCaptionMode] = useState<"none" | "default" | "simplified">("none");
     const [speakerControl, setSpeakerControl] = useState<AudioControls>({ volume: 1, muted: false, prevVolume: 1 });
     const [musicControl, setMusicControl] = useState<AudioControls>({ volume: 1, muted: false, prevVolume: 1 });
     const [otherControl, setOtherControl] = useState<AudioControls>({ volume: 1, muted: false, prevVolume: 1 });
+    const [currentMuxAssetId, setCurrentMuxAssetId] = useState<string>(muxAssetId.original); // mux
 
     const [ema, setEma] = useState<EMAState>({ isOpen: false, currentQuestion: null, lastAction: "general" });
     const [userName, setUserName] = useState<string>("");
@@ -183,6 +189,24 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
         setCaptionMode(mode);
     };
 
+    // useEffect(() => {
+    //     const fetchMetadata = async () => {
+    //         try {
+    //             const res = await fetch(`/${videoName}/${videoName}.json`);
+    //             if (!res.ok) throw new Error("Failed to load metadata");
+    //             const data: VideoMetadata = await res.json();
+    //             setMetadata(data);
+    //             // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //         } catch (err: any) {
+    //             setError(err.message);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
+
+    //     fetchMetadata();
+    // }, [videoName]);
+
     useEffect(() => {
         const fetchMetadata = async () => {
             try {
@@ -219,10 +243,12 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
 
                 if (settings.highlight) {
                     setHighlight(true);
-                    setVideoSource(highlightSrc);
+                    // setVideoSource(highlightSrc);
+                    setCurrentMuxAssetId(highlightSrc);
                 } else {
                     setHighlight(false);
-                    setVideoSource(videoSrc);
+                    // setVideoSource(videoSrc);
+                    setCurrentMuxAssetId(videoSrc);
                 }
 
                 setTimeout(() => {
@@ -277,21 +303,41 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
         setTimeout(saveSettings, 0);
     };
 
+    // const handleHighlight = (): void => {
+    //     setShowVideo(false);
+    //     setTimeout(() => {
+    //         setHighlight(prev => {
+    //             const newValue = !prev;
+    //             if (newValue) {
+    //                 setVideoSource(highlightSrc);
+    //                 handleLogging("Highlight was turned on.", "highlight")
+    //             } else {
+    //                 setVideoSource(videoSrc);
+    //                 handleLogging("Highlight was turned off.", "highlight")
+    //             }
+
+    //             setTimeout(saveSettings, 0);
+
+    //             return newValue;
+    //         });
+    //         setShowVideo(true);
+    //     }, 0);
+    // };
+
     const handleHighlight = (): void => {
         setShowVideo(false);
         setTimeout(() => {
             setHighlight(prev => {
                 const newValue = !prev;
                 if (newValue) {
-                    setVideoSource(highlightSrc);
-                    handleLogging("Highlight was turned on.", "highlight")
+                    setCurrentMuxAssetId(muxAssetId.highlight);
+                    handleLogging("Highlight was turned on.", "highlight");
                 } else {
-                    setVideoSource(videoSrc);
-                    handleLogging("Highlight was turned off.", "highlight")
+                    setCurrentMuxAssetId(muxAssetId.original);
+                    handleLogging("Highlight was turned off.", "highlight");
                 }
 
                 setTimeout(saveSettings, 0);
-
                 return newValue;
             });
             setShowVideo(true);
@@ -379,40 +425,69 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
         }
     }, [playbackRate, saveSettings, metadata]);
 
+    // const handlePlayPause = (button: "play" | "pause"): void => {
+    //     const video = videoRef.current;
+    //     const speaker = speakerRef.current;
+    //     const music = musicRef.current;
+    //     const other = otherRef.current;
+
+    //     if (video && speaker && music && other) {
+    //         if (button === "play") {
+    //             video.play();
+    //             speaker.play();
+    //             music.play();
+    //             other.play();
+    //             setCurrentTimestamp(video.currentTime);
+    //             handleLogging("Video was put in play.")
+    //         } else {
+    //             video.pause();
+    //             speaker.pause();
+    //             music.pause();
+    //             other.pause();
+    //             setCurrentTimestamp(video.currentTime);
+    //             handleLogging("Video playback paused.")
+    //         }
+    //     }
+    // };
+
     const handlePlayPause = (button: "play" | "pause"): void => {
-        const video = videoRef.current;
+        const muxPlayer = muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
         const other = otherRef.current;
 
-        if (video && speaker && music && other) {
+        if (muxPlayer && speaker && music && other) {
+            // const videoElement = muxPlayer.querySelector('video');
+            // if (!videoElement) { console.log(muxPlayer); return; };
+
             if (button === "play") {
-                video.play();
+                muxPlayer.play();
                 speaker.play();
                 music.play();
                 other.play();
-                setCurrentTimestamp(video.currentTime);
-                handleLogging("Video was put in play.")
+                setCurrentTimestamp(muxPlayer.currentTime);
+                handleLogging("Video was put in play.");
             } else {
-                video.pause();
+                muxPlayer.pause();
                 speaker.pause();
                 music.pause();
                 other.pause();
-                setCurrentTimestamp(video.currentTime);
-                handleLogging("Video playback paused.")
+                setCurrentTimestamp(muxPlayer.currentTime);
+                handleLogging("Video playback paused.");
             }
         }
     };
 
     const handleSeek = (value: number) => {
-        const video = videoRef.current;
+        // const video = videoRef.current;
+        const muxPlayer = muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
         const other = otherRef.current;
         const time = value;
 
-        if (video && speaker && music && other) {
-            video.currentTime = time;
+        if (muxPlayer && speaker && music && other) {
+            muxPlayer.currentTime = time;
             speaker.currentTime = time;
             music.currentTime = time;
             other.currentTime = time;
@@ -486,14 +561,15 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     };
 
     const handleSkipForwards = (): void => {
-        const video = videoRef.current;
+        // const video = videoRef.current;
+        const muxPlayer = muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
         const other = otherRef.current;
-        if (video && speaker && music && other && metadata) {
-            const currentTime = video.currentTime;
+        if (muxPlayer && speaker && music && other && metadata) {
+            const currentTime = muxPlayer.currentTime;
             const newTime = currentTime + 10 > metadata.duration ? metadata.duration : currentTime + 10;
-            video.currentTime = newTime;
+            muxPlayer.currentTime = newTime;
             speaker.currentTime = newTime;
             music.currentTime = newTime;
             other.currentTime = newTime;
@@ -508,14 +584,15 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     };
 
     const handleSkipBackwards = (): void => {
-        const video = videoRef.current;
+        // const video = videoRef.current;
+        const muxPlayer = muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
         const other = otherRef.current;
-        if (video && speaker && music && other) {
-            const currentTime = video.currentTime;
+        if (muxPlayer && speaker && music && other) {
+            const currentTime = muxPlayer.currentTime;
             const newTime = currentTime - 10 <= 0 ? 0 : currentTime - 10;
-            video.currentTime = newTime;
+            muxPlayer.currentTime = newTime;
             speaker.currentTime = newTime;
             music.currentTime = newTime;
             other.currentTime = newTime;
@@ -580,18 +657,19 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     }, [isFullScreen, lastAction]);
 
     useEffect(() => {
-        const video = videoRef.current;
+        // const video = videoRef.current;
+        const muxPlayer = muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
         const other = otherRef.current;
 
-        if (video && speaker && music && other) {
+        if (muxPlayer && speaker && music && other) {
             const checkTime = (): void => {
-                if (video.currentTime !== currentTimestamp) {
-                    setCurrentTimestamp(video.currentTime);
+                if (muxPlayer.currentTime !== currentTimestamp) {
+                    setCurrentTimestamp(muxPlayer.currentTime);
 
                     if (isSpeedAutomated) {
-                        updateAutomatedSpeed(video.currentTime);
+                        updateAutomatedSpeed(muxPlayer.currentTime);
                     }
                 }
             };
@@ -605,35 +683,70 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     }, [currentTimestamp, isSpeedAutomated, metadata, updateAutomatedSpeed]);
 
     useEffect(() => {
-        const video = videoRef.current;
+        // const video = videoRef.current;
+        const muxPlayer = muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
         const other = otherRef.current;
 
-        if (video && speaker && music && other) {
-            video.playbackRate = playbackRate;
+        if (muxPlayer && speaker && music && other) {
+            muxPlayer.playbackRate = playbackRate;
             speaker.playbackRate = playbackRate;
             music.playbackRate = playbackRate;
             other.playbackRate = playbackRate;
         }
     }, [playbackRate]);
 
+    // useEffect(() => {
+    //     const video = videoRef.current;
+    //     const speaker = speakerRef.current;
+    //     const music = musicRef.current;
+    //     const other = otherRef.current;
+
+    //     if (!video || !speaker || !music || !other) {
+    //         return;
+    //     }
+
+    //     speaker.muted = false;
+    //     music.muted = false;
+    //     other.muted = false;
+
+    //     const syncAudio = (): void => {
+    //         if (video.paused) {
+    //             speaker.pause();
+    //             music.pause();
+    //             other.pause();
+    //         } else {
+    //             speaker.play().catch((e) => console.error("Speaker play failed:", e));
+    //             music.play().catch((e) => console.error("Music play failed:", e));
+    //             other.play().catch((e) => console.error("Other play failed:", e));
+    //         }
+    //     };
+
+    //     video.addEventListener("play", syncAudio);
+    //     video.addEventListener("pause", syncAudio);
+
+    //     return () => {
+    //         video.removeEventListener("play", syncAudio);
+    //         video.removeEventListener("pause", syncAudio);
+    //     };
+    // }, []);
+
     useEffect(() => {
-        const video = videoRef.current;
+        const muxPlayer = muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
         const other = otherRef.current;
 
-        if (!video || !speaker || !music || !other) {
+        if (!muxPlayer || !speaker || !music || !other) {
             return;
         }
 
-        speaker.muted = false;
-        music.muted = false;
-        other.muted = false;
+        const videoElement = muxPlayer.querySelector('video');
+        if (!videoElement) return;
 
         const syncAudio = (): void => {
-            if (video.paused) {
+            if (videoElement.paused) {
                 speaker.pause();
                 music.pause();
                 other.pause();
@@ -644,12 +757,12 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
             }
         };
 
-        video.addEventListener("play", syncAudio);
-        video.addEventListener("pause", syncAudio);
+        videoElement.addEventListener("play", syncAudio);
+        videoElement.addEventListener("pause", syncAudio);
 
         return () => {
-            video.removeEventListener("play", syncAudio);
-            video.removeEventListener("pause", syncAudio);
+            videoElement.removeEventListener("play", syncAudio);
+            videoElement.removeEventListener("pause", syncAudio);
         };
     }, []);
 
@@ -671,7 +784,7 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                 <>
                     {!isFullScreen && (
                         <div className="p-4 md:p-6">
-
+                            {currentMuxAssetId}
                             <div className="mb-4">
                                 <IconButton
                                     text="View Video"
@@ -852,12 +965,55 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
 
                     <div ref={videoContainerRef} className={`bg-black ${isFullScreen ? 'fixed inset-0 z-50 w-screen h-screen' : 'hidden'}`}>
                         {showVideo && isFullScreen && (
-                            <Video id="video" ref={videoRef} controls={false} muted className="w-full h-full object-contain">
-                                <source id="videoSource" src={videoSource} type="video/mp4" />
-                                <track label="Default English" kind="subtitles" srcLang="en" src={defaultCaptionsSrc} default={captionMode === 'default'} />
-                                <track label="Simplified English" kind="subtitles" srcLang="en" src={simplifiedCaptionsSrc} default={captionMode === 'simplified'} />
-                                Your browser does not support the video tag.
-                            </Video>
+                            // <Video id="video" ref={videoRef} controls={false} muted className="w-full h-full object-contain">
+                            //     <source id="videoSource" src={videoSource} type="video/mp4" />
+                            //     <track label="Default English" kind="subtitles" srcLang="en" src={defaultCaptionsSrc} default={captionMode === 'default'} />
+                            //     <track label="Simplified English" kind="subtitles" srcLang="en" src={simplifiedCaptionsSrc} default={captionMode === 'simplified'} />
+                            //     Your browser does not support the video tag.
+                            // </Video>
+                            <MuxPlayer
+                                ref={muxPlayerRef}
+                                playbackId={currentMuxAssetId}
+                                streamType="on-demand"
+                                // controls={false}
+                                muted={true}
+                                autoPlay={false}
+                                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                onTimeUpdate={(e) => {
+                                    const target = e.target as HTMLVideoElement;
+                                    setCurrentTimestamp(target.currentTime);
+                                    if (isSpeedAutomated) {
+                                        updateAutomatedSpeed(target.currentTime);
+                                    }
+                                }}
+                                onRateChange={(e) => {
+                                    const target = e.target as HTMLVideoElement;
+                                    const speaker = speakerRef.current;
+                                    const music = musicRef.current;
+                                    const other = otherRef.current;
+
+                                    if (speaker && music && other) {
+                                        speaker.playbackRate = target.playbackRate;
+                                        music.playbackRate = target.playbackRate;
+                                        other.playbackRate = target.playbackRate;
+                                    }
+                                }}
+                            >
+                                <track
+                                    label="Default English"
+                                    kind="subtitles"
+                                    srcLang="en"
+                                    src={defaultCaptionsSrc}
+                                    default={captionMode === 'default'}
+                                />
+                                <track
+                                    label="Simplified English"
+                                    kind="subtitles"
+                                    srcLang="en"
+                                    src={simplifiedCaptionsSrc}
+                                    default={captionMode === 'simplified'}
+                                />
+                            </MuxPlayer>
                         )}
                         {isFullScreen && (
                             <>
@@ -921,4 +1077,4 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     );
 };
 
-export default AltVideoPlayer;
+export default VideoPlayer;

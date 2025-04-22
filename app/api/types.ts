@@ -33,6 +33,10 @@ export interface VideoPlayerSettings {
 
 export interface VideoPlayerProps {
     videoName: string;
+    muxAssetId: {
+        original: string;
+        highlight: string;
+    };
 }
 
 export interface EMAQuestion {
