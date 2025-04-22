@@ -28,7 +28,7 @@ const TheSocialNetwork = () => {
 
     return (
         <div className="m-1">
-            <VideoPlayer videoName="theSocialNetwork" muxAssetId={{ original: "D9Xxap602VLGGoxMHUllGZJl02aeLmX8ruDWtmwv01A01RU", highlight: "aHdiI66wo5De1dHDoeMJYCabcHmE7rDsbiyhJmerjfc" }} />
+            <VideoPlayer videoName="theSocialNetwork" muxAssetId={{ original: "l9G5Me8Mwz5009FiNowaldgOd6Mr1n5YVtvch02r59sew", highlight: "TwIChxe902xtC3lCZ8lglSl00oE02suvBTdZXhlNx4HCtI" }} />
         </div>
     )
 }

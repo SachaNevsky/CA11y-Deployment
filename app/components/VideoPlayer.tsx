@@ -621,6 +621,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                 }
             } else {
                 if (document.exitFullscreen) {
+                    handlePlayPause("pause");
                     document.exitFullscreen();
                     handleLogging("Exited fullscreen mode.", lastAction);
                 }
