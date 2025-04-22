@@ -71,3 +71,57 @@ export interface MuxVideoConfig {
     streamType: StreamType;
     preload: PreloadType;
 }
+
+export interface VolumeControlsProps {
+    speakerControl: AudioControls;
+    musicControl: AudioControls;
+    otherControl: AudioControls;
+    onSpeakerVolumeChange: (val: number) => void;
+    onMusicVolumeChange: (val: number) => void;
+    onOtherVolumeChange: (val: number) => void;
+    onSpeakerMute: () => void;
+    onMusicMute: () => void;
+    onOtherMute: () => void;
+    onOpenHelp: (section: string) => void;
+}
+
+export interface VolumeSliderProps {
+    label: string;
+    control: AudioControls;
+    onChange: (val: number) => void;
+    onMute: () => void;
+    lastItem?: boolean;
+}
+
+export interface CaptionControlsProps {
+    captionMode: "none" | "default" | "simplified";
+    onCaptionsToggle: () => void;
+    onSimpleCaptions: () => void;
+    onOpenHelp: (section: string) => void;
+}
+
+export interface FullscreenControlsProps {
+    isUserActive: boolean;
+    currentTimestamp: number;
+    duration: number;
+    onSkipBackwards: () => void;
+    onPlayPause: (action: "play" | "pause") => void;
+    onSkipForwards: () => void;
+    onSeek: (value: number) => void;
+    onExitFullscreen: () => void;
+}
+
+export interface PlaybackSpeedControlsProps {
+    playbackRate: number;
+    isSpeedAutomated: boolean;
+    onSlowDown: () => void;
+    onSpeedUp: () => void;
+    onToggleAutomateSpeed: () => void;
+    onOpenHelp: (section: string) => void;
+}
+
+export interface SpotlightControlsProps {
+    highlight: boolean;
+    onHighlightToggle: () => void;
+    onOpenHelp: (section: string) => void;
+}

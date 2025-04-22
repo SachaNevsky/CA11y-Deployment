@@ -4,15 +4,17 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import MuxPlayer from "@mux/mux-player-react";
 import MuxPlayerElement from "@mux/mux-player";
-// import Video from "next-video";
-import { Slider } from "@heroui/slider";
 import EMACard from "./EMACard";
 import { AudioControls, VideoMetadata, VideoPlayerProps, VideoPlayerSettings, EMAQuestion, EMAState } from "../api/types";
 import { logAction } from "@/lib/logAction";
 import { EMA_QUESTIONS } from "../api/EMAQuestions";
 import IconButton from "./IconButton";
-import { HelpCircle } from "lucide-react";
 import HelpPopup from "./HelpPopup";
+import VolumeControls from "./VolumeControls";
+import CaptionControls from "./CaptionControls";
+import FullscreenControls from "./FullscreenControls";
+import PlaybackSpeedControls from "./PlaybackSpeedControls";
+import SpotlightControls from "./SpotlightControls";
 
 const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element => {
     const [metadata, setMetadata] = useState<VideoMetadata | null>(null);
@@ -24,8 +26,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     const activityTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     const basePath = `/${videoName}/${videoName}`;
-    // const videoSrc = `${basePath}.mp4`;
-    // const highlightSrc = `${basePath}_highlight.mp4`;
     const videoSrc = muxAssetId.original;
     const highlightSrc = muxAssetId.highlight;
     const speakerSrc = `${basePath}_speaker.mp3`;
@@ -45,24 +45,18 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     const [currentTimestamp, setCurrentTimestamp] = useState<number>(0.1);
     const [isFullScreen, setIsFullScreen] = useState<boolean>(false);
     const [highlight, setHighlight] = useState<boolean>(false);
-    // const [videoSource, setVideoSource] = useState<string>(videoSrc);
     const [showVideo, setShowVideo] = useState<boolean>(true);
     const [captionMode, setCaptionMode] = useState<"none" | "default" | "simplified">("none");
     const [speakerControl, setSpeakerControl] = useState<AudioControls>({ volume: 1, muted: false, prevVolume: 1 });
     const [musicControl, setMusicControl] = useState<AudioControls>({ volume: 1, muted: false, prevVolume: 1 });
     const [otherControl, setOtherControl] = useState<AudioControls>({ volume: 1, muted: false, prevVolume: 1 });
     const [currentMuxAssetId, setCurrentMuxAssetId] = useState<string>(muxAssetId.original); // mux
+    const [isMuxPlayerLoaded, setIsMuxPlayerLoaded] = useState<boolean>(false); // mux
 
     const [ema, setEma] = useState<EMAState>({ isOpen: false, currentQuestion: null, lastAction: "general" });
     const [userName, setUserName] = useState<string>("");
     const [lastAction, setLastAction] = useState<string>("general");
-
-    const [helpPopup, setHelpPopup] = useState<{ isOpen: boolean; title: string; content: string; section: string }>({
-        isOpen: false,
-        title: "",
-        content: "",
-        section: ""
-    });
+    const [helpPopup, setHelpPopup] = useState<{ isOpen: boolean; title: string; content: string; section: string }>({ isOpen: false, title: "", content: "", section: "" });
 
     const handleOpenHelp = (section: string) => {
         let title = "";
@@ -90,13 +84,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                 content = "Need assistance with the video player controls?";
         }
 
-        setHelpPopup({
-            isOpen: true,
-            title,
-            content,
-            section
-        });
-
+        setHelpPopup({ isOpen: true, title, content, section });
         handleLogging(`Opened help for ${section} controls.`);
     };
 
@@ -189,24 +177,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         setCaptionMode(mode);
     };
 
-    // useEffect(() => {
-    //     const fetchMetadata = async () => {
-    //         try {
-    //             const res = await fetch(`/${videoName}/${videoName}.json`);
-    //             if (!res.ok) throw new Error("Failed to load metadata");
-    //             const data: VideoMetadata = await res.json();
-    //             setMetadata(data);
-    //             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    //         } catch (err: any) {
-    //             setError(err.message);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-
-    //     fetchMetadata();
-    // }, [videoName]);
-
     useEffect(() => {
         const fetchMetadata = async () => {
             try {
@@ -243,11 +213,9 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
 
                 if (settings.highlight) {
                     setHighlight(true);
-                    // setVideoSource(highlightSrc);
                     setCurrentMuxAssetId(highlightSrc);
                 } else {
                     setHighlight(false);
-                    // setVideoSource(videoSrc);
                     setCurrentMuxAssetId(videoSrc);
                 }
 
@@ -303,29 +271,9 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         setTimeout(saveSettings, 0);
     };
 
-    // const handleHighlight = (): void => {
-    //     setShowVideo(false);
-    //     setTimeout(() => {
-    //         setHighlight(prev => {
-    //             const newValue = !prev;
-    //             if (newValue) {
-    //                 setVideoSource(highlightSrc);
-    //                 handleLogging("Highlight was turned on.", "highlight")
-    //             } else {
-    //                 setVideoSource(videoSrc);
-    //                 handleLogging("Highlight was turned off.", "highlight")
-    //             }
-
-    //             setTimeout(saveSettings, 0);
-
-    //             return newValue;
-    //         });
-    //         setShowVideo(true);
-    //     }, 0);
-    // };
-
     const handleHighlight = (): void => {
-        setShowVideo(false);
+        if (isMuxPlayerLoaded) setShowVideo(false);
+
         setTimeout(() => {
             setHighlight(prev => {
                 const newValue = !prev;
@@ -338,26 +286,28 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                 }
 
                 setTimeout(saveSettings, 0);
+                if (isMuxPlayerLoaded) setShowVideo(true);
+
                 return newValue;
             });
-            setShowVideo(true);
         }, 0);
     };
 
     useEffect(() => {
-        const video = videoRef.current;
+        // const video = videoRef.current;
+        const muxPlayer = muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
         const other = otherRef.current;
 
-        if (video && speaker && music && other) {
-            video.pause();
+        if (muxPlayer && speaker && music && other) {
+            muxPlayer.pause();
             speaker.pause();
             music.pause();
             other.pause();
 
-            video.currentTime = currentTimestamp;
-            video.playbackRate = playbackRate;
+            muxPlayer.currentTime = currentTimestamp;
+            muxPlayer.playbackRate = playbackRate;
             speaker.currentTime = currentTimestamp;
             music.currentTime = currentTimestamp;
             other.currentTime = currentTimestamp;
@@ -425,31 +375,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         }
     }, [playbackRate, saveSettings, metadata]);
 
-    // const handlePlayPause = (button: "play" | "pause"): void => {
-    //     const video = videoRef.current;
-    //     const speaker = speakerRef.current;
-    //     const music = musicRef.current;
-    //     const other = otherRef.current;
-
-    //     if (video && speaker && music && other) {
-    //         if (button === "play") {
-    //             video.play();
-    //             speaker.play();
-    //             music.play();
-    //             other.play();
-    //             setCurrentTimestamp(video.currentTime);
-    //             handleLogging("Video was put in play.")
-    //         } else {
-    //             video.pause();
-    //             speaker.pause();
-    //             music.pause();
-    //             other.pause();
-    //             setCurrentTimestamp(video.currentTime);
-    //             handleLogging("Video playback paused.")
-    //         }
-    //     }
-    // };
-
     const handlePlayPause = (button: "play" | "pause"): void => {
         const muxPlayer = muxPlayerRef.current;
         const speaker = speakerRef.current;
@@ -457,9 +382,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         const other = otherRef.current;
 
         if (muxPlayer && speaker && music && other) {
-            // const videoElement = muxPlayer.querySelector('video');
-            // if (!videoElement) { console.log(muxPlayer); return; };
-
             if (button === "play") {
                 muxPlayer.play();
                 speaker.play();
@@ -479,7 +401,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     };
 
     const handleSeek = (value: number) => {
-        // const video = videoRef.current;
         const muxPlayer = muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
@@ -561,7 +482,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     };
 
     const handleSkipForwards = (): void => {
-        // const video = videoRef.current;
         const muxPlayer = muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
@@ -584,7 +504,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     };
 
     const handleSkipBackwards = (): void => {
-        // const video = videoRef.current;
         const muxPlayer = muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
@@ -606,9 +525,51 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         }
     };
 
+    // const toggleFullscreen = (): void => {
+    //     if (videoContainerRef.current) {
+    //         if (!document.fullscreenElement) {
+    //             setIsMuxPlayerLoaded(true);
+    //             if (videoContainerRef.current.requestFullscreen) {
+    //                 videoContainerRef.current.requestFullscreen();
+    //                 handleLogging("Entered fullscreen mode.", lastAction);
+    //             } else if (videoContainerRef.current.webkitRequestFullscreen) {
+    //                 videoContainerRef.current.webkitRequestFullscreen();
+    //                 handleLogging("Entered fullscreen mode.", lastAction);
+    //             } else if (videoContainerRef.current.msRequestFullscreen) {
+    //                 videoContainerRef.current.msRequestFullscreen();
+    //                 handleLogging("Entered fullscreen mode.", lastAction);
+    //             }
+    //         } else {
+    //             if (document.exitFullscreen) {
+    //                 handlePlayPause("pause");
+    //                 document.exitFullscreen();
+    //                 handleLogging("Exited fullscreen mode.", lastAction);
+    //             }
+    //         }
+    //     }
+    // };
+
+    const videoStateRef = useRef<{ time: number, shouldPlay: boolean } | null>(null);
+
     const toggleFullscreen = (): void => {
         if (videoContainerRef.current) {
             if (!document.fullscreenElement) {
+                // Save current state before entering fullscreen
+                const currentTime = currentTimestamp;
+                const isPlaying = !!(speakerRef.current && !speakerRef.current.paused);
+
+                // Store these in ref values so they persist across renders
+                const fullscreenStateRef = {
+                    time: currentTime,
+                    shouldPlay: isPlaying
+                };
+
+                // Set a ref to store this state
+                videoStateRef.current = fullscreenStateRef;
+
+                setIsMuxPlayerLoaded(true);
+
+                // Enter fullscreen
                 if (videoContainerRef.current.requestFullscreen) {
                     videoContainerRef.current.requestFullscreen();
                     handleLogging("Entered fullscreen mode.", lastAction);
@@ -620,6 +581,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                     handleLogging("Entered fullscreen mode.", lastAction);
                 }
             } else {
+                // Exit fullscreen
                 if (document.exitFullscreen) {
                     handlePlayPause("pause");
                     document.exitFullscreen();
@@ -642,6 +604,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
             setIsFullScreen(isNowFullScreen);
 
             if (!isNowFullScreen && isFullScreen) {
+                setIsMuxPlayerLoaded(false);
                 const question = getEMAQuestion(lastAction);
                 setEma({
                     isOpen: true,
@@ -658,7 +621,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     }, [isFullScreen, lastAction]);
 
     useEffect(() => {
-        // const video = videoRef.current;
         const muxPlayer = muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
@@ -666,11 +628,11 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
 
         if (muxPlayer && speaker && music && other) {
             const checkTime = (): void => {
-                if (muxPlayer.currentTime !== currentTimestamp) {
-                    setCurrentTimestamp(muxPlayer.currentTime);
+                if (speaker.currentTime !== currentTimestamp) {
+                    setCurrentTimestamp(speaker.currentTime);
 
                     if (isSpeedAutomated) {
-                        updateAutomatedSpeed(muxPlayer.currentTime);
+                        updateAutomatedSpeed(speaker.currentTime);
                     }
                 }
             };
@@ -684,66 +646,32 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     }, [currentTimestamp, isSpeedAutomated, metadata, updateAutomatedSpeed]);
 
     useEffect(() => {
-        // const video = videoRef.current;
-        const muxPlayer = muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
         const other = otherRef.current;
 
-        if (muxPlayer && speaker && music && other) {
-            muxPlayer.playbackRate = playbackRate;
+        if (speaker && music && other) {
             speaker.playbackRate = playbackRate;
             music.playbackRate = playbackRate;
             other.playbackRate = playbackRate;
         }
     }, [playbackRate]);
 
-    // useEffect(() => {
-    //     const video = videoRef.current;
-    //     const speaker = speakerRef.current;
-    //     const music = musicRef.current;
-    //     const other = otherRef.current;
-
-    //     if (!video || !speaker || !music || !other) {
-    //         return;
-    //     }
-
-    //     speaker.muted = false;
-    //     music.muted = false;
-    //     other.muted = false;
-
-    //     const syncAudio = (): void => {
-    //         if (video.paused) {
-    //             speaker.pause();
-    //             music.pause();
-    //             other.pause();
-    //         } else {
-    //             speaker.play().catch((e) => console.error("Speaker play failed:", e));
-    //             music.play().catch((e) => console.error("Music play failed:", e));
-    //             other.play().catch((e) => console.error("Other play failed:", e));
-    //         }
-    //     };
-
-    //     video.addEventListener("play", syncAudio);
-    //     video.addEventListener("pause", syncAudio);
-
-    //     return () => {
-    //         video.removeEventListener("play", syncAudio);
-    //         video.removeEventListener("pause", syncAudio);
-    //     };
-    // }, []);
-
+    // I am not sure if this works now with the MuxPlayer only being rendered when in fullscreen mode
+    // This normally ensures that the video and audio are synced
+    // If the MuxPlayer is created when entering fullscreen mode, it resets the video
+    // And the sync does not work here since the video element does not exist until then
     useEffect(() => {
         const muxPlayer = muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
         const other = otherRef.current;
 
-        if (!muxPlayer || !speaker || !music || !other) {
+        if (!speaker || !music || !other) {
             return;
         }
 
-        const videoElement = muxPlayer.querySelector('video');
+        const videoElement = muxPlayer?.shadowRoot?.querySelector('video') || muxPlayer?.querySelector('video');
         if (!videoElement) return;
 
         const syncAudio = (): void => {
@@ -769,13 +697,11 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
 
     return (
         <div className="w-full mx-auto relative">
-
             <div className="absolute w-px h-px overflow-hidden -left-px -top-px">
                 <audio id="speaker" ref={speakerRef} src={speakerSrc} preload="auto" />
                 <audio id="music" ref={musicRef} src={musicSrc} preload="auto" />
                 <audio id="other" ref={otherRef} src={otherSrc} preload="auto" />
             </div>
-
             {error && <p className="text-red-500 text-center p-2">Error: {error}</p>}
             {loading ? (
                 <p className="text-center p-4">Loading video player...</p>
@@ -785,7 +711,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                 <>
                     {!isFullScreen && (
                         <div className="p-4 md:p-6">
-                            {currentMuxAssetId}
                             <div className="mb-4">
                                 <IconButton
                                     text="View Video"
@@ -795,267 +720,70 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                                     aria-label="Enter fullscreen video mode"
                                 />
                             </div>
-
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-                                <div className="bg-purple-100 px-6 py-4 rounded-xl">
-                                    <h3 className="font-bold text-base mb-4 flex justify-between items-center">
-                                        <span>Captions <span className="inline bg-purple-300 mx-2 px-2 py-1 rounded">{captionMode === "none" ? "Off" : captionMode === "default" ? "On" : "Simplified"}</span></span>
-                                        <button
-                                            onClick={() => handleOpenHelp("captions")}
-                                            className="p-1 ml-2 text-purple-600 hover:text-purple-800 transition-colors"
-                                            aria-label="Captions help"
-                                        >
-                                            <HelpCircle size={"1.5em"} />
-                                        </button>
-                                    </h3>
-                                    <div className="flex flex-row gap-3">
-                                        {captionMode === "none" ?
-                                            (<IconButton text="Turn ON captions" icon="captionsOn" color="purple" onClickFunction={handleCaptions} />)
-                                            : (<IconButton text="Turn OFF captions" icon="captionsOff" color="purple" onClickFunction={handleCaptions} />)
-                                        }
-                                        {captionMode !== "none" && (
-                                            captionMode === "default" ? (
-                                                <IconButton text="Make simple" icon="captionsEasier" color="purple" onClickFunction={handleSimpleCaptions} />
-                                            ) : (
-                                                <IconButton text="Return default" icon="captionsDefault" color="purple" onClickFunction={handleSimpleCaptions} />
-                                            )
-                                        )}
-                                    </div>
-                                </div>
-
-                                <div className="bg-warmAmber-100 px-6 py-4 rounded-xl">
-                                    <h3 className="font-bold text-base mb-4 flex justify-between items-center">
-                                        <span>Spotlight <span className="inline bg-warmAmber-300 mx-2 px-2 py-1 rounded">{highlight ? "On" : "Off"}</span></span>
-                                        <button
-                                            onClick={() => handleOpenHelp("spotlight")}
-                                            className="p-1 ml-2 text-warmAmber-600 hover:text-warmAmber-800 transition-colors"
-                                            aria-label="Spotlight help"
-                                        >
-                                            <HelpCircle size={"1.5em"} />
-                                        </button>
-                                    </h3>
-                                    {highlight ?
-                                        (<IconButton text="Turn OFF spotlight" icon="spotlightOff" color="amber" onClickFunction={handleHighlight} />)
-                                        : (<IconButton text="Turn ON spotlight" icon="spotlight" color="amber" onClickFunction={handleHighlight} />)
-                                    }
-                                </div>
-
-                                <div className="bg-warmGreen-100 px-6 py-4 rounded-xl">
-                                    <h3 className="font-bold text-base mb-4 flex justify-between items-center">
-                                        <span>Playback Speed <span className="inline bg-warmGreen-300 mx-2 px-2 py-1 rounded">{isSpeedAutomated ? "Auto" : `${Math.floor(playbackRate * 100)}%`}</span></span>
-                                        <button
-                                            onClick={() => handleOpenHelp("speed")}
-                                            className="p-1 ml-2 text-warmGreen-600 hover:text-warmGreen-800 transition-colors"
-                                            aria-label="Playback speed help"
-                                        >
-                                            <HelpCircle size={"1.5em"} />
-                                        </button>
-                                    </h3>
-                                    <div className="grid grid-cols-2 gap-3 mb-3">
-                                        {isSpeedAutomated ?
-                                            (<IconButton text="Slow Down" icon="slowDown" color="green" disabled />)
-                                            : (<IconButton text="Slow Down" icon="slowDown" color="green" onClickFunction={handleSlowDown} />)
-                                        }
-                                        {isSpeedAutomated ?
-                                            (<IconButton text="Speed Up" icon="speedUp" color="green" disabled />)
-                                            : (<IconButton text="Speed Up" icon="speedUp" color="green" onClickFunction={handleSpeedUp} />)
-                                        }
-                                    </div>
-                                    {isSpeedAutomated ?
-                                        (<IconButton text="Automated Speed" icon="check" color="green" onClickFunction={handleToggleAutomateSpeed} />)
-                                        : (<IconButton text="Automated Speed" icon="cross" color="green" onClickFunction={handleToggleAutomateSpeed} />)
-                                    }
-                                </div>
-
-                                <div className="bg-blue-100 px-6 py-4 rounded-xl">
-                                    <h3 className="font-bold text-base mb-4 flex justify-between items-center">
-                                        <span>Volume Controls</span>
-                                        <button
-                                            onClick={() => handleOpenHelp("volume")}
-                                            className="p-1 ml-2 text-blue-600 hover:text-blue-800 transition-colors"
-                                            aria-label="Volume controls help"
-                                        >
-                                            <HelpCircle size={"1.5em"} />
-                                        </button>
-                                    </h3>
-                                    <div className="mb-2">
-                                        <label className="font-semibold block mb-1">Speaker <span className="inline bg-blue-300 mx-2 px-2 py-1 rounded">{speakerControl.muted ? "Muted" : `${Math.floor(speakerControl.volume * 100)}%`}</span></label>
-                                        <div className="flex items-center py-2">
-                                            <div className="flex-grow">
-                                                <Slider
-                                                    aria-label="SpeakerVolumeSlider"
-                                                    name="speakerSlider"
-                                                    size="lg"
-                                                    classNames={{ track: "custom-slider-track" }}
-                                                    color={speakerControl.muted ? "secondary" : "primary"}
-                                                    defaultValue={speakerControl.volume}
-                                                    minValue={0}
-                                                    maxValue={1}
-                                                    step={0.05}
-                                                    value={speakerControl.volume}
-                                                    onChange={(val) => handleSpeakerVolume(val as number)}
-                                                />
-                                            </div>
-                                            <button
-                                                className="ml-2 p-1 border rounded-md"
-                                                onClick={() => { handleSpeakerMute() }}
-                                            >
-                                                {speakerControl.muted ? ("🔇") : ("🔊")}
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div className="mb-2">
-                                        <label className="font-semibold block mb-1">Music <span className="inline bg-blue-300 mx-2 px-2 py-1 rounded">{musicControl.muted ? "Muted" : `${Math.floor(musicControl.volume * 100)}%`}</span></label>
-                                        <div className="flex items-center py-2">
-                                            <div className="flex-grow">
-                                                <Slider
-                                                    aria-label="MusicVolumeSlider"
-                                                    name="musicSlider"
-                                                    size="lg"
-                                                    classNames={{ track: "custom-slider-track" }}
-                                                    color={musicControl.muted ? "secondary" : "primary"}
-                                                    defaultValue={musicControl.volume}
-                                                    minValue={0}
-                                                    maxValue={1}
-                                                    step={0.05}
-                                                    value={musicControl.volume}
-                                                    onChange={(val) => handleMusicVolume(val as number)}
-                                                />
-                                            </div>
-                                            <button
-                                                className="ml-2 p-1 border rounded-md"
-                                                onClick={() => { handleMusicMute() }}
-                                            >
-                                                {musicControl.muted ? ("🔇") : ("🔊")}
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label className="font-semibold block mb-1">Background <span className="inline bg-blue-300 mx-2 px-2 py-1 rounded">{otherControl.muted ? "Muted" : `${Math.floor(otherControl.volume * 100)}%`}</span></label>
-                                        <div className="flex items-center pt-2">
-                                            <div className="flex-grow">
-                                                <Slider
-                                                    aria-label="OtherVolumeSlider"
-                                                    name="otherSlider"
-                                                    size="lg"
-                                                    classNames={{ track: "custom-slider-track" }}
-                                                    color={otherControl.muted ? "secondary" : "primary"}
-                                                    defaultValue={otherControl.volume}
-                                                    minValue={0}
-                                                    maxValue={1}
-                                                    step={0.05}
-                                                    value={otherControl.volume}
-                                                    onChange={(val) => handleOtherVolume(val as number)}
-                                                />
-                                            </div>
-                                            <button
-                                                className="ml-2 p-1 border rounded-md"
-                                                onClick={() => { handleOtherMute() }}
-                                            >
-                                                {otherControl.muted ? ("🔇") : ("🔊")}
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                <CaptionControls
+                                    captionMode={captionMode}
+                                    onCaptionsToggle={handleCaptions}
+                                    onSimpleCaptions={handleSimpleCaptions}
+                                    onOpenHelp={() => { handleOpenHelp("captions") }}
+                                />
+                                <SpotlightControls highlight={highlight} onHighlightToggle={handleHighlight} onOpenHelp={handleOpenHelp} />
+                                <PlaybackSpeedControls
+                                    playbackRate={playbackRate}
+                                    isSpeedAutomated={isSpeedAutomated}
+                                    onSlowDown={handleSlowDown}
+                                    onSpeedUp={handleSpeedUp}
+                                    onToggleAutomateSpeed={handleToggleAutomateSpeed}
+                                    onOpenHelp={handleOpenHelp}
+                                />
+                                <VolumeControls
+                                    speakerControl={speakerControl}
+                                    musicControl={musicControl}
+                                    otherControl={otherControl}
+                                    onSpeakerVolumeChange={handleSpeakerVolume}
+                                    onMusicVolumeChange={handleMusicVolume}
+                                    onOtherVolumeChange={handleOtherVolume}
+                                    onSpeakerMute={handleSpeakerMute}
+                                    onMusicMute={handleMusicMute}
+                                    onOtherMute={handleOtherMute}
+                                    onOpenHelp={() => handleOpenHelp("volume")}
+                                />
                             </div>
                         </div>
                     )}
-
                     <div ref={videoContainerRef} className={`bg-black ${isFullScreen ? 'fixed inset-0 z-50 w-screen h-screen' : 'hidden'}`}>
-                        {showVideo && isFullScreen && (
-                            // <Video id="video" ref={videoRef} controls={false} muted className="w-full h-full object-contain">
-                            //     <source id="videoSource" src={videoSource} type="video/mp4" />
-                            //     <track label="Default English" kind="subtitles" srcLang="en" src={defaultCaptionsSrc} default={captionMode === 'default'} />
-                            //     <track label="Simplified English" kind="subtitles" srcLang="en" src={simplifiedCaptionsSrc} default={captionMode === 'simplified'} />
-                            //     Your browser does not support the video tag.
-                            // </Video>
-                            <MuxPlayer
-                                ref={muxPlayerRef}
-                                playbackId={currentMuxAssetId}
-                                streamType="on-demand"
-                                // controls={false}
-                                muted={true}
-                                autoPlay={false}
-                                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                                onTimeUpdate={(e) => {
-                                    const target = e.target as HTMLVideoElement;
-                                    setCurrentTimestamp(target.currentTime);
-                                    if (isSpeedAutomated) {
-                                        updateAutomatedSpeed(target.currentTime);
-                                    }
-                                }}
-                                onRateChange={(e) => {
-                                    const target = e.target as HTMLVideoElement;
-                                    const speaker = speakerRef.current;
-                                    const music = musicRef.current;
-                                    const other = otherRef.current;
-
-                                    if (speaker && music && other) {
-                                        speaker.playbackRate = target.playbackRate;
-                                        music.playbackRate = target.playbackRate;
-                                        other.playbackRate = target.playbackRate;
-                                    }
-                                }}
-                            >
-                                <track
-                                    label="Default English"
-                                    kind="subtitles"
-                                    srcLang="en"
-                                    src={defaultCaptionsSrc}
-                                    default={captionMode === 'default'}
-                                />
-                                <track
-                                    label="Simplified English"
-                                    kind="subtitles"
-                                    srcLang="en"
-                                    src={simplifiedCaptionsSrc}
-                                    default={captionMode === 'simplified'}
-                                />
-                            </MuxPlayer>
+                        {showVideo && isFullScreen && isMuxPlayerLoaded && (
+                            <>
+                                <MuxPlayer
+                                    ref={muxPlayerRef}
+                                    playbackId={currentMuxAssetId}
+                                    streamType="on-demand"
+                                    muted={true}
+                                    autoPlay={false}
+                                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                    playbackRate={playbackRate}
+                                    startTime={currentTimestamp}
+                                >
+                                    <track
+                                        label={`English ${captionMode}`}
+                                        kind="subtitles"
+                                        srcLang="en"
+                                        src={captionMode === "default" ? defaultCaptionsSrc : simplifiedCaptionsSrc}
+                                    />
+                                </MuxPlayer>
+                            </>
                         )}
                         {isFullScreen && (
-                            <>
-                                <div className="absolute top-4 right-4 z-10" style={{ pointerEvents: "none", opacity: isUserActive ? 1 : 0, transition: "opacity 200ms ease-in-out" }}>
-                                    <IconButton
-                                        text="Exit Fullscreen"
-                                        icon="exitFullscreen"
-                                        onClickFunction={toggleFullscreen}
-                                        style={{ pointerEvents: "auto" }}
-                                        className="bg-black/50 text-white hover:bg-black/75 p-2 rounded"
-                                    />
-                                </div>
-                                <div className="absolute bottom-4 left-4 right-4 z-10" style={{ opacity: isUserActive ? 1 : 0, transition: "opacity 200ms ease-in-out" }}>
-                                    <div className="bg-black/60 rounded-lg p-3 md:p-4">
-                                        <div className="flex items-center gap-2 md:gap-4 mb-3">
-                                            <IconButton text="10s" icon="rewind" onClickFunction={handleSkipBackwards} className="text-white" aria-label="Skip backward 10 seconds" />
-                                            <IconButton text="Play" icon="play" onClickFunction={() => handlePlayPause("play")} className="text-white" aria-label="Play video" />
-                                            <IconButton text="Pause" icon="pause" onClickFunction={() => handlePlayPause("pause")} className="text-white" aria-label="Pause video" />
-                                            <IconButton text="10s" icon="forwards" onClickFunction={handleSkipForwards} className="text-white" aria-label="Skip forward 10 seconds" />
-                                        </div>
-                                        <div>
-                                            <div className="flex-grow mx-2">
-                                                <Slider
-                                                    aria-label="SeekbarSlider"
-                                                    name="seekSlider"
-                                                    color="primary"
-                                                    size="lg"
-                                                    classNames={{ track: "custom-slider-track-fullscreen" }}
-                                                    defaultValue={currentTimestamp}
-                                                    minValue={0}
-                                                    maxValue={metadata!.duration}
-                                                    step={1}
-                                                    value={currentTimestamp}
-                                                    onChange={(val) => handleSeek(val as number)}
-                                                />
-                                            </div>
-                                            <p className="text-white text-sm font-mono w-24 text-center">{formatTime(currentTimestamp)} / {formatTime(metadata!.duration)}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </>
+                            <FullscreenControls
+                                isUserActive={isUserActive}
+                                currentTimestamp={currentTimestamp}
+                                duration={metadata!.duration}
+                                onSkipBackwards={handleSkipBackwards}
+                                onSkipForwards={handleSkipForwards}
+                                onPlayPause={handlePlayPause}
+                                onSeek={handleSeek}
+                                onExitFullscreen={toggleFullscreen}
+                            />
                         )}
                     </div>
                     {ema.currentQuestion && (
