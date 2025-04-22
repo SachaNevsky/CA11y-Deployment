@@ -6,6 +6,9 @@ export interface AudioControls {
 }
 
 export interface VideoMetadata {
+    muxPlaybackId: string;
+    muxHighlightPlaybackId: string;
+    thumbnailUrl?: string;
     duration: number;
     subtitles?: {
         start_time: number;
@@ -55,4 +58,12 @@ export interface EMADocument {
     user: string;
     responses: EMAResponse[];
     createdAt: Date;
+}
+
+type StreamType = 'on-demand' | 'live' | 'dvr';
+type PreloadType = 'auto' | 'metadata' | 'none';
+export interface MuxVideoConfig {
+    playbackId: string;
+    streamType: StreamType;
+    preload: PreloadType;
 }

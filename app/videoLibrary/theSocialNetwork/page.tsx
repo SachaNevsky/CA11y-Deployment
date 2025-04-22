@@ -6,6 +6,7 @@ import { logAction } from "@/lib/logAction";
 import { useEffect } from "react";
 
 const TheSocialNetwork = () => {
+
     useEffect(() => {
         if (typeof window !== "undefined") {
             try {
@@ -26,7 +27,9 @@ const TheSocialNetwork = () => {
     }, []);
 
     return (
-        <VideoPlayer videoName="theSocialNetwork" />
+        <div className="m-1">
+            <VideoPlayer videoName="theSocialNetwork" />
+        </div>
     )
 }
 

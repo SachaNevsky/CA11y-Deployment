@@ -3,7 +3,7 @@ import "@/styles/globals.css";
 import Header from "./components/Header";
 
 export const metadata: Metadata = {
-	title: "CA11y Deplyment",
+	title: "CA11y Deployment",
 	description: "An app used for the deployment of video interventions as part of the CA11y project.",
 };
 

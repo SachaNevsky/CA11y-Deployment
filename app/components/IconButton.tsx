@@ -1,5 +1,6 @@
 import React, { CSSProperties } from 'react';
 import { Play, Pause, LucideIcon, Rewind, FastForward, Captions, CaptionsOff, SmilePlus, Undo2, Lightbulb, LightbulbOff, Snail, Rabbit, CircleX, CircleCheck, Expand, Shrink, HelpCircle } from 'lucide-react';
+import parse from "html-react-parser";
 
 const iconMap: Record<string, LucideIcon> = {
     "play": Play,
@@ -64,7 +65,7 @@ const IconButton: React.FC<IconButtonProps> = ({
             style={style}
         >
             <span className="flex items-center justify-center w-full text-black">
-                <span>{text}</span>
+                <span>{parse(text)}</span>
                 <IconComponent strokeWidth={2.75} className="ml-2 h-[1.3em] w-[1.3em]" />
             </span>
         </button>

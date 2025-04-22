@@ -12,10 +12,12 @@ import IconButton from "./IconButton";
 import { HelpCircle } from "lucide-react";
 import HelpPopup from "./HelpPopup";
 
-const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
+const VideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     const [metadata, setMetadata] = useState<VideoMetadata | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [isLeftHanded, setIsLeftHanded] = useState<boolean>(false);
+    const [isMobile, setIsMobile] = useState<boolean>(false);
     const [isSpeedAutomated, setIsSpeedAutomated] = useState<boolean>(false);
     const [manualPlaybackRate, setManualPlaybackRate] = useState<number>(1);
     const [isUserActive, setIsUserActive] = useState<boolean>(true);
@@ -184,6 +186,27 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     };
 
     useEffect(() => {
+        if (typeof window !== "undefined") {
+            const aphasiaCharacteristics = localStorage.getItem("ca11yAphasiaCharacteristics");
+
+            if (aphasiaCharacteristics) {
+                const handedness = JSON.parse(aphasiaCharacteristics).handedness || "rightHanded";
+                setIsLeftHanded(handedness === "leftHanded");
+            } else {
+                console.error("No ca11yAphasiaCharacteristics stored.")
+            }
+
+            const checkIsMobile = () => {
+                setIsMobile(window.innerWidth < 768);
+            };
+
+            checkIsMobile();
+            window.addEventListener("resize", checkIsMobile);
+            return () => window.removeEventListener("resize", checkIsMobile);
+        }
+    }, []);
+
+    useEffect(() => {
         const fetchMetadata = async () => {
             try {
                 const res = await fetch(`/${videoName}/${videoName}.json`);
@@ -228,7 +251,23 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                 setTimeout(() => {
                     updateCaptionsMode(settings.captionMode);
                 }, 100);
+            } else {
+                const aphasiaCharacteristics = localStorage.getItem("ca11yAphasiaCharacteristics");
+                if (aphasiaCharacteristics) {
+                    const handedness = JSON.parse(aphasiaCharacteristics).handedness || "rightHanded";
+                    setIsLeftHanded(handedness === "leftHanded");
+                } else {
+                    console.error("No ca11yAphasiaCharacteristics stored.")
+                }
             }
+
+            const checkIsMobile = () => {
+                setIsMobile(window.innerWidth < 768);
+            };
+
+            checkIsMobile();
+            window.addEventListener("resize", checkIsMobile);
+            return () => window.removeEventListener("resize", checkIsMobile);
         }
     }, [videoSrc, highlightSrc]);
 
@@ -654,35 +693,97 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     }, []);
 
     return (
-        <div className="w-full mx-auto relative">
-
-            <div className="absolute w-px h-px overflow-hidden -left-px -top-px">
-                <audio id="speaker" ref={speakerRef} src={speakerSrc} preload="auto" />
-                <audio id="music" ref={musicRef} src={musicSrc} preload="auto" />
-                <audio id="other" ref={otherRef} src={otherSrc} preload="auto" />
-            </div>
-
+        <div className="w-full mx-auto">
             {error && <p className="text-red-500 text-center p-2">Error: {error}</p>}
             {loading ? (
-                <p className="text-center p-4">Loading video player...</p>
-            ) : !metadata ? (
-                <p className="text-center p-4">Video metadata not available.</p>
+                <p className="text-center p-2">Loading metadata...</p>
             ) : (
                 <>
-                    {!isFullScreen && (
-                        <div className="p-4 md:p-6">
+                    <div className={`w-full flex ${isMobile ? "flex-col" : ""} ${isLeftHanded && !isMobile ? "flex-row-reverse" : ""}`}>
+                        <div className={`${!isMobile ? (isLeftHanded ? "px-6 py-4" : "px-6 py-4") : ""} ${!isMobile ? "w-1/2" : "w-full"}`} ref={videoContainerRef}>
+                            {showVideo && (
+                                <div className="w-full">
+                                    <Video id="video" ref={videoRef} controls={false} muted>
+                                        <source id="videoSource" src={videoSource} type="video/mp4" />
+                                        <track label="Default English" kind="subtitles" srcLang="en" src={defaultCaptionsSrc} />
+                                        <track label="Simplified English" kind="subtitles" srcLang="en" src={simplifiedCaptionsSrc} />
+                                    </Video>
+                                </div>
+                            )}
+                            <audio id="speaker" ref={speakerRef} src={speakerSrc} />
+                            <audio id="music" ref={musicRef} src={musicSrc} />
+                            <audio id="other" ref={otherRef} src={otherSrc} />
+                            {!isFullScreen && (
+                                <>
+                                    <div className="w-full mx-auto mt-2">
+                                        <Slider
+                                            aria-label="SeekbarSlider"
+                                            name="seekSlider"
+                                            color="primary"
+                                            size="lg"
+                                            classNames={{ track: "custom-slider-track" }}
+                                            defaultValue={currentTimestamp}
+                                            minValue={0}
+                                            maxValue={metadata!.duration}
+                                            step={1}
+                                            value={currentTimestamp}
+                                            onChange={(val) => handleSeek(val as number)}
+                                        />
+                                        <p className="text-center mt-1">{formatTime(currentTimestamp)} / {formatTime(metadata!.duration)}</p>
+                                    </div>
+                                    <div className="mt-2 text-center">
+                                        <IconButton text="Enter Fullscreen" icon="fullscreen" onClickFunction={toggleFullscreen} />
+                                    </div>
+                                </>
+                            )}
 
-                            <div className="mb-4">
-                                <IconButton
-                                    text="View Video"
-                                    icon="fullscreen"
-                                    onClickFunction={toggleFullscreen}
-                                    className="w-full justify-center text-lg py-3"
-                                    aria-label="Enter fullscreen video mode"
-                                />
-                            </div>
+                            {isFullScreen && (
+                                <>
+                                    <div className="absolute top-4 right-4 z-10" style={{ pointerEvents: "none", opacity: isUserActive ? 1 : 0, transition: "opacity 200ms ease-in-out" }}>
+                                        <IconButton text="Exit Fullscreen" icon="exitFullscreen" onClickFunction={toggleFullscreen} style={{ pointerEvents: "auto" }} />
+                                    </div>
+                                    <div className="absolute bottom-4 left-4 right-4 z-10" style={{ opacity: isUserActive ? 1 : 0, transition: "opacity 200ms ease-in-out" }}>
+                                        <div className="bg-black/50 rounded-lg p-4">
+                                            <div className="grid grid-cols-4 gap-1 mb-2 text-white ">
+                                                <IconButton text="10s" icon="rewind" onClickFunction={handleSkipBackwards} />
+                                                <IconButton text="Play" icon="play" onClickFunction={() => handlePlayPause("play")} />
+                                                <IconButton text="Pause" icon="pause" onClickFunction={() => handlePlayPause("pause")} />
+                                                <IconButton text="10s" icon="forwards" onClickFunction={handleSkipForwards} />
+                                            </div>
+                                            <div className="w-full">
+                                                <Slider
+                                                    aria-label="SeekbarSlider"
+                                                    name="seekSlider"
+                                                    color="primary"
+                                                    size="lg"
+                                                    classNames={{ track: "custom-slider-track-fullscreen" }}
+                                                    defaultValue={currentTimestamp}
+                                                    minValue={0}
+                                                    maxValue={metadata!.duration}
+                                                    step={1}
+                                                    value={currentTimestamp}
+                                                    onChange={(val) => handleSeek(val as number)}
+                                                />
+                                                <p className="text-center mt-1 text-white">{formatTime(currentTimestamp)} / {formatTime(metadata!.duration)}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+                        </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className={`pt-4 ${!isMobile ? "w-1/2 px-6" : "w-full mt-2"}`}>
+                            <div className="flex flex-col space-y-4">
+                                {/* To remove */}
+                                {/* <div className="bg-blue-100 p-6 rounded-md">
+                                    <h3 className="font-bold text-base mb-2">Playback</h3>
+                                    <div className="grid grid-cols-4 gap-3">
+                                        <IconButton text="10s" icon="rewind" onClickFunction={handleSkipBackwards} />
+                                        <IconButton text="Play" icon="play" onClickFunction={() => handlePlayPause("play")} />
+                                        <IconButton text="Pause" icon="pause" onClickFunction={() => handlePlayPause("pause")} />
+                                        <IconButton text="10s" icon="forwards" onClickFunction={handleSkipForwards} />
+                                    </div>
+                                </div> */}
 
                                 <div className="bg-purple-100 px-6 py-4 rounded-xl">
                                     <h3 className="font-bold text-base mb-4 flex justify-between items-center">
@@ -696,10 +797,11 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                         </button>
                                     </h3>
                                     <div className="flex flex-row gap-3">
-                                        {captionMode === "none" ?
-                                            (<IconButton text="Turn ON captions" icon="captionsOn" color="purple" onClickFunction={handleCaptions} />)
-                                            : (<IconButton text="Turn OFF captions" icon="captionsOff" color="purple" onClickFunction={handleCaptions} />)
-                                        }
+                                        {captionMode === "none" ? (
+                                            <IconButton text="Turn ON captions" icon="captionsOn" color="purple" onClickFunction={handleCaptions} />
+                                        ) : (
+                                            <IconButton text="Turn OFF captions" icon="captionsOff" color="purple" onClickFunction={handleCaptions} />
+                                        )}
                                         {captionMode !== "none" && (
                                             captionMode === "default" ? (
                                                 <IconButton text="Make simple" icon="captionsEasier" color="purple" onClickFunction={handleSimpleCaptions} />
@@ -721,10 +823,11 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                             <HelpCircle size={"1.5em"} />
                                         </button>
                                     </h3>
-                                    {highlight ?
-                                        (<IconButton text="Turn OFF spotlight" icon="spotlightOff" color="amber" onClickFunction={handleHighlight} />)
-                                        : (<IconButton text="Turn ON spotlight" icon="spotlight" color="amber" onClickFunction={handleHighlight} />)
-                                    }
+                                    {highlight ? (
+                                        <IconButton text="Turn OFF spotlight" icon="spotlightOff" color="amber" onClickFunction={handleHighlight} />
+                                    ) : (
+                                        <IconButton text="Turn ON spotlight" icon="spotlight" color="amber" onClickFunction={handleHighlight} />
+                                    )}
                                 </div>
 
                                 <div className="bg-warmGreen-100 px-6 py-4 rounded-xl">
@@ -739,19 +842,22 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                         </button>
                                     </h3>
                                     <div className="grid grid-cols-2 gap-3 mb-3">
-                                        {isSpeedAutomated ?
-                                            (<IconButton text="Slow Down" icon="slowDown" color="green" disabled />)
-                                            : (<IconButton text="Slow Down" icon="slowDown" color="green" onClickFunction={handleSlowDown} />)
-                                        }
-                                        {isSpeedAutomated ?
-                                            (<IconButton text="Speed Up" icon="speedUp" color="green" disabled />)
-                                            : (<IconButton text="Speed Up" icon="speedUp" color="green" onClickFunction={handleSpeedUp} />)
-                                        }
+                                        {isSpeedAutomated ? (
+                                            <IconButton text="Slow Down" icon="slowDown" color="green" disabled />
+                                        ) : (
+                                            <IconButton text="Slow Down" icon="slowDown" color="green" onClickFunction={handleSlowDown} />
+                                        )}
+                                        {isSpeedAutomated ? (
+                                            <IconButton text="Speed Up" icon="speedUp" color="green" disabled />
+                                        ) : (
+                                            <IconButton text="Speed Up" icon="speedUp" color="green" onClickFunction={handleSpeedUp} />
+                                        )}
                                     </div>
-                                    {isSpeedAutomated ?
-                                        (<IconButton text="Automated Speed" icon="check" color="green" onClickFunction={handleToggleAutomateSpeed} />)
-                                        : (<IconButton text="Automated Speed" icon="cross" color="green" onClickFunction={handleToggleAutomateSpeed} />)
-                                    }
+                                    {isSpeedAutomated ? (
+                                        <IconButton text="Automated Speed" icon="check" color="green" onClickFunction={handleToggleAutomateSpeed} />
+                                    ) : (
+                                        <IconButton text="Automated Speed" icon="cross" color="green" onClickFunction={handleToggleAutomateSpeed} />
+                                    )}
                                 </div>
 
                                 <div className="bg-blue-100 px-6 py-4 rounded-xl">
@@ -848,58 +954,6 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
                                 </div>
                             </div>
                         </div>
-                    )}
-
-                    <div ref={videoContainerRef} className={`bg-black ${isFullScreen ? 'fixed inset-0 z-50 w-screen h-screen' : 'hidden'}`}>
-                        {showVideo && isFullScreen && (
-                            <Video id="video" ref={videoRef} controls={false} muted className="w-full h-full object-contain">
-                                <source id="videoSource" src={videoSource} type="video/mp4" />
-                                <track label="Default English" kind="subtitles" srcLang="en" src={defaultCaptionsSrc} default={captionMode === 'default'} />
-                                <track label="Simplified English" kind="subtitles" srcLang="en" src={simplifiedCaptionsSrc} default={captionMode === 'simplified'} />
-                                Your browser does not support the video tag.
-                            </Video>
-                        )}
-                        {isFullScreen && (
-                            <>
-                                <div className="absolute top-4 right-4 z-10" style={{ pointerEvents: "none", opacity: isUserActive ? 1 : 0, transition: "opacity 200ms ease-in-out" }}>
-                                    <IconButton
-                                        text="Exit Fullscreen"
-                                        icon="exitFullscreen"
-                                        onClickFunction={toggleFullscreen}
-                                        style={{ pointerEvents: "auto" }}
-                                        className="bg-black/50 text-white hover:bg-black/75 p-2 rounded"
-                                    />
-                                </div>
-                                <div className="absolute bottom-4 left-4 right-4 z-10" style={{ opacity: isUserActive ? 1 : 0, transition: "opacity 200ms ease-in-out" }}>
-                                    <div className="bg-black/60 rounded-lg p-3 md:p-4">
-                                        <div className="flex items-center gap-2 md:gap-4 mb-3">
-                                            <IconButton text="10s" icon="rewind" onClickFunction={handleSkipBackwards} className="text-white" aria-label="Skip backward 10 seconds" />
-                                            <IconButton text="Play" icon="play" onClickFunction={() => handlePlayPause("play")} className="text-white" aria-label="Play video" />
-                                            <IconButton text="Pause" icon="pause" onClickFunction={() => handlePlayPause("pause")} className="text-white" aria-label="Pause video" />
-                                            <IconButton text="10s" icon="forwards" onClickFunction={handleSkipForwards} className="text-white" aria-label="Skip forward 10 seconds" />
-                                        </div>
-                                        <div>
-                                            <div className="flex-grow mx-2">
-                                                <Slider
-                                                    aria-label="SeekbarSlider"
-                                                    name="seekSlider"
-                                                    color="primary"
-                                                    size="lg"
-                                                    classNames={{ track: "custom-slider-track-fullscreen" }}
-                                                    defaultValue={currentTimestamp}
-                                                    minValue={0}
-                                                    maxValue={metadata!.duration}
-                                                    step={1}
-                                                    value={currentTimestamp}
-                                                    onChange={(val) => handleSeek(val as number)}
-                                                />
-                                            </div>
-                                            <p className="text-white text-sm font-mono w-24 text-center">{formatTime(currentTimestamp)} / {formatTime(metadata!.duration)}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </>
-                        )}
                     </div>
                     {ema.currentQuestion && (
                         <EMACard
@@ -921,4 +975,4 @@ const AltVideoPlayer = ({ videoName }: VideoPlayerProps): JSX.Element => {
     );
 };
 
-export default AltVideoPlayer;
+export default VideoPlayer;

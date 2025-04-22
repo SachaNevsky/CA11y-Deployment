@@ -31,11 +31,11 @@ const VideoLibrary = () => {
     }, [aphasiaCharacteristics]);
 
     const handleVideoClick = (video: string): void => {
-        const name = localStorage.getItem("ca11yDeploymentName")
+        const name = localStorage.getItem("ca11yDeploymentName");
 
         if (name) logAction(name, `Selected the video ${video}`);
 
-        window.open(`/videoLibrary/${video}`, "_self")
+        window.open(`/videoLibrary/${video}`, "_self");
     }
 
     const handleDeleteCharacteristics = () => {
