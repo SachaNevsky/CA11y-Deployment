@@ -103,7 +103,6 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 						<p className="text-lg font-semibold mb-2">
 							What hand do you prefer using?
 						</p>
-						{/* Mobile View - Added flex-row to force buttons to stay side by side */}
 						<div className="md:hidden flex flex-row space-x-2">
 							<button
 								className={`py-4 px-6 rounded-md border-2 flex-1 ${aphasiaCharacteristics.handedness === "leftHanded" ? "border-blue-500 bg-blue-100" : "border-gray-300"}`}
@@ -124,7 +123,6 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 								Right-Handed
 							</button>
 						</div>
-						{/* Desktop View - Original buttons */}
 						<div className="hidden md:block">
 							<button
 								className={`mx-2 py-4 px-8 rounded-md border-2 ${aphasiaCharacteristics.handedness === "leftHanded" ? "border-blue-500 bg-blue-100" : "border-gray-300"}`}
@@ -144,18 +142,16 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 						<p className="text-lg font-semibold mb-2">
 							How do you find your language abilities?
 						</p>
-						{/* Mobile View */}
 						<div className="md:hidden mb-4">
 							<div className="w-full text-center font-medium text-lg">
 								👎&nbsp;Bad → Good&nbsp;👍
 							</div>
 						</div>
-						{/* Desktop View */}
 						<div className="hidden md:grid grid-cols-2 gap-y-2 mb-4 items-center">
 							<div></div>
 							<div className="w-fit">
 								<div className="w-full text-center font-medium text-lg">
-									👎&nbsp; Bad &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Good&nbsp;👍
+									👎&nbsp; Bad &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; Good&nbsp;👍
 								</div>
 								<div className="flex justify-start space-x-4 w-fit invisible h-0">
 									{[1, 2, 3, 4, 5].map((value) => (
@@ -165,21 +161,19 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 											id={`header-${value}`}
 											name="header-rating"
 											value={value}
-											className="w-6 h-6 cursor-pointer"
+											className="w-8 h-8 cursor-pointer"
 										/>
 									))}
 								</div>
 							</div>
 						</div>
-
-						{/* Mobile View - Radio buttons */}
 						<div className="md:hidden">
 							{["Listening", "Speaking", "Reading", "Writing"].map((ability) => (
 								<div key={ability} className="mb-8">
 									<label className="block text-lg mb-4 text-center">
 										{ability}:
 									</label>
-									<div className="flex justify-center space-x-6 w-full">
+									<div className="flex justify-center space-x-2 w-full">
 										{[1, 2, 3, 4, 5].map((value) => (
 											<div key={`${ability}-${value}`} className="flex flex-col items-center">
 												<input
@@ -189,7 +183,7 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 													value={value}
 													checked={aphasiaCharacteristics[ability.toLowerCase() as keyof typeof aphasiaCharacteristics] === value}
 													onChange={() => handleAbilityChange(ability, value)}
-													className="w-8 h-8 cursor-pointer"
+													className="w-12 h-12 cursor-pointer"
 												/>
 												<label htmlFor={`${ability.toLowerCase()}-mobile-${value}`} className="text-sm font-medium mt-2">{value}</label>
 											</div>
@@ -198,8 +192,6 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 								</div>
 							))}
 						</div>
-
-						{/* Desktop View - Original radio buttons */}
 						<div className="hidden md:block">
 							{["Listening", "Speaking", "Reading", "Writing"].map((ability) => (
 								<div key={ability} className="grid grid-cols-2 items-center gap-y-4 mb-3">
@@ -216,7 +208,7 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 												value={value}
 												checked={aphasiaCharacteristics[ability.toLowerCase() as keyof typeof aphasiaCharacteristics] === value}
 												onChange={() => handleAbilityChange(ability, value)}
-												className="w-6 h-6 cursor-pointer"
+												className="w-8 h-8 cursor-pointer"
 											/>
 										))}
 									</div>
@@ -225,7 +217,6 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 						</div>
 					</div>
 				</div>
-
 				<div className="mt-6">
 					Which of these do you find challenging?
 					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
