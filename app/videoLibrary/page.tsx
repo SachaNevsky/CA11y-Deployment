@@ -5,7 +5,12 @@ import VideoCard from "../components/VideoCard";
 import { logAction } from "@/lib/logAction";
 
 const VideoLibrary = () => {
-    const videoNames = ["theSocialNetwork"];
+    const videos = [
+        { name: "The Social Network", video: "theSocialNetwork", info: { year: "2010", type: "Drama film" } },
+        { name: "The Social Network", video: "theSocialNetwork", info: { year: "2010", type: "Drama film" } },
+        { name: "The Social Network", video: "theSocialNetwork", info: { year: "2010", type: "Drama film" } },
+        { name: "The Social Network", video: "theSocialNetwork", info: { year: "2010", type: "Drama film" } }
+    ];
 
     const [name, setName] = useState("");
     const [aphasiaCharacteristics, setAphasiaCharacteristics] = useState();
@@ -48,16 +53,16 @@ const VideoLibrary = () => {
     }
 
     return (
-        <div className="m-auto text-center">
+        <div className="m-auto w-[90%] text-center">
             Hello {name}, this is our video library.<br />Choose something to watch.
             <div>
                 <button className="py-2 px-4 m-4 border-solid border-2 rounded-md border-gray-500" onClick={() => { handleDeleteCharacteristics() }}>Delete aphasia characteristics</button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
-                {videoNames.map(video => {
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+                {videos.map(video => {
                     return (
-                        <button key={video} onClick={() => handleVideoClick(video)}>
-                            <VideoCard name={video} />
+                        <button key={video.video} onClick={() => handleVideoClick(video.video)}>
+                            <VideoCard name={video.name} video={video.video} info={video.info} />
                         </button>
                     )
                 })}
