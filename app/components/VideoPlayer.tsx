@@ -15,6 +15,7 @@ import CaptionControls from "./CaptionControls";
 import FullscreenControls from "./FullscreenControls";
 import PlaybackSpeedControls from "./PlaybackSpeedControls";
 import SpotlightControls from "./SpotlightControls";
+import Video from "next-video";
 
 const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element => {
     const [metadata, setMetadata] = useState<VideoMetadata | null>(null);
@@ -26,13 +27,18 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     const activityTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     const basePath = `/${videoName}/${videoName}`;
-    const videoSrc = muxAssetId.original;
-    const highlightSrc = muxAssetId.highlight;
+    const videoSrc = muxAssetId?.original;
+    const highlightSrc = muxAssetId?.highlight;
     const speakerSrc = `${basePath}_speaker.mp3`;
     const musicSrc = `${basePath}_music.mp3`;
     const otherSrc = `${basePath}_other.mp3`;
     const defaultCaptionsSrc = `${basePath}.vtt`;
-    const simplifiedCaptionsSrc = `${basePath}_simplified.vtt`;
+    const simplifiedCaptionsSrc = `${basePath}.vtt`;
+    // const simplifiedCaptionsSrc = `${basePath}_simplified.vtt`;
+
+    const localVideoSrc = `${basePath}.mp4`
+    // const localHighlightSrc = `${basePath}.mp4`
+    const [useLocalVideo] = useState<boolean>(!muxAssetId?.original);
 
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const speakerRef = useRef<HTMLAudioElement | null>(null);
@@ -50,7 +56,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     const [speakerControl, setSpeakerControl] = useState<AudioControls>({ volume: 1, muted: false, prevVolume: 1 });
     const [musicControl, setMusicControl] = useState<AudioControls>({ volume: 1, muted: false, prevVolume: 1 });
     const [otherControl, setOtherControl] = useState<AudioControls>({ volume: 1, muted: false, prevVolume: 1 });
-    const [currentMuxAssetId, setCurrentMuxAssetId] = useState<string>(muxAssetId.original); // mux
+    const [currentMuxAssetId, setCurrentMuxAssetId] = useState<string | undefined>(muxAssetId?.original); // mux
     const [isMuxPlayerLoaded, setIsMuxPlayerLoaded] = useState<boolean>(false); // mux
 
     const [ema, setEma] = useState<EMAState>({ isOpen: false, currentQuestion: null, lastAction: "general" });
@@ -195,6 +201,37 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         fetchMetadata();
     }, [videoName]);
 
+    // useEffect(() => {
+    //     if (typeof window !== "undefined") {
+    //         const savedSettings = localStorage.getItem("ca11ySettings");
+
+    //         if (!savedSettings) console.error("No ca11ySettings stored.")
+
+    //         if (savedSettings) {
+    //             const settings: VideoPlayerSettings = JSON.parse(savedSettings);
+    //             setCaptionMode(settings.captionMode);
+    //             setPlaybackRate(settings.playbackRate);
+    //             setManualPlaybackRate(settings.manualPlaybackRate);
+    //             setIsSpeedAutomated(settings.isSpeedAutomated);
+    //             setSpeakerControl(settings.speakerControl);
+    //             setMusicControl(settings.musicControl);
+    //             setOtherControl(settings.otherControl);
+
+    //             if (settings.highlight) {
+    //                 setHighlight(true);
+    //                 setCurrentMuxAssetId(highlightSrc);
+    //             } else {
+    //                 setHighlight(false);
+    //                 setCurrentMuxAssetId(videoSrc);
+    //             }
+
+    //             setTimeout(() => {
+    //                 updateCaptionsMode(settings.captionMode);
+    //             }, 100);
+    //         }
+    //     }
+    // }, [videoSrc, highlightSrc]);
+
     useEffect(() => {
         if (typeof window !== "undefined") {
             const savedSettings = localStorage.getItem("ca11ySettings");
@@ -213,10 +250,14 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
 
                 if (settings.highlight) {
                     setHighlight(true);
-                    setCurrentMuxAssetId(highlightSrc);
+                    if (!useLocalVideo) {
+                        setCurrentMuxAssetId(highlightSrc);
+                    }
                 } else {
                     setHighlight(false);
-                    setCurrentMuxAssetId(videoSrc);
+                    if (!useLocalVideo) {
+                        setCurrentMuxAssetId(videoSrc);
+                    }
                 }
 
                 setTimeout(() => {
@@ -224,7 +265,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                 }, 100);
             }
         }
-    }, [videoSrc, highlightSrc]);
+    }, [videoSrc, highlightSrc, useLocalVideo]);
 
     const saveSettings = useCallback(() => {
         if (typeof window !== "undefined") {
@@ -271,22 +312,48 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         setTimeout(saveSettings, 0);
     };
 
+    // const handleHighlight = (): void => {
+    //     if (isMuxPlayerLoaded) setShowVideo(false);
+
+    //     setTimeout(() => {
+    //         setHighlight(prev => {
+    //             const newValue = !prev;
+    //             if (newValue) {
+    //                 setCurrentMuxAssetId(muxAssetId?.highlight);
+    //                 handleLogging("Highlight was turned on.", "highlight");
+    //             } else {
+    //                 setCurrentMuxAssetId(muxAssetId?.original);
+    //                 handleLogging("Highlight was turned off.", "highlight");
+    //             }
+
+    //             setTimeout(saveSettings, 0);
+    //             if (isMuxPlayerLoaded) setShowVideo(true);
+
+    //             return newValue;
+    //         });
+    //     }, 0);
+    // };
+
     const handleHighlight = (): void => {
-        if (isMuxPlayerLoaded) setShowVideo(false);
+        if (isMuxPlayerLoaded && !useLocalVideo) setShowVideo(false);
 
         setTimeout(() => {
             setHighlight(prev => {
                 const newValue = !prev;
-                if (newValue) {
-                    setCurrentMuxAssetId(muxAssetId.highlight);
-                    handleLogging("Highlight was turned on.", "highlight");
+                if (!useLocalVideo) {
+                    if (newValue) {
+                        setCurrentMuxAssetId(muxAssetId?.highlight);
+                        handleLogging("Highlight was turned on.", "highlight");
+                    } else {
+                        setCurrentMuxAssetId(muxAssetId?.original);
+                        handleLogging("Highlight was turned off.", "highlight");
+                    }
                 } else {
-                    setCurrentMuxAssetId(muxAssetId.original);
-                    handleLogging("Highlight was turned off.", "highlight");
+                    handleLogging(`Highlight was turned ${newValue ? "on" : "off"}.`, "highlight");
                 }
 
                 setTimeout(saveSettings, 0);
-                if (isMuxPlayerLoaded) setShowVideo(true);
+                if (isMuxPlayerLoaded && !useLocalVideo) setShowVideo(true);
 
                 return newValue;
             });
@@ -294,20 +361,19 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     };
 
     useEffect(() => {
-        // const video = videoRef.current;
-        const muxPlayer = muxPlayerRef.current;
+        const player = useLocalVideo ? videoRef.current : muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
         const other = otherRef.current;
 
-        if (muxPlayer && speaker && music && other) {
-            muxPlayer.pause();
+        if (player && speaker && music && other) {
+            player.pause();
             speaker.pause();
             music.pause();
             other.pause();
 
-            muxPlayer.currentTime = currentTimestamp;
-            muxPlayer.playbackRate = playbackRate;
+            player.currentTime = currentTimestamp;
+            player.playbackRate = playbackRate;
             speaker.currentTime = currentTimestamp;
             music.currentTime = currentTimestamp;
             other.currentTime = currentTimestamp;
@@ -376,39 +442,39 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     }, [playbackRate, saveSettings, metadata]);
 
     const handlePlayPause = (button: "play" | "pause"): void => {
-        const muxPlayer = muxPlayerRef.current;
+        const player = useLocalVideo ? videoRef.current : muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
         const other = otherRef.current;
 
-        if (muxPlayer && speaker && music && other) {
+        if (player && speaker && music && other) {
             if (button === "play") {
-                muxPlayer.play();
+                player.play();
                 speaker.play();
                 music.play();
                 other.play();
-                setCurrentTimestamp(muxPlayer.currentTime);
+                setCurrentTimestamp(player.currentTime);
                 handleLogging("Video was put in play.");
             } else {
-                muxPlayer.pause();
+                player.pause();
                 speaker.pause();
                 music.pause();
                 other.pause();
-                setCurrentTimestamp(muxPlayer.currentTime);
+                setCurrentTimestamp(player.currentTime);
                 handleLogging("Video playback paused.");
             }
         }
     };
 
     const handleSeek = (value: number) => {
-        const muxPlayer = muxPlayerRef.current;
+        const player = useLocalVideo ? videoRef.current : muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
         const other = otherRef.current;
         const time = value;
 
-        if (muxPlayer && speaker && music && other) {
-            muxPlayer.currentTime = time;
+        if (player && speaker && music && other) {
+            player.currentTime = time;
             speaker.currentTime = time;
             music.currentTime = time;
             other.currentTime = time;
@@ -482,14 +548,15 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     };
 
     const handleSkipForwards = (): void => {
-        const muxPlayer = muxPlayerRef.current;
+        const player = useLocalVideo ? videoRef.current : muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
         const other = otherRef.current;
-        if (muxPlayer && speaker && music && other && metadata) {
-            const currentTime = muxPlayer.currentTime;
+
+        if (player && speaker && music && other && metadata) {
+            const currentTime = player.currentTime;
             const newTime = currentTime + 10 > metadata.duration ? metadata.duration : currentTime + 10;
-            muxPlayer.currentTime = newTime;
+            player.currentTime = newTime;
             speaker.currentTime = newTime;
             music.currentTime = newTime;
             other.currentTime = newTime;
@@ -504,14 +571,15 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     };
 
     const handleSkipBackwards = (): void => {
-        const muxPlayer = muxPlayerRef.current;
+        const player = useLocalVideo ? videoRef.current : muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
         const other = otherRef.current;
-        if (muxPlayer && speaker && music && other) {
-            const currentTime = muxPlayer.currentTime;
+
+        if (player && speaker && music && other) {
+            const currentTime = player.currentTime;
             const newTime = currentTime - 10 <= 0 ? 0 : currentTime - 10;
-            muxPlayer.currentTime = newTime;
+            player.currentTime = newTime;
             speaker.currentTime = newTime;
             music.currentTime = newTime;
             other.currentTime = newTime;
@@ -525,51 +593,22 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         }
     };
 
-    // const toggleFullscreen = (): void => {
-    //     if (videoContainerRef.current) {
-    //         if (!document.fullscreenElement) {
-    //             setIsMuxPlayerLoaded(true);
-    //             if (videoContainerRef.current.requestFullscreen) {
-    //                 videoContainerRef.current.requestFullscreen();
-    //                 handleLogging("Entered fullscreen mode.", lastAction);
-    //             } else if (videoContainerRef.current.webkitRequestFullscreen) {
-    //                 videoContainerRef.current.webkitRequestFullscreen();
-    //                 handleLogging("Entered fullscreen mode.", lastAction);
-    //             } else if (videoContainerRef.current.msRequestFullscreen) {
-    //                 videoContainerRef.current.msRequestFullscreen();
-    //                 handleLogging("Entered fullscreen mode.", lastAction);
-    //             }
-    //         } else {
-    //             if (document.exitFullscreen) {
-    //                 handlePlayPause("pause");
-    //                 document.exitFullscreen();
-    //                 handleLogging("Exited fullscreen mode.", lastAction);
-    //             }
-    //         }
-    //     }
-    // };
-
     const videoStateRef = useRef<{ time: number, shouldPlay: boolean } | null>(null);
 
     const toggleFullscreen = (): void => {
         if (videoContainerRef.current) {
             if (!document.fullscreenElement) {
-                // Save current state before entering fullscreen
                 const currentTime = currentTimestamp;
                 const isPlaying = !!(speakerRef.current && !speakerRef.current.paused);
 
-                // Store these in ref values so they persist across renders
                 const fullscreenStateRef = {
                     time: currentTime,
                     shouldPlay: isPlaying
                 };
 
-                // Set a ref to store this state
                 videoStateRef.current = fullscreenStateRef;
-
                 setIsMuxPlayerLoaded(true);
 
-                // Enter fullscreen
                 if (videoContainerRef.current.requestFullscreen) {
                     videoContainerRef.current.requestFullscreen();
                     handleLogging("Entered fullscreen mode.", lastAction);
@@ -581,7 +620,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                     handleLogging("Entered fullscreen mode.", lastAction);
                 }
             } else {
-                // Exit fullscreen
                 if (document.exitFullscreen) {
                     handlePlayPause("pause");
                     document.exitFullscreen();
@@ -621,12 +659,12 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     }, [isFullScreen, lastAction]);
 
     useEffect(() => {
-        const muxPlayer = muxPlayerRef.current;
+        const player = useLocalVideo ? videoRef.current : muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
         const other = otherRef.current;
 
-        if (muxPlayer && speaker && music && other) {
+        if (player && speaker && music && other) {
             const checkTime = (): void => {
                 if (speaker.currentTime !== currentTimestamp) {
                     setCurrentTimestamp(speaker.currentTime);
@@ -643,7 +681,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                 clearInterval(interval);
             };
         }
-    }, [currentTimestamp, isSpeedAutomated, metadata, updateAutomatedSpeed]);
+    }, [currentTimestamp, isSpeedAutomated, metadata, updateAutomatedSpeed, useLocalVideo]);
 
     useEffect(() => {
         const speaker = speakerRef.current;
@@ -662,7 +700,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     // If the MuxPlayer is created when entering fullscreen mode, it resets the video
     // And the sync does not work here since the video element does not exist until then
     useEffect(() => {
-        const muxPlayer = muxPlayerRef.current;
+        const player = useLocalVideo ? videoRef.current : muxPlayerRef.current;
         const speaker = speakerRef.current;
         const music = musicRef.current;
         const other = otherRef.current;
@@ -671,7 +709,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
             return;
         }
 
-        const videoElement = muxPlayer?.shadowRoot?.querySelector('video') || muxPlayer?.querySelector('video');
+        const videoElement = player?.shadowRoot?.querySelector('video') || player?.querySelector('video');
         if (!videoElement) return;
 
         const syncAudio = (): void => {
@@ -693,7 +731,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
             videoElement.removeEventListener("play", syncAudio);
             videoElement.removeEventListener("pause", syncAudio);
         };
-    }, []);
+    });
 
     return (
         <div className="w-full mx-auto relative">
@@ -754,23 +792,32 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                     <div ref={videoContainerRef} className={`bg-black ${isFullScreen ? 'fixed inset-0 z-50 w-screen h-screen' : 'hidden'}`}>
                         {showVideo && isFullScreen && isMuxPlayerLoaded && (
                             <>
-                                <MuxPlayer
-                                    ref={muxPlayerRef}
-                                    playbackId={currentMuxAssetId}
-                                    streamType="on-demand"
-                                    muted={true}
-                                    autoPlay={false}
-                                    style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                                    playbackRate={playbackRate}
-                                    startTime={currentTimestamp}
-                                >
-                                    <track
-                                        label={`English ${captionMode}`}
-                                        kind="subtitles"
-                                        srcLang="en"
-                                        src={captionMode === "default" ? defaultCaptionsSrc : simplifiedCaptionsSrc}
-                                    />
-                                </MuxPlayer>
+                                {useLocalVideo ? (
+                                    <div className="w-full">
+                                        <Video id="video" ref={videoRef} controls={false} muted>
+                                            <source id="videoSource" src={localVideoSrc} type="video/mp4" />
+                                            <track label={`English ${captionMode}`} kind="subtitles" srcLang="en" src={captionMode === "default" ? defaultCaptionsSrc : simplifiedCaptionsSrc} />
+                                        </Video>
+                                    </div>
+                                ) : (
+                                    <MuxPlayer
+                                        ref={muxPlayerRef}
+                                        playbackId={currentMuxAssetId}
+                                        streamType="on-demand"
+                                        muted={true}
+                                        autoPlay={false}
+                                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                        playbackRate={playbackRate}
+                                        startTime={currentTimestamp}
+                                    >
+                                        <track
+                                            label={`English ${captionMode}`}
+                                            kind="subtitles"
+                                            srcLang="en"
+                                            src={captionMode === "default" ? defaultCaptionsSrc : simplifiedCaptionsSrc}
+                                        />
+                                    </MuxPlayer>
+                                )}
                             </>
                         )}
                         {isFullScreen && (

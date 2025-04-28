@@ -1,11 +1,11 @@
-// ./app/videoLibrary/theSocialNetwork/page.tsx
+// ./app/videoLibrary/nigel_slater/page.tsx
 "use client";
 
 import VideoPlayer from "@/app/components/VideoPlayer";
 import { logAction } from "@/lib/logAction";
 import { useEffect } from "react";
 
-const TheSocialNetwork = () => {
+const NigelSlater = () => {
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -13,7 +13,7 @@ const TheSocialNetwork = () => {
                 const name = localStorage.getItem("ca11yDeploymentName");
 
                 if (name) {
-                    logAction(name, "Watching the video theSocialNetwork.")
+                    logAction(name, "Watching the video Nigel Slater.")
                         .catch((error) => {
                             console.error("Failed to log action:", error);
                         });
@@ -28,10 +28,10 @@ const TheSocialNetwork = () => {
 
     return (
         <div className="m-1">
-            {/* <VideoPlayer videoName="theSocialNetwork" muxAssetId={{ original: "l9G5Me8Mwz5009FiNowaldgOd6Mr1n5YVtvch02r59sew", highlight: "TwIChxe902xtC3lCZ8lglSl00oE02suvBTdZXhlNx4HCtI" }} /> */}
-            <VideoPlayer videoName="theSocialNetwork" />
+            {/* <VideoPlayer videoName="nigel_slater" muxAssetId={{ original: "", highlight: "" }} /> */}
+            <VideoPlayer videoName="nigel_slater" />
         </div>
     )
 }
 
-export default TheSocialNetwork;
+export default NigelSlater;
