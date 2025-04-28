@@ -1,0 +1,3717 @@
+{
+  "duration": 1728,
+  "subtitles": [
+    {
+      "start_time": 11.8,
+      "end_time": 14.64,
+      "text": "Hello, you're watching The One Show, live on BBC One and iPlayer.",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 206,
+      "complexity_score": 0.89
+    },
+    {
+      "start_time": 14.64,
+      "end_time": 17.88,
+      "text": "With Alex Jones and JB Gill.",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 197,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 17.88,
+      "end_time": 20.36,
+      "text": "Now as it's Wednesday, Matt's in for Watchdog.",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 206,
+      "complexity_score": 0.89
+    },
+    {
+      "start_time": 20.36,
+      "end_time": 23.48,
+      "text": "And if you're one of the millions of people watching with a pension,",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 207,
+      "complexity_score": 0.89
+    },
+    {
+      "start_time": 23.48,
+      "end_time": 26.68,
+      "text": "you'll want to listen up.",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 203,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 26.68,
+      "end_time": 28.84,
+      "text": "Yes, I'll be telling you about the pension provider",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 202,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 28.84,
+      "end_time": 31.56,
+      "text": "that's left some customers locked out of their life savings.",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 199,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 31.56,
+      "end_time": 34.64,
+      "text": "Plus, our inbox was inundated on Easter Monday with complaints",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 199,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 34.64,
+      "end_time": 37.28,
+      "text": "about a cancelled P&O cruise that let people know just 24",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 198,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 37.28,
+      "end_time": 40.64,
+      "text": "hours before departure.",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 188,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 40.64,
+      "end_time": 43.24,
+      "text": "We'll be telling you how to claim back costs if you're",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 208,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 43.24,
+      "end_time": 45.56,
+      "text": "left out of pocket.",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 200,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 45.56,
+      "end_time": 47.84,
+      "text": "Thanks, Matt, that's coming up in just a moment.",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 208,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 47.84,
+      "end_time": 50.56,
+      "text": "Also tonight - we'll be joined by Max Beesley and newcomer",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 203,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 50.56,
+      "end_time": 53.08,
+      "text": "Edison Alcaide who star in a new thought provoking drama",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 200,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 53.08,
+      "end_time": 57.32,
+      "text": "called Suspect: The Shooting of Jean Charles de Menezes.",
+      "flesch_reading_ease": 74,
+      "words_per_minute": 197,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 57.32,
+      "end_time": 60.44,
+      "text": "Set 20 years ago, in the aftermath of the 7/7 bombings,",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 210,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 60.44,
+      "end_time": 63.84,
+      "text": "it focuses on the real life events that led to an innocent young",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 209,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 63.84,
+      "end_time": 66.44,
+      "text": "man being fatally shot on the London Underground",
+      "flesch_reading_ease": 70,
+      "words_per_minute": 199,
+      "complexity_score": 0.74
+    },
+    {
+      "start_time": 66.44,
+      "end_time": 69.28,
+      "text": "after he was mistaken for a terrorist.",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 180,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 69.28,
+      "end_time": 72.44,
+      "text": "Max and Edison will be telling us what it was like to bring",
+      "flesch_reading_ease": 69,
+      "words_per_minute": 169,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 72.44,
+      "end_time": 74.72,
+      "text": "such a powerful story to the small screen.",
+      "flesch_reading_ease": 69,
+      "words_per_minute": 166,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 74.72,
+      "end_time": 78.0,
+      "text": "And joining us later in the show is Oscar nominated actor",
+      "flesch_reading_ease": 70,
+      "words_per_minute": 164,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 78.0,
+      "end_time": 81.08,
+      "text": "Dame Imelda Staunton and her daughter Bessie Carter -",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 159,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 81.08,
+      "end_time": 84.4,
+      "text": "who'll you know from Bridgerton - as they prepare to take to the stage",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 159,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 84.4,
+      "end_time": 86.72,
+      "text": "for the first time playing a mother and daughter.",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 157,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 86.72,
+      "end_time": 89.68,
+      "text": "Plus, we're heading to the stunning Scottish Borders where artist",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 161,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 89.68,
+      "end_time": 93.44,
+      "text": "Adebanji Alade meets legendary children's TV presenter",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 158,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 93.44,
+      "end_time": 95.8,
+      "text": "Timmy Mallett to find out how his late brother",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 162,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 95.8,
+      "end_time": 100.52,
+      "text": "inspired him to paint.",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 151,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 100.52,
+      "end_time": 106.56,
+      "text": "Martin was never defined by his language and learning difficulties,",
+      "flesch_reading_ease": 87,
+      "words_per_minute": 164,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 106.56,
+      "end_time": 109.72,
+      "text": "he was never held back by downs syndrome, he would say,",
+      "flesch_reading_ease": 92,
+      "words_per_minute": 178,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 109.72,
+      "end_time": 111.64,
+      "text": "you and me, I'm happy.",
+      "flesch_reading_ease": 92,
+      "words_per_minute": 175,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 111.64,
+      "end_time": 117.12,
+      "text": "What that means is being in the moment.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 179,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 117.12,
+      "end_time": 119.52,
+      "text": "Such a heart-warming film, you won't want to miss that!",
+      "flesch_reading_ease": 84,
+      "words_per_minute": 197,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 119.52,
+      "end_time": 122.72,
+      "text": "But first, it's Matt for Watchdog with that story about pensions.",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 176,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 122.72,
+      "end_time": 125.84,
+      "text": "Yes, it's meant to be your ticket to retirement, the pot of gold",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 176,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 125.84,
+      "end_time": 128.08,
+      "text": "at the end of your working rainbow.",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 149,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 128.08,
+      "end_time": 130.88,
+      "text": "So finding out you can't access it?",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 147,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 130.88,
+      "end_time": 137.52,
+      "text": "Well, it's not just frustrating, it can put your plans on pause.",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 154,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 137.52,
+      "end_time": 139.88,
+      "text": "Imagine that there's cash in your account,",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 169,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 139.88,
+      "end_time": 144.0,
+      "text": "but you can't access it through no fault of your own.",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 172,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 144.0,
+      "end_time": 147.6,
+      "text": "Well, that's what some customers of one of the country's largest",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 166,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 147.6,
+      "end_time": 149.04,
+      "text": "pension providers have been experiencing over",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 168,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 149.04,
+      "end_time": 152.2,
+      "text": "the last few months.",
+      "flesch_reading_ease": 91,
+      "words_per_minute": 166,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 152.2,
+      "end_time": 155.64,
+      "text": "Aegon boasts around 4 million customers across the UK.",
+      "flesch_reading_ease": 89,
+      "words_per_minute": 174,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 155.64,
+      "end_time": 157.76,
+      "text": "One of them is Beyata, a self-employed cake",
+      "flesch_reading_ease": 94,
+      "words_per_minute": 180,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 157.76,
+      "end_time": 161.16,
+      "text": "maker from Brighton.",
+      "flesch_reading_ease": 94,
+      "words_per_minute": 178,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 161.16,
+      "end_time": 168.92,
+      "text": "I started a pension 20 years ago, so I didn't pay too much attention.",
+      "flesch_reading_ease": 94,
+      "words_per_minute": 180,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 168.92,
+      "end_time": 171.76,
+      "text": "Now I'm becoming 57 and I would like to exit my money.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 203,
+      "complexity_score": 0.89
+    },
+    {
+      "start_time": 171.76,
+      "end_time": 174.88,
+      "text": "Wanting to use the money to buy a property, Beyata tried to log",
+      "flesch_reading_ease": 89,
+      "words_per_minute": 201,
+      "complexity_score": 0.89
+    },
+    {
+      "start_time": 174.88,
+      "end_time": 177.56,
+      "text": "into her Aegon account to check how much she had saved.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 198,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 177.56,
+      "end_time": 180.8,
+      "text": "But she hit a brick wall.",
+      "flesch_reading_ease": 91,
+      "words_per_minute": 197,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 180.8,
+      "end_time": 183.6,
+      "text": "I want to know how much I've got in the pot.",
+      "flesch_reading_ease": 89,
+      "words_per_minute": 184,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 183.6,
+      "end_time": 188.4,
+      "text": "You would like to see how you want to exit, the tax you pay.",
+      "flesch_reading_ease": 87,
+      "words_per_minute": 184,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 188.4,
+      "end_time": 190.56,
+      "text": "So when you go in, what do you find?",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 195,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 190.56,
+      "end_time": 191.76,
+      "text": "Well, nothing at the moment.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 188,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 191.76,
+      "end_time": 195.48,
+      "text": "The website isn't working.",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 181,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 195.48,
+      "end_time": 197.16,
+      "text": "Confused, Beyata called up Aegon customer services",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 192,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 197.16,
+      "end_time": 199.12,
+      "text": "who told her the website was down.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 193,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 199.12,
+      "end_time": 202.24,
+      "text": "Instead, she was sent an online form and was assured she would get",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 188,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 202.24,
+      "end_time": 203.64,
+      "text": "a response within five working days.",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 162,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 203.64,
+      "end_time": 205.44,
+      "text": "But she didn't hear anything.",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 167,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 205.44,
+      "end_time": 207.56,
+      "text": "There is no phone call, there is no letter.",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 166,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 207.56,
+      "end_time": 208.6,
+      "text": "There's nothing.",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 165,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 208.6,
+      "end_time": 215.44,
+      "text": "Instead, took Aegon 18 days to send Beyata a letter,",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 165,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 215.44,
+      "end_time": 218.08,
+      "text": "telling her she had over \u00a322,000 in her pension savings pot",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 189,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 218.08,
+      "end_time": 219.52,
+      "text": "and explaining how to withdraw it.",
+      "flesch_reading_ease": 70,
+      "words_per_minute": 191,
+      "complexity_score": 0.74
+    },
+    {
+      "start_time": 219.52,
+      "end_time": 221.4,
+      "text": "But despite repeated attempts, she still couldn't get",
+      "flesch_reading_ease": 70,
+      "words_per_minute": 189,
+      "complexity_score": 0.74
+    },
+    {
+      "start_time": 221.4,
+      "end_time": 223.16,
+      "text": "access to her money.",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 154,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 223.16,
+      "end_time": 226.96,
+      "text": "What is the communication with Aegon at the moment?",
+      "flesch_reading_ease": 70,
+      "words_per_minute": 155,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 226.96,
+      "end_time": 229.44,
+      "text": "There is no communication, only the letter we've received.",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 162,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 229.44,
+      "end_time": 231.08,
+      "text": "I'm waiting.",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 162,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 231.08,
+      "end_time": 239.04,
+      "text": "What does this mean for you, Beyata, and your family?",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 164,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 239.32,
+      "end_time": 241.24,
+      "text": "It affects me hugely because obviously you find",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 195,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 241.24,
+      "end_time": 243.84,
+      "text": "a property, but I can't exchange so I'm waiting for it.",
+      "flesch_reading_ease": 74,
+      "words_per_minute": 197,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 243.84,
+      "end_time": 245.04,
+      "text": "So it's very, very frustrating.",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 192,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 245.04,
+      "end_time": 247.2,
+      "text": "Beyata's case is just the tip of the iceberg.",
+      "flesch_reading_ease": 74,
+      "words_per_minute": 190,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 247.2,
+      "end_time": 249.4,
+      "text": "There are loads of complaints online from disgruntled customers.",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 169,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 249.4,
+      "end_time": 252.24,
+      "text": "Since the start of the year, 58% of Aegon reviews on Trustpilot",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 161,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 252.24,
+      "end_time": 260.2,
+      "text": "have ranked just one star.",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 161,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 262.28,
+      "end_time": 264.68,
+      "text": "The customers we've heard from haven't been given a timeframe",
+      "flesch_reading_ease": 74,
+      "words_per_minute": 210,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 264.68,
+      "end_time": 267.08,
+      "text": "for when they will be able to access their money.",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 196,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 267.08,
+      "end_time": 269.76,
+      "text": "And in our research we also heard that it is affecting",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 170,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 269.76,
+      "end_time": 271.92,
+      "text": "people who don't even hold an account with them.",
+      "flesch_reading_ease": 84,
+      "words_per_minute": 173,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 271.92,
+      "end_time": 273.6,
+      "text": "Eight months ago, self-employed tradesman Gary decided",
+      "flesch_reading_ease": 84,
+      "words_per_minute": 167,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 273.6,
+      "end_time": 276.0,
+      "text": "to leave Aegon having been with the providers since 2010.",
+      "flesch_reading_ease": 88,
+      "words_per_minute": 164,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 276.0,
+      "end_time": 278.56,
+      "text": "However, he discovered three contributions of \u00a3778 had been",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 165,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 278.56,
+      "end_time": 284.52,
+      "text": "taken from him by Aegon after closing his account.",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 168,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 284.52,
+      "end_time": 287.52,
+      "text": "So Gary complained to the company.",
+      "flesch_reading_ease": 88,
+      "words_per_minute": 161,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 287.52,
+      "end_time": 290.16,
+      "text": "Then they came back and said we shouldn't have taken it.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 164,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 290.16,
+      "end_time": 293.4,
+      "text": "It can take a little while to sort out, possibly 28 days.",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 164,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 293.4,
+      "end_time": 298.12,
+      "text": "But 28 days later, there was still no sign of the \u00a32300.",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 164,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 298.12,
+      "end_time": 305.56,
+      "text": "When you explained what was happening, what did they say?",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 173,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 305.56,
+      "end_time": 309.36,
+      "text": "When I rang up I said could be a week or could it be six months?",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 197,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 309.36,
+      "end_time": 310.56,
+      "text": "Sorry, there is no timescale.",
+      "flesch_reading_ease": 69,
+      "words_per_minute": 197,
+      "complexity_score": 0.74
+    },
+    {
+      "start_time": 310.56,
+      "end_time": 313.2,
+      "text": "But despite making regular calls to Aegon there was still no",
+      "flesch_reading_ease": 67,
+      "words_per_minute": 178,
+      "complexity_score": 0.74
+    },
+    {
+      "start_time": 313.2,
+      "end_time": 314.24,
+      "text": "sign of Gary's cash.",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 179,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 314.24,
+      "end_time": 315.68,
+      "text": "Just continually ringing their customer service.",
+      "flesch_reading_ease": 69,
+      "words_per_minute": 176,
+      "complexity_score": 0.74
+    },
+    {
+      "start_time": 315.68,
+      "end_time": 322.64,
+      "text": "Very frustrating.",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 173,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 322.64,
+      "end_time": 325.52,
+      "text": "And I just feel you're banging your head against a brick wall.",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 214,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 325.52,
+      "end_time": 328.64,
+      "text": "Two years ago a new set of rules was introduced known as consumer",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 208,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 328.64,
+      "end_time": 331.04,
+      "text": "duty which requires FCA regulated firms to prove they deliver",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 206,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 331.04,
+      "end_time": 332.08,
+      "text": "good customer outcomes.",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 205,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 332.08,
+      "end_time": 334.24,
+      "text": "If they don't, they can be hit with penalties.",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 206,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 334.24,
+      "end_time": 337.24,
+      "text": "James Daly is from the financial research group Fairer Finance.",
+      "flesch_reading_ease": 68,
+      "words_per_minute": 181,
+      "complexity_score": 0.74
+    },
+    {
+      "start_time": 337.24,
+      "end_time": 339.88,
+      "text": "It doesn't sound like Aegon has done enough at this point.",
+      "flesch_reading_ease": 69,
+      "words_per_minute": 180,
+      "complexity_score": 0.74
+    },
+    {
+      "start_time": 339.88,
+      "end_time": 342.08,
+      "text": "Customers seem incredibly frustrated.",
+      "flesch_reading_ease": 64,
+      "words_per_minute": 177,
+      "complexity_score": 0.74
+    },
+    {
+      "start_time": 342.08,
+      "end_time": 347.32,
+      "text": "They've been made promises which Aegon didn't keep.",
+      "flesch_reading_ease": 67,
+      "words_per_minute": 182,
+      "complexity_score": 0.74
+    },
+    {
+      "start_time": 347.32,
+      "end_time": 350.44,
+      "text": "If they were seen to be stalling and not doing what was best",
+      "flesch_reading_ease": 65,
+      "words_per_minute": 196,
+      "complexity_score": 0.74
+    },
+    {
+      "start_time": 350.44,
+      "end_time": 352.12,
+      "text": "for their customers, then penalties would be",
+      "flesch_reading_ease": 60,
+      "words_per_minute": 194,
+      "complexity_score": 0.65
+    },
+    {
+      "start_time": 352.12,
+      "end_time": 354.0,
+      "text": "even greater for them.",
+      "flesch_reading_ease": 61,
+      "words_per_minute": 164,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 354.0,
+      "end_time": 357.6,
+      "text": "To say we are going to have this sorted in a few days and then",
+      "flesch_reading_ease": 60,
+      "words_per_minute": 165,
+      "complexity_score": 0.7
+    },
+    {
+      "start_time": 357.6,
+      "end_time": 359.76,
+      "text": "continually let customers down, just adds insult to injury.",
+      "flesch_reading_ease": 54,
+      "words_per_minute": 163,
+      "complexity_score": 0.7
+    },
+    {
+      "start_time": 359.76,
+      "end_time": 361.2,
+      "text": "We asked Aegon for a comment.",
+      "flesch_reading_ease": 55,
+      "words_per_minute": 158,
+      "complexity_score": 0.7
+    },
+    {
+      "start_time": 361.2,
+      "end_time": 362.84,
+      "text": "It sincerely apologised for any frustration",
+      "flesch_reading_ease": 54,
+      "words_per_minute": 154,
+      "complexity_score": 0.7
+    },
+    {
+      "start_time": 362.84,
+      "end_time": 368.08,
+      "text": "and inconvenience caused.",
+      "flesch_reading_ease": 63,
+      "words_per_minute": 159,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 368.08,
+      "end_time": 370.96,
+      "text": "It said that a technology upgrade left a small number of customers",
+      "flesch_reading_ease": 64,
+      "words_per_minute": 178,
+      "complexity_score": 0.74
+    },
+    {
+      "start_time": 370.96,
+      "end_time": 373.36,
+      "text": "experiencing issues which may have led to delays in service.",
+      "flesch_reading_ease": 70,
+      "words_per_minute": 160,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 373.36,
+      "end_time": 377.12,
+      "text": "But that no one would be financially disadvantaged as a result.",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 155,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 377.12,
+      "end_time": 380.08,
+      "text": "Aegon assured us that its customers' money is safe and secure",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 157,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 380.08,
+      "end_time": 382.24,
+      "text": "and that its executive team is working to improve",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 156,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 382.24,
+      "end_time": 389.48,
+      "text": "customer experience.",
+      "flesch_reading_ease": 74,
+      "words_per_minute": 147,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 389.48,
+      "end_time": 392.12,
+      "text": "After we got in touch, Aegon did reimburse Gary his \u00a32300",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 174,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 392.12,
+      "end_time": 394.52,
+      "text": "and Beyata successfully cashed out her pension pot, with both",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 169,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 394.52,
+      "end_time": 397.72,
+      "text": "receiving gestures of goodwill.",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 163,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 397.72,
+      "end_time": 400.04,
+      "text": "Aegon, you've been trusted to look after people's money.",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 170,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 400.04,
+      "end_time": 402.4,
+      "text": "So don't let them down when, after years, they need",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 166,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 402.4,
+      "end_time": 408.8,
+      "text": "to access their funds.",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 156,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 408.8,
+      "end_time": 410.04,
+      "text": "You really feel for them.",
+      "flesch_reading_ease": 74,
+      "words_per_minute": 178,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 410.04,
+      "end_time": 413.72,
+      "text": "t's so frustrating when you've got money that you just can't access.",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 183,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 413.72,
+      "end_time": 415.6,
+      "text": "Absolutely, Al.",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 179,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 415.6,
+      "end_time": 418.48,
+      "text": "And if you feel you've been treated unfairly by a pension provider,",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 185,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 418.48,
+      "end_time": 420.76,
+      "text": "or any company for that matter, get in touch.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 186,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 420.76,
+      "end_time": 425.04,
+      "text": "watchdog@bbc.co.uk, @BBCWatchdog on the socials.",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 184,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 425.04,
+      "end_time": 428.44,
+      "text": "Another company that's back in our inbox is Klarna,",
+      "flesch_reading_ease": 84,
+      "words_per_minute": 179,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 428.44,
+      "end_time": 431.72,
+      "text": "the buy now pay later service.",
+      "flesch_reading_ease": 84,
+      "words_per_minute": 182,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 431.72,
+      "end_time": 433.64,
+      "text": "Last year, we told you how fraudulent accounts",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 191,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 433.64,
+      "end_time": 436.16,
+      "text": "were being set up in people's names.",
+      "flesch_reading_ease": 87,
+      "words_per_minute": 171,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 436.16,
+      "end_time": 438.64,
+      "text": "At the time, Klarna told us it had",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 174,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 438.64,
+      "end_time": 443.24,
+      "text": "industry-leading fraud prevention methods in place to protect users.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 178,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 443.24,
+      "end_time": 445.16,
+      "text": "I'm guessing that those measures haven't held up?",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 175,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 445.16,
+      "end_time": 447.4,
+      "text": "You got it, JB.",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 155,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 447.4,
+      "end_time": 450.28,
+      "text": "We've heard from a number of people who say fraudulent Klarna accounts",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 163,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 450.28,
+      "end_time": 453.4,
+      "text": "have been set up in their name and now they're left with hundreds",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 162,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 453.4,
+      "end_time": 454.6,
+      "text": "of pounds worth of debt.",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 162,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 454.6,
+      "end_time": 456.44,
+      "text": "Take Craig.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 159,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 456.44,
+      "end_time": 458.92,
+      "text": "Al, hit it.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 170,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 458.92,
+      "end_time": 461.76,
+      "text": "Craig received a letter from Klarna issuing a final demand",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 176,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 461.76,
+      "end_time": 464.68,
+      "text": "for a payment of \u00a3495, but he hadn't used",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 181,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 464.68,
+      "end_time": 468.8,
+      "text": "Klarna since 2023.",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 180,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 468.8,
+      "end_time": 471.68,
+      "text": "Once he checked his credit score and discovered it was affected,",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 197,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 471.68,
+      "end_time": 474.08,
+      "text": "he contacted Klarna who confirmed someone had indeed set up",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 194,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 474.08,
+      "end_time": 477.56,
+      "text": "an account in his name.",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 194,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 477.56,
+      "end_time": 482.64,
+      "text": "Sadly Craig isn't alone.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 211,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 482.64,
+      "end_time": 483.96,
+      "text": "JB, tell us about Carl.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 242,
+      "complexity_score": 0.77
+    },
+    {
+      "start_time": 483.96,
+      "end_time": 486.36,
+      "text": "He discovered he had a Klarna account in his name",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 229,
+      "complexity_score": 0.77
+    },
+    {
+      "start_time": 486.36,
+      "end_time": 488.76,
+      "text": "with a debt of over \u00a3600, even though he's never",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 213,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 488.76,
+      "end_time": 489.8,
+      "text": "been a customer.",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 201,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 489.8,
+      "end_time": 492.68,
+      "text": "He told Klarna it couldn't possibly have been him making the purchases",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 207,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 492.68,
+      "end_time": 495.32,
+      "text": "as he was with his family in Canada at the time.",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 176,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 495.32,
+      "end_time": 497.96,
+      "text": "Yes, and he's since had calls from a debt collection agency,",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 181,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 497.96,
+      "end_time": 500.44,
+      "text": "which has taken a big toll on him.",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 174,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 500.44,
+      "end_time": 502.68,
+      "text": "It's really frustrating and incredibly stressful.",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 178,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 502.68,
+      "end_time": 505.28,
+      "text": "I'm looking to buy a house later in the year.",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 185,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 505.28,
+      "end_time": 507.68,
+      "text": "And the idea of something like this putting a spanner",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 180,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 507.68,
+      "end_time": 510.4,
+      "text": "in the works is unbearable.",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 181,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 510.4,
+      "end_time": 512.12,
+      "text": "That must be so stressful.",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 180,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 512.12,
+      "end_time": 515.08,
+      "text": "What has Klarna said about this?",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 180,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 515.08,
+      "end_time": 518.56,
+      "text": "Klarna says the fraudsters would have already had compromised",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 155,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 518.56,
+      "end_time": 521.4,
+      "text": "data to open these accounts, but it is really sorry for how",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 156,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 521.4,
+      "end_time": 526.84,
+      "text": "these cases were handled.",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 154,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 526.84,
+      "end_time": 529.24,
+      "text": "It says a stronger verification process has now been introduced",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 177,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 529.24,
+      "end_time": 532.36,
+      "text": "meaning customers will have to take a live selfie along with a photo",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 155,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 532.36,
+      "end_time": 534.04,
+      "text": "of their ID if fraud is suspected.",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 162,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 534.04,
+      "end_time": 535.8,
+      "text": "And what about Craig and Carl?",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 158,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 535.8,
+      "end_time": 538.68,
+      "text": "Klarna recognises that it didn't act quick enough to resolve the issues",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 156,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 538.68,
+      "end_time": 541.8,
+      "text": "and since we got involved they both have now had their debts removed",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 150,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 541.8,
+      "end_time": 545.72,
+      "text": "along with any marks on their credit reports.",
+      "flesch_reading_ease": 69,
+      "words_per_minute": 143,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 545.72,
+      "end_time": 553.68,
+      "text": "What a result for Watchdog!",
+      "flesch_reading_ease": 68,
+      "words_per_minute": 144,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 554.4,
+      "end_time": 556.08,
+      "text": "Thank you, studio!",
+      "flesch_reading_ease": 69,
+      "words_per_minute": 177,
+      "complexity_score": 0.74
+    },
+    {
+      "start_time": 556.08,
+      "end_time": 558.48,
+      "text": "Hopefully Klarna will clear up any other similar cases just",
+      "flesch_reading_ease": 68,
+      "words_per_minute": 180,
+      "complexity_score": 0.74
+    },
+    {
+      "start_time": 558.48,
+      "end_time": 560.4,
+      "text": "as quickly without needing a nudge from us.",
+      "flesch_reading_ease": 74,
+      "words_per_minute": 168,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 560.4,
+      "end_time": 561.84,
+      "text": "Let us know if they don't.",
+      "flesch_reading_ease": 74,
+      "words_per_minute": 168,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 561.84,
+      "end_time": 568.6,
+      "text": "Now on Easter Monday, whilst most people were still",
+      "flesch_reading_ease": 69,
+      "words_per_minute": 166,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 568.6,
+      "end_time": 570.52,
+      "text": "working through their eggs, our inbox was chock-a-block.",
+      "flesch_reading_ease": 67,
+      "words_per_minute": 191,
+      "complexity_score": 0.74
+    },
+    {
+      "start_time": 570.52,
+      "end_time": 572.68,
+      "text": "We received over 50 complaints after P&O Cruises cancelled",
+      "flesch_reading_ease": 65,
+      "words_per_minute": 188,
+      "complexity_score": 0.74
+    },
+    {
+      "start_time": 572.68,
+      "end_time": 576.44,
+      "text": "its Southampton to Zeebrugge cruise around 24 hours before departure.",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 190,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 576.44,
+      "end_time": 578.2,
+      "text": "The reason?",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 169,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 578.2,
+      "end_time": 580.4,
+      "text": "A last-minute delay to the ship's refit.",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 174,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 580.4,
+      "end_time": 583.56,
+      "text": "Understandably people aren't happy.",
+      "flesch_reading_ease": 74,
+      "words_per_minute": 141,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 583.56,
+      "end_time": 585.48,
+      "text": "And when I say people, I mean Mary.",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 136,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 585.48,
+      "end_time": 588.16,
+      "text": "JB, tell us something about Mary?",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 131,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 588.16,
+      "end_time": 590.08,
+      "text": "Mary planned to go cruising with her friends.",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 136,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 590.08,
+      "end_time": 595.52,
+      "text": "Her husband even took time off work to look after the dogs.",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 132,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 595.52,
+      "end_time": 597.44,
+      "text": "She says only one of the group received",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 133,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 597.44,
+      "end_time": 598.64,
+      "text": "the cancellation email on Sunday",
+      "flesch_reading_ease": 74,
+      "words_per_minute": 124,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 598.64,
+      "end_time": 601.04,
+      "text": "and when they phoned customer services on Monday they said",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 121,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 601.04,
+      "end_time": 602.72,
+      "text": "the advisor didn't know anything about it.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 125,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 602.72,
+      "end_time": 606.08,
+      "text": "Yes, they thought it was all a scam until P&O phoned them back hours",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 126,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 606.08,
+      "end_time": 614.04,
+      "text": "before the ship was due to board confirming the cancellation.",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 122,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 614.92,
+      "end_time": 624.36,
+      "text": "Did they explain why it was so late?",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 143,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 624.44,
+      "end_time": 631.8,
+      "text": "They offered discount on another cruise but many have said, not",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 167,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 631.8,
+      "end_time": 635.52,
+      "text": "likely and there are also additional costs like insurance and parking and",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 189,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 635.52,
+      "end_time": 640.8,
+      "text": "time taken off work for dog care. What should people do in that",
+      "flesch_reading_ease": 89,
+      "words_per_minute": 185,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 640.8,
+      "end_time": 645.76,
+      "text": "situation?",
+      "flesch_reading_ease": 87,
+      "words_per_minute": 177,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 646.12,
+      "end_time": 647.56,
+      "text": "Hold the cruise company to account.",
+      "flesch_reading_ease": 88,
+      "words_per_minute": 208,
+      "complexity_score": 0.89
+    },
+    {
+      "start_time": 647.56,
+      "end_time": 649.24,
+      "text": "It's the one that took your money.",
+      "flesch_reading_ease": 89,
+      "words_per_minute": 197,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 649.24,
+      "end_time": 652.12,
+      "text": "If the ship's not available then it's got to sort you out.",
+      "flesch_reading_ease": 89,
+      "words_per_minute": 178,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 652.12,
+      "end_time": 654.76,
+      "text": "Only then should you go to your insurer, because of course,",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 169,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 654.76,
+      "end_time": 656.92,
+      "text": "if you have to claim, you could see your",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 169,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 656.92,
+      "end_time": 658.12,
+      "text": "premiums go up next time.",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 165,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 658.12,
+      "end_time": 660.76,
+      "text": "Which made us worry about tomorrow, when The Aurora is off",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 165,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 660.76,
+      "end_time": 661.96,
+      "text": "to Norway for 12 nights.",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 159,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 661.96,
+      "end_time": 665.12,
+      "text": "P&O say she's ship-shape and Bristol fashion,",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 161,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 665.12,
+      "end_time": 668.56,
+      "text": "pining for the fjords.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 162,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 668.56,
+      "end_time": 671.2,
+      "text": "If you're Oslo-bound on the Aurora, still no harm in checking",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 171,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 671.2,
+      "end_time": 675.0,
+      "text": "before leaving the house.",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 163,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 675.0,
+      "end_time": 678.6,
+      "text": "Send us a postcard of the Northern Lights!",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 152,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 678.6,
+      "end_time": 680.24,
+      "text": "Thanks, Matt.",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 151,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 680.24,
+      "end_time": 683.68,
+      "text": "Lots of great advice as always.",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 154,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 683.68,
+      "end_time": 686.48,
+      "text": "Still to come tonight, acting royalty Dame Imelda Staunton",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 160,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 686.48,
+      "end_time": 690.0,
+      "text": "will be here alongside her daughter, Bridgerton star Bessie Carter,",
+      "flesch_reading_ease": 74,
+      "words_per_minute": 154,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 690.0,
+      "end_time": 692.44,
+      "text": "as they tell us about playing a mother and daughter",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 148,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 692.44,
+      "end_time": 694.76,
+      "text": "who don't see eye to eye.",
+      "flesch_reading_ease": 74,
+      "words_per_minute": 142,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 694.76,
+      "end_time": 698.4,
+      "text": "But first, we're talking about a powerful new drama out next",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 146,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 698.4,
+      "end_time": 701.12,
+      "text": "week called Suspect: The shooting of Jean Charles De Menezes.",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 138,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 701.12,
+      "end_time": 704.36,
+      "text": "Set in London in 2005, it focuses on the events that",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 130,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 704.36,
+      "end_time": 707.96,
+      "text": "surrounded the tragic killing of an innocent man at Stockwell tube",
+      "flesch_reading_ease": 70,
+      "words_per_minute": 130,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 707.96,
+      "end_time": 715.92,
+      "text": "station after he was mistaken for a terrorist.",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 117,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 718.04,
+      "end_time": 720.64,
+      "text": "Before we speak to actors Max Beesley and Edison Alcaide -",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 132,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 720.64,
+      "end_time": 721.84,
+      "text": "who plays Jean Charles -",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 125,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 721.84,
+      "end_time": 725.24,
+      "text": "let's take a look.",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 123,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 725.24,
+      "end_time": 728.52,
+      "text": "July 7th, we've never seen anything like it before.",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 126,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 728.52,
+      "end_time": 734.56,
+      "text": "The most significant attack on Kabul the Second World War. We should",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 124,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 734.56,
+      "end_time": 738.24,
+      "text": "assume that the people who did this will try again. This needs decisive",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 125,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 738.24,
+      "end_time": 745.48,
+      "text": "action. He has entered the station. There is no doubt that the man shot",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 121,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 745.48,
+      "end_time": 749.08,
+      "text": "yesterday has no connections to terrorism.",
+      "flesch_reading_ease": 84,
+      "words_per_minute": 125,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 749.08,
+      "end_time": 751.72,
+      "text": "And joining us now is Max Beesley and Edison Alcaide!",
+      "flesch_reading_ease": 87,
+      "words_per_minute": 127,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 751.72,
+      "end_time": 756.48,
+      "text": "This is such a powerful drama.",
+      "flesch_reading_ease": 89,
+      "words_per_minute": 127,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 756.48,
+      "end_time": 765.4,
+      "text": "We have both been lucky enough to see a preview. It really takes you",
+      "flesch_reading_ease": 89,
+      "words_per_minute": 132,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 765.4,
+      "end_time": 772.92,
+      "text": "back to how tense we were as a nation at that time. I do remember",
+      "flesch_reading_ease": 92,
+      "words_per_minute": 147,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 772.92,
+      "end_time": 778.96,
+      "text": "exactly where I was at that time and the show itself starts in the",
+      "flesch_reading_ease": 91,
+      "words_per_minute": 161,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 778.96,
+      "end_time": 784.68,
+      "text": "aftermath of the first bombings which resulted in I think 52 deaths",
+      "flesch_reading_ease": 89,
+      "words_per_minute": 166,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 784.68,
+      "end_time": 790.92,
+      "text": "and almost 800 injuries. So we are right in the deep end of the start",
+      "flesch_reading_ease": 92,
+      "words_per_minute": 151,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 790.92,
+      "end_time": 797.16,
+      "text": "of the show. But I remember on the day we were doing a run through for",
+      "flesch_reading_ease": 84,
+      "words_per_minute": 159,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 797.16,
+      "end_time": 801.96,
+      "text": "the show at nine o'clock and the producer said we should start at",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 156,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 801.96,
+      "end_time": 806.68,
+      "text": "8:30am. So we are all heading in an hour earlier than we should have",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 138,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 806.68,
+      "end_time": 811.12,
+      "text": "been but we were all on that infrastructure and then we were",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 140,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 811.12,
+      "end_time": 814.68,
+      "text": "hearing sirens and thinking what on earth is going on and of course we",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 132,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 814.68,
+      "end_time": 819.08,
+      "text": "know now what a tragedy it was. I think everyone remembers where they",
+      "flesch_reading_ease": 70,
+      "words_per_minute": 116,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 819.08,
+      "end_time": 824.32,
+      "text": "were.",
+      "flesch_reading_ease": 68,
+      "words_per_minute": 111,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 824.32,
+      "end_time": 828.64,
+      "text": "were. After the original bombings who had second-rate failed bombings.",
+      "flesch_reading_ease": 65,
+      "words_per_minute": 123,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 828.64,
+      "end_time": 831.28,
+      "text": "which led to a huge manhunt which Jean Charles de Menezes",
+      "flesch_reading_ease": 66,
+      "words_per_minute": 119,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 831.28,
+      "end_time": 832.32,
+      "text": "was accidently drawn into.",
+      "flesch_reading_ease": 67,
+      "words_per_minute": 122,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 832.32,
+      "end_time": 836.84,
+      "text": "How did he get caught up in this?",
+      "flesch_reading_ease": 68,
+      "words_per_minute": 120,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 836.84,
+      "end_time": 845.84,
+      "text": "So many different factors and so many errors. And obviously no luck",
+      "flesch_reading_ease": 64,
+      "words_per_minute": 121,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 845.84,
+      "end_time": 850.12,
+      "text": "as well, a combination of everything. But this is just the man",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 137,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 850.12,
+      "end_time": 853.48,
+      "text": "who was living in London, Brazilian man living completely innocent and",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 144,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 853.48,
+      "end_time": 861.44,
+      "text": "just trying to make ends meet. Just like everyone else. It is so tragic",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 140,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 861.44,
+      "end_time": 869.64,
+      "text": "and that is portrayed really well in the drama.",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 154,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 869.64,
+      "end_time": 873.08,
+      "text": "The drama is told from multiple perspectives.",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 180,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 873.08,
+      "end_time": 874.12,
+      "text": "Including Andy Hayman",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 188,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 874.12,
+      "end_time": 875.8,
+      "text": "who oversees the investigations into the bombings.",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 189,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 875.8,
+      "end_time": 883.0,
+      "text": "You play him and had the opportunity to meet him.",
+      "flesch_reading_ease": 84,
+      "words_per_minute": 185,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 883.08,
+      "end_time": 887.04,
+      "text": "I asked the producers on the show if it was possible to get in touch with",
+      "flesch_reading_ease": 84,
+      "words_per_minute": 194,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 887.04,
+      "end_time": 892.84,
+      "text": "him and I had read before I knew I was going to do the job, he had a",
+      "flesch_reading_ease": 87,
+      "words_per_minute": 194,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 892.84,
+      "end_time": 896.88,
+      "text": "book out which was a great read and I'd read it a few times and started",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 188,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 896.88,
+      "end_time": 901.92,
+      "text": "to get a sense of the man and what he was like as an operator in the",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 179,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 901.92,
+      "end_time": 904.6,
+      "text": "police force. He was an incredible high achiever and immense",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 181,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 904.6,
+      "end_time": 908.8,
+      "text": "professional and very good and at the top of his game but to actually",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 178,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 908.8,
+      "end_time": 915.92,
+      "text": "get time with him was invaluable because you can get a measure of the",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 154,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 915.92,
+      "end_time": 919.52,
+      "text": "man. You're trying to find the soul of someone and of course not trying",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 168,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 919.52,
+      "end_time": 923.64,
+      "text": "to do impressions of people but from the practicalities of dialect and",
+      "flesch_reading_ease": 68,
+      "words_per_minute": 146,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 923.64,
+      "end_time": 927.88,
+      "text": "movement and hand gestures and within the confines of the script",
+      "flesch_reading_ease": 70,
+      "words_per_minute": 143,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 927.88,
+      "end_time": 933.12,
+      "text": "just to get that time with him and he was generous with me. And we",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 142,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 933.12,
+      "end_time": 936.44,
+      "text": "started off quite light for the first hour and then got into some",
+      "flesch_reading_ease": 69,
+      "words_per_minute": 128,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 936.44,
+      "end_time": 939.72,
+      "text": "quite pertinent questions and he was very forthcoming. That was",
+      "flesch_reading_ease": 68,
+      "words_per_minute": 125,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 939.72,
+      "end_time": 945.0,
+      "text": "invaluable.",
+      "flesch_reading_ease": 68,
+      "words_per_minute": 121,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 945.0,
+      "end_time": 949.2,
+      "text": "You worked closely with the family of Jean Charles de Menezes, you are",
+      "flesch_reading_ease": 69,
+      "words_per_minute": 134,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 949.2,
+      "end_time": 952.6,
+      "text": "both Brazilian, but aside from that you felt that there were some real",
+      "flesch_reading_ease": 70,
+      "words_per_minute": 126,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 952.6,
+      "end_time": 960.12,
+      "text": "similarities between the two of you. Absolutely. Jean Charles are",
+      "flesch_reading_ease": 69,
+      "words_per_minute": 127,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 960.12,
+      "end_time": 965.0,
+      "text": "somebody I could see myself in. I felt like I really connected with",
+      "flesch_reading_ease": 74,
+      "words_per_minute": 135,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 965.0,
+      "end_time": 971.04,
+      "text": "Jean Charles on so many levels. It is very meaningful to me, as well,",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 129,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 971.04,
+      "end_time": 980.0,
+      "text": "because he is a Brazilian guy living in London, you know? This is",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 131,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 980.0,
+      "end_time": 986.6,
+      "text": "Edison's first big role alongside yourself, Max, and Daniel Mays and",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 149,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 986.6,
+      "end_time": 990.72,
+      "text": "Russell Derby, you must be very proud of him. Yes, when you look at",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 147,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 990.72,
+      "end_time": 997.2,
+      "text": "this horrific tragedy we only have documents, we can look at the",
+      "flesch_reading_ease": 74,
+      "words_per_minute": 141,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 997.2,
+      "end_time": 1000.8,
+      "text": "descriptions of Jean Charles and so on, but for a drama like this and",
+      "flesch_reading_ease": 74,
+      "words_per_minute": 147,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1000.8,
+      "end_time": 1007.24,
+      "text": "for Edison to play it like this, it was so truthful and so beautiful,",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 142,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1007.24,
+      "end_time": 1014.92,
+      "text": "actually, at the press screening at the Bafta, I was sat next to Laura,",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 140,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1014.92,
+      "end_time": 1019.76,
+      "text": "and we couldn't actually breed, we were struggling to hold it together",
+      "flesch_reading_ease": 68,
+      "words_per_minute": 131,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 1019.76,
+      "end_time": 1023.56,
+      "text": "and to humanise Jean Charles and to portray him as best as you can as",
+      "flesch_reading_ease": 65,
+      "words_per_minute": 129,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 1023.56,
+      "end_time": 1030.6,
+      "text": "you did -- could not actually breathe. It is powerful to put that",
+      "flesch_reading_ease": 64,
+      "words_per_minute": 128,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 1030.6,
+      "end_time": 1035.4,
+      "text": "drama into peoples houses and give them multiples perspectives and to",
+      "flesch_reading_ease": 63,
+      "words_per_minute": 138,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 1035.4,
+      "end_time": 1040.52,
+      "text": "see a living version of Jean Charles as himself betrayed by Edison so",
+      "flesch_reading_ease": 65,
+      "words_per_minute": 136,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 1040.52,
+      "end_time": 1045.28,
+      "text": "beautifully, it is vital to connect with people, if that makes sense. It",
+      "flesch_reading_ease": 65,
+      "words_per_minute": 144,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 1045.28,
+      "end_time": 1051.24,
+      "text": "really was. It is a really important show, and done so well.",
+      "flesch_reading_ease": 69,
+      "words_per_minute": 139,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 1051.24,
+      "end_time": 1060.12,
+      "text": "Congratulations on your performances. You can watch Suspect",
+      "flesch_reading_ease": 70,
+      "words_per_minute": 145,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 1060.12,
+      "end_time": 1061.76,
+      "text": "on Disney+ from next Wednesday.",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 147,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1061.76,
+      "end_time": 1064.72,
+      "text": "And details of organisations offering help and support",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 140,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1067.44,
+      "end_time": 1070.32,
+      "text": "In just a moment Dame Imelda Staunton and Bessie Carter will be",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 149,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1070.32,
+      "end_time": 1073.84,
+      "text": "here to tell us about taking on their most personal role to date.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 147,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1073.84,
+      "end_time": 1076.84,
+      "text": "But now, we're heading to the Scottish Borders with artist",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 148,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1076.84,
+      "end_time": 1082.68,
+      "text": "Adebanji Alade to visit one of the UK's most striking landmarks.",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 154,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1082.68,
+      "end_time": 1084.8,
+      "text": "And joining him is a familiar face whose artwork is as colourful",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 166,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1086.28,
+      "end_time": 1087.32,
+      "text": "This landscape is stunning.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 162,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1087.32,
+      "end_time": 1090.12,
+      "text": "And I'm not here by chance.",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 154,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1090.12,
+      "end_time": 1091.8,
+      "text": "This spot has been chosen by someone",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 150,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1091.8,
+      "end_time": 1094.28,
+      "text": "whose wacky sense of humour",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 152,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1094.28,
+      "end_time": 1102.24,
+      "text": "kept a whole generation of kids laughing.",
+      "flesch_reading_ease": 74,
+      "words_per_minute": 154,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1105.36,
+      "end_time": 1107.2,
+      "text": "Mallet's Mallett is a word association game.",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 198,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 1107.2,
+      "end_time": 1109.72,
+      "text": "You must pause. You mustn't hesitate.",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 186,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 1109.72,
+      "end_time": 1111.6,
+      "text": "Otherwise you get back your head like this.",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 182,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 1111.6,
+      "end_time": 1112.68,
+      "text": "Or like this.",
+      "flesch_reading_ease": 74,
+      "words_per_minute": 185,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 1112.68,
+      "end_time": 1114.8,
+      "text": "Timmy Mallett, he's asked me to meet him here",
+      "flesch_reading_ease": 72,
+      "words_per_minute": 185,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 1114.8,
+      "end_time": 1116.72,
+      "text": "at the foot of the magnificent Leaderfoot Viaduct",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 166,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1116.72,
+      "end_time": 1118.88,
+      "text": "in the Scottish Borders, because nowadays he's more likely",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 156,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1118.88,
+      "end_time": 1121.76,
+      "text": "to be wielding a paintbrush rather than his iconic big foam mallet.",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 150,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1121.76,
+      "end_time": 1123.96,
+      "text": "Here he comes. Oh, my days.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 146,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1123.96,
+      "end_time": 1125.76,
+      "text": "Adebanji!",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 145,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1125.76,
+      "end_time": 1127.36,
+      "text": "Timmy! What an honour.",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 150,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1127.36,
+      "end_time": 1130.96,
+      "text": "Tell me, why are we here?",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 150,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1130.96,
+      "end_time": 1133.36,
+      "text": "And when I'm not entertaining with Mallett's mallet,",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 159,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1133.36,
+      "end_time": 1136.32,
+      "text": "I'm The Cycling Artist. And I pedal everywhere.",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 135,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1136.32,
+      "end_time": 1139.8,
+      "text": "And I paint pictures everywhere I go.",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 122,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1139.8,
+      "end_time": 1143.64,
+      "text": "Now it makes sense, because this place is stunning.",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 127,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1143.64,
+      "end_time": 1146.04,
+      "text": "We're setting up our easels so I can paint him",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 126,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1146.04,
+      "end_time": 1151.4,
+      "text": "while he captures a picture of the landscape.",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 118,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1151.4,
+      "end_time": 1155.16,
+      "text": "Southern Scotland is a hidden gem.",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 124,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1155.16,
+      "end_time": 1159.8,
+      "text": "People tend to dash past on their way to the Highlands, and really,",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 126,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1159.8,
+      "end_time": 1164.16,
+      "text": "they're missing a trick because this really has so much to offer.",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 128,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1164.16,
+      "end_time": 1169.0,
+      "text": "This viaduct was an old railway line which ran for 80 years.",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 131,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1169.0,
+      "end_time": 1170.92,
+      "text": "The last Indiana Jones film was shot here.",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 132,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1170.92,
+      "end_time": 1173.48,
+      "text": "Wow.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 127,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1173.48,
+      "end_time": 1181.44,
+      "text": "It's a great location and it's attracting all sorts,",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 133,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1184.4,
+      "end_time": 1187.64,
+      "text": "including great artists like Adebaji.",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 163,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1187.64,
+      "end_time": 1189.92,
+      "text": "Joking aside, Timmy's set up is pretty unusual.",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 175,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1189.92,
+      "end_time": 1194.68,
+      "text": "Timmy, I have never seen an easel on a bike.",
+      "flesch_reading_ease": 88,
+      "words_per_minute": 174,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1194.68,
+      "end_time": 1200.36,
+      "text": "I wanted to find a way to paint on the bike,",
+      "flesch_reading_ease": 84,
+      "words_per_minute": 177,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 1200.36,
+      "end_time": 1206.0,
+      "text": "so I've worked out a way of attaching the easel onto the bike.",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 177,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 1206.0,
+      "end_time": 1207.92,
+      "text": "I painted the bike myself with water-based paints.",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 164,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1207.92,
+      "end_time": 1211.12,
+      "text": "It's part and parcel of who I am.",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 159,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1211.12,
+      "end_time": 1214.72,
+      "text": "In 1984, Timmy joined children's TV show Wide Awake Club",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 170,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1214.72,
+      "end_time": 1218.6,
+      "text": "and later went on to present Wacaday, which ran until 1992.",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 164,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1218.6,
+      "end_time": 1221.24,
+      "text": "What do you think of the shorts? Do you like them?",
+      "flesch_reading_ease": 89,
+      "words_per_minute": 135,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1221.24,
+      "end_time": 1223.64,
+      "text": "His face and catchphrases were known by an entire generation.",
+      "flesch_reading_ease": 87,
+      "words_per_minute": 122,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1223.64,
+      "end_time": 1224.84,
+      "text": "Bash my head like this.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 126,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1224.84,
+      "end_time": 1225.88,
+      "text": "Or like this.",
+      "flesch_reading_ease": 89,
+      "words_per_minute": 123,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1225.88,
+      "end_time": 1228.52,
+      "text": "Utterly brilliant.",
+      "flesch_reading_ease": 88,
+      "words_per_minute": 126,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1228.52,
+      "end_time": 1230.68,
+      "text": "But more recently, art has become a full-time occupation.",
+      "flesch_reading_ease": 89,
+      "words_per_minute": 131,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1230.68,
+      "end_time": 1234.96,
+      "text": "Timmy, have you always been an artist?",
+      "flesch_reading_ease": 91,
+      "words_per_minute": 127,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1234.96,
+      "end_time": 1242.92,
+      "text": "Oh, yeah. Art's been essential in our family.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 134,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1242.92,
+      "end_time": 1245.76,
+      "text": "My dad, he was an artist. He would say, \"Sharpen your eyes\".",
+      "flesch_reading_ease": 87,
+      "words_per_minute": 147,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1245.76,
+      "end_time": 1246.8,
+      "text": "Look closely at things and let the light and shade",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 128,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1246.8,
+      "end_time": 1249.76,
+      "text": "build up the picture.",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 122,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1249.76,
+      "end_time": 1253.12,
+      "text": "And we'd always have a great critic in my mum.",
+      "flesch_reading_ease": 87,
+      "words_per_minute": 130,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1253.12,
+      "end_time": 1261.08,
+      "text": "Oh!",
+      "flesch_reading_ease": 87,
+      "words_per_minute": 131,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1261.48,
+      "end_time": 1264.32,
+      "text": "\"Mum, what do you think of my painting?\"",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 157,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1264.32,
+      "end_time": 1269.72,
+      "text": "She would say...",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 153,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1269.72,
+      "end_time": 1271.36,
+      "text": "\"Very nice, dear. I prefer the frame.\"",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 171,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1271.36,
+      "end_time": 1272.8,
+      "text": "In 2018, Timmy set off on",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 159,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1272.8,
+      "end_time": 1274.72,
+      "text": "a 2500-mile painting and cycling trip around Europe.",
+      "flesch_reading_ease": 84,
+      "words_per_minute": 159,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1274.72,
+      "end_time": 1276.16,
+      "text": "It's a long way to Santiago!",
+      "flesch_reading_ease": 84,
+      "words_per_minute": 150,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1276.16,
+      "end_time": 1277.8,
+      "text": "His inspiration was his brother Martin.",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 152,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1277.8,
+      "end_time": 1278.84,
+      "text": "Martin had Down's Syndrome",
+      "flesch_reading_ease": 88,
+      "words_per_minute": 150,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1278.84,
+      "end_time": 1282.56,
+      "text": "and he died shortly before Timmy set off.",
+      "flesch_reading_ease": 89,
+      "words_per_minute": 144,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1282.56,
+      "end_time": 1286.48,
+      "text": "Martin was never defined by his language and learning difficulties.",
+      "flesch_reading_ease": 89,
+      "words_per_minute": 150,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1286.48,
+      "end_time": 1294.44,
+      "text": "He was never held back by Down's Syndrome.",
+      "flesch_reading_ease": 93,
+      "words_per_minute": 153,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1295.48,
+      "end_time": 1297.4,
+      "text": "He would say, \"You and me, I'm happy.\"",
+      "flesch_reading_ease": 92,
+      "words_per_minute": 181,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 1297.4,
+      "end_time": 1299.32,
+      "text": "What that means is being in the moment",
+      "flesch_reading_ease": 93,
+      "words_per_minute": 162,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1299.32,
+      "end_time": 1301.96,
+      "text": "and to be in the moment is easy on the bike.",
+      "flesch_reading_ease": 92,
+      "words_per_minute": 148,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1301.96,
+      "end_time": 1304.76,
+      "text": "Dear Martin shows me that,",
+      "flesch_reading_ease": 93,
+      "words_per_minute": 130,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1304.76,
+      "end_time": 1307.08,
+      "text": "have a go,",
+      "flesch_reading_ease": 93,
+      "words_per_minute": 131,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1307.08,
+      "end_time": 1310.24,
+      "text": "try your best to reach your potential.",
+      "flesch_reading_ease": 92,
+      "words_per_minute": 134,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1310.24,
+      "end_time": 1311.68,
+      "text": "See if you can. Every day.",
+      "flesch_reading_ease": 92,
+      "words_per_minute": 134,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1311.68,
+      "end_time": 1315.0,
+      "text": "Wonderful. What a spirit.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 119,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1315.0,
+      "end_time": 1317.0,
+      "text": "And you know what, Adebanji? I'm done.",
+      "flesch_reading_ease": 90,
+      "words_per_minute": 118,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1317.0,
+      "end_time": 1319.08,
+      "text": "All right, I'm gonna come and see yours first.",
+      "flesch_reading_ease": 91,
+      "words_per_minute": 113,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1319.08,
+      "end_time": 1321.72,
+      "text": "Oh, wow. I love it.",
+      "flesch_reading_ease": 89,
+      "words_per_minute": 107,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1321.72,
+      "end_time": 1323.8,
+      "text": "The contrast in the light hitting these pillars.",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 108,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1323.8,
+      "end_time": 1325.96,
+      "text": "You have these silhouetted ones against the sky,",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 104,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1325.96,
+      "end_time": 1327.64,
+      "text": "and then, boom, the light comes out.",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 99,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1327.64,
+      "end_time": 1329.04,
+      "text": "Wonderful. Brilliant.",
+      "flesch_reading_ease": 84,
+      "words_per_minute": 99,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1329.04,
+      "end_time": 1331.48,
+      "text": "Thanks.",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 100,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1331.48,
+      "end_time": 1333.16,
+      "text": "Brilliant.",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 103,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1333.16,
+      "end_time": 1334.84,
+      "text": "Shall we have a look at yours?",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 104,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1334.84,
+      "end_time": 1336.52,
+      "text": "OK. Right.",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 100,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1336.52,
+      "end_time": 1337.8,
+      "text": "I recognise that fella.",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 101,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1337.8,
+      "end_time": 1339.88,
+      "text": "Yeah.",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 99,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1339.88,
+      "end_time": 1341.88,
+      "text": "There's some colour in this, isn't there?",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 102,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1341.88,
+      "end_time": 1348.36,
+      "text": "Yeah.",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 100,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1348.44,
+      "end_time": 1355.16,
+      "text": "It represents what you do, how you do it and what you do it with. Thank",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 110,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1355.16,
+      "end_time": 1363.12,
+      "text": "you, that is utterly, utterly brilliant. Thank you.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 99,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1364.52,
+      "end_time": 1371.04,
+      "text": "brilliant. Thank you. Both paintings are so lovely. I used to love",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 114,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1371.04,
+      "end_time": 1375.16,
+      "text": "watching Timmy Mallett.",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 120,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1375.16,
+      "end_time": 1377.08,
+      "text": "Time to say hello to our next guests.",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 126,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1377.08,
+      "end_time": 1382.6,
+      "text": "They're two actors who also happen to share a family tree.",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 122,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1382.6,
+      "end_time": 1388.92,
+      "text": "It's Dame Imelda Staunton and her daughter Bessie Carter.",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 115,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1389.0,
+      "end_time": 1394.04,
+      "text": "I'm in the presence of acting royalty, because you have just won",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 117,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1394.04,
+      "end_time": 1400.68,
+      "text": "your fifth Olivier Award, amazing, how do you feel? Greedy! Still",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 124,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1400.68,
+      "end_time": 1407.48,
+      "text": "greedy. It is very nice, yes. You are not going to get much more out",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 128,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1407.48,
+      "end_time": 1417.4,
+      "text": "of me on that. You two now, mother and daughter on",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 130,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1418.56,
+      "end_time": 1420.44,
+      "text": "and daughter on stage in Mrs Warren's Profession, set in",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 149,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1420.44,
+      "end_time": 1424.08,
+      "text": "Victorian times, and when it was first written, it is about the",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 144,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1424.08,
+      "end_time": 1429.04,
+      "text": "contentious relationship between the pair, and then a secret is revealed",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 143,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1429.04,
+      "end_time": 1436.08,
+      "text": "that changes things.",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 147,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1436.16,
+      "end_time": 1440.2,
+      "text": "that changes things. Yes, it focuses on a mother and daughter who have",
+      "flesch_reading_ease": 84,
+      "words_per_minute": 171,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1440.2,
+      "end_time": 1442.92,
+      "text": "been somewhat estranged and have not known each other due to their",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 176,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 1442.92,
+      "end_time": 1448.2,
+      "text": "circumstances. We meet them over these few days when they have a sort",
+      "flesch_reading_ease": 84,
+      "words_per_minute": 141,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1448.2,
+      "end_time": 1450.6,
+      "text": "of confrontation of sorts which neither of them want to have but",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 144,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1450.6,
+      "end_time": 1459.68,
+      "text": "they have to have. And to have a play that is written in 1893, about",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 129,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1459.68,
+      "end_time": 1464.12,
+      "text": "the plight of women either in the workplace or at home or just in",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 133,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1464.12,
+      "end_time": 1468.24,
+      "text": "life, that women yet again are not treated equally, and George Bernard",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 123,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1468.24,
+      "end_time": 1473.04,
+      "text": "Shaw was a great champion of women, and this play was a band, because",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 123,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1473.04,
+      "end_time": 1476.36,
+      "text": "they didn't want to know. It was partly banned because of the title.",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 120,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1476.36,
+      "end_time": 1488.72,
+      "text": "You have a woman having a title, not acceptable. Not cool at the time.",
+      "flesch_reading_ease": 82,
+      "words_per_minute": 116,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1488.72,
+      "end_time": 1493.12,
+      "text": "Now, you start alongside your mum, Bessie, and this is your first time",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 129,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1493.12,
+      "end_time": 1500.8,
+      "text": "starring alongside her, how does it feel? Terrible, awful! We were both",
+      "flesch_reading_ease": 84,
+      "words_per_minute": 117,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1500.8,
+      "end_time": 1508.0,
+      "text": "having a terrible time!",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 128,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1508.08,
+      "end_time": 1510.36,
+      "text": "having a terrible time! It is really great. It is a real treat. We are",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 146,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1510.36,
+      "end_time": 1517.08,
+      "text": "having a lovely time. It feels weirdly, almost burly, to us,",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 138,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1517.08,
+      "end_time": 1522.68,
+      "text": "normal, and be just our two actors in a space trying to tell a story,",
+      "flesch_reading_ease": 87,
+      "words_per_minute": 144,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1522.68,
+      "end_time": 1528.88,
+      "text": "so it is a real treat. And the packed lunches are really good. That",
+      "flesch_reading_ease": 88,
+      "words_per_minute": 148,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1528.88,
+      "end_time": 1535.36,
+      "text": "is all we talk about! You have the hard-boiled eggs for the 11 o'clock",
+      "flesch_reading_ease": 88,
+      "words_per_minute": 150,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1535.36,
+      "end_time": 1545.08,
+      "text": "break, and then we compare stuff. Living the dream! Add your dad as an",
+      "flesch_reading_ease": 87,
+      "words_per_minute": 159,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1545.08,
+      "end_time": 1548.72,
+      "text": "actor, you have directed him before, is it good to working with family,",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 183,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 1548.72,
+      "end_time": 1554.6,
+      "text": "or not so much? When you get into that region when you're on the",
+      "flesch_reading_ease": 88,
+      "words_per_minute": 187,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 1554.6,
+      "end_time": 1557.68,
+      "text": "floor, working with each other, the relationship, the father and son",
+      "flesch_reading_ease": 84,
+      "words_per_minute": 180,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 1557.68,
+      "end_time": 1563.68,
+      "text": "with my father, you trust each other, I will give him a note, and",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 182,
+      "complexity_score": 0.93
+    },
+    {
+      "start_time": 1563.68,
+      "end_time": 1569.4,
+      "text": "he would go OK and get up and do it, but it was a brilliant thing for him",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 157,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1569.4,
+      "end_time": 1573.44,
+      "text": "to let me direct, it is a brilliant short, and he is wonderful in it. I",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 142,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1573.44,
+      "end_time": 1577.8,
+      "text": "am really glad that I actually did that, I have something that is",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 131,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1577.8,
+      "end_time": 1581.2,
+      "text": "tangible with my father and I that I can look at and show his",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 127,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1581.2,
+      "end_time": 1585.44,
+      "text": "grandchildren years down the line. It was a great experience. Really",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 115,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1585.44,
+      "end_time": 1591.28,
+      "text": "special, isn't it? And you said that you had not performed together",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 119,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1591.28,
+      "end_time": 1594.28,
+      "text": "before, but then we found this photo, and we wondered what was",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 120,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1594.28,
+      "end_time": 1605.68,
+      "text": "going on. This was a rendition of Mamma Mia!!. It was last week!",
+      "flesch_reading_ease": 73,
+      "words_per_minute": 107,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1605.68,
+      "end_time": 1610.84,
+      "text": "Started young.",
+      "flesch_reading_ease": 69,
+      "words_per_minute": 110,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 1611.4,
+      "end_time": 1613.28,
+      "text": "Started young. Dorking family, Edison, what did your family say",
+      "flesch_reading_ease": 68,
+      "words_per_minute": 120,
+      "complexity_score": 0.8
+    },
+    {
+      "start_time": 1613.28,
+      "end_time": 1619.12,
+      "text": "when you wanted to pursue acting as a career? -- talking family. My",
+      "flesch_reading_ease": 71,
+      "words_per_minute": 119,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1619.12,
+      "end_time": 1623.88,
+      "text": "parents were always really supportive but cautiously",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 126,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1623.88,
+      "end_time": 1629.64,
+      "text": "supportive, they told me, OK, good, have a Plan B, C and D, and get a",
+      "flesch_reading_ease": 78,
+      "words_per_minute": 129,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1629.64,
+      "end_time": 1637.88,
+      "text": "degree. Did you? I did. I actually studied here in the UK, at",
+      "flesch_reading_ease": 76,
+      "words_per_minute": 130,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1637.88,
+      "end_time": 1641.88,
+      "text": "university, but I went for film production. It was a way of sort of",
+      "flesch_reading_ease": 75,
+      "words_per_minute": 137,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1641.88,
+      "end_time": 1646.2,
+      "text": "like losing my parents but also still being involved somehow in",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 124,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1646.2,
+      "end_time": 1655.36,
+      "text": "film. They must be proud now, though. I totally understand that.",
+      "flesch_reading_ease": 81,
+      "words_per_minute": 118,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1655.36,
+      "end_time": 1663.6,
+      "text": "And lots of rumours flying around about the celebrity Traitors",
+      "flesch_reading_ease": 77,
+      "words_per_minute": 126,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1663.6,
+      "end_time": 1667.24,
+      "text": "Sentences, And Celia Imrie Is Rumoured To Be One Of Them, Will She",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 131,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1667.24,
+      "end_time": 1671.68,
+      "text": "Make A Good Traitor? She Is An Actress, I Dare Say She Will Make A",
+      "flesch_reading_ease": 86,
+      "words_per_minute": 127,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1671.68,
+      "end_time": 1678.64,
+      "text": "Brilliant Traitor, I Cannot Think Of Anyone Better. We watch traitors and",
+      "flesch_reading_ease": 83,
+      "words_per_minute": 129,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1678.64,
+      "end_time": 1681.68,
+      "text": "it is hilarious, and I think she would be a great asset to that",
+      "flesch_reading_ease": 85,
+      "words_per_minute": 139,
+      "complexity_score": 1.0
+    },
+    {
+      "start_time": 1681.68,
+      "end_time": 1686.56,
+      "text": "house.",
+      "flesch_reading_ease": 80,
+      "words_per_minute": 140,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1686.96,
+      "end_time": 1690.76,
+      "text": "house. Mrs Walker's profession opens on the 22nd of May at the Garrick",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 157,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1690.76,
+      "end_time": 1697.76,
+      "text": "Theatre in London and is on until the 16th of August.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 150,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1699.36,
+      "end_time": 1703.52,
+      "text": "the 16th of August. -- Mrs Warren's Profession. This would definitely",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 174,
+      "complexity_score": 0.9
+    },
+    {
+      "start_time": 1703.52,
+      "end_time": 1709.36,
+      "text": "give the",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 177,
+      "complexity_score": 0.84
+    },
+    {
+      "start_time": 1709.44,
+      "end_time": 1712.52,
+      "text": "give the cast the heebeegeebees! A big thank you to all of our guests",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 235,
+      "complexity_score": 0.77
+    },
+    {
+      "start_time": 1712.52,
+      "end_time": 1715.08,
+      "text": "and to Matthew Bostock.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 226,
+      "complexity_score": 0.77
+    },
+    {
+      "start_time": 1715.08,
+      "end_time": 1717.6,
+      "text": "That's all we've got time for tonight.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 259,
+      "complexity_score": 0.76
+    },
+    {
+      "start_time": 1717.6,
+      "end_time": 1720.04,
+      "text": "I'll be back tomorrow with Roman when we'll be joined",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 273,
+      "complexity_score": 0.76
+    },
+    {
+      "start_time": 1720.04,
+      "end_time": 1721.92,
+      "text": "by the stars of Thunderbolts, Florence Pugh and",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 263,
+      "complexity_score": 0.76
+    },
+    {
+      "start_time": 1721.92,
+      "end_time": 1723.12,
+      "text": "Julia Louis-Dreyfus, alongside Jeremy Vine.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 267,
+      "complexity_score": 0.76
+    },
+    {
+      "start_time": 1723.12,
+      "end_time": 1725.52,
+      "text": "Plus, KSI gives out a special One Big Thank You.",
+      "flesch_reading_ease": 79,
+      "words_per_minute": 250,
+      "complexity_score": 0.77
+    }
+  ]
+}

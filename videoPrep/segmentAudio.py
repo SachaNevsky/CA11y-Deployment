@@ -1,4 +1,4 @@
-from datetime import datetime
+from pathlib import Path
 import json
 import math
 import re
@@ -10,6 +10,11 @@ from mutagen.mp3 import MP3
 import re
 import json
 import os
+
+
+def segmentAudio(name: str):
+    command = f"ffmpeg -i {name}.mp4 -b:a 192K -vn {name}.mp3"
+    subprocess.run(command, shell=True)
 
 
 def isDockerRunning():
@@ -36,36 +41,40 @@ def startDocker():
     return True
 
 
-def dockerSegmentMusic(name):
+def dockerSegmentMusic(name: str):
     command = [
         "docker", "run", "--gpus", "all",
-        "-v", "C:/Users/sacha/Desktop/ca11y-deployment/public:/data",
+        "--env", "CUDA_MEMORY_FRACTION=0.9", "--cpus", "4",
+        "-v", f"C:/Users/sacha/Desktop/ca11y-deployment/public/{name}:/data",
         "beveradb/audio-separator:gpu", f"/data/{name}.mp3",
         "--output_format=MP3",
-        "--output_dir", f"/data/{name}"
+        "--output_dir", "/data",
+        "--mdxc_batch_size=8", "--mdxc_segment_size=88200"
     ]
 
     if startDocker():
         print("Executing Docker command to segment music...")
-        subprocess.run(command, shell=True)
+        subprocess.run(command)
 
 
-def dockerSegmentCrowd(name):
+def dockerSegmentCrowd(name: str):
     command = [
         "docker", "run", "--gpus", "all",
+        "--env", "CUDA_MEMORY_FRACTION=0.9", "--cpus", "4",
         "-v", f"C:/Users/sacha/Desktop/ca11y-deployment/public/{name}:/data",
         "beveradb/audio-separator:gpu", "/data/crowded.mp3",
         "-m", "mel_band_roformer_crowd_aufr33_viperx_sdr_8.7144.ckpt",
         "--output_format=MP3",
-        "--output_dir", "/data"
+        "--output_dir", "/data",
+        "--mdxc_batch_size=8", "--mdxc_segment_size=88200"
     ]
 
     if startDocker():
         print("Executing Docker command to segment crowd noise...")
-        subprocess.run(command, shell=True)
+        subprocess.run(command)
 
 
-def renameFiles(directory, searchStr, newName):
+def renameFiles(directory: str, searchStr: str, newName: str):
     files = glob.glob(os.path.join(directory, f"*{searchStr}*"))
 
     if not files:
@@ -80,7 +89,7 @@ def renameFiles(directory, searchStr, newName):
         print(f"Renamed '{oldName}' to '{newName}'")
 
 
-def deleteFiles(directory, searchStr):
+def deleteFiles(directory: str, searchStr: str):
     files = glob.glob(os.path.join(directory, f"*{searchStr}*"))
     for file in files:
         try:
@@ -90,13 +99,13 @@ def deleteFiles(directory, searchStr):
             print(f"Error deleting {file}: {e}")
 
 
-def parse_vtt_time(time_str):
+def parse_vtt_time(time_str: str):
     h, m, s = time_str.split(':')
     seconds = float(h) * 3600 + float(m) * 60 + float(s)
     return seconds
 
 
-def parse_vtt_file(file_path):
+def parse_vtt_file(file_path: str):
     with open(file_path, 'r', encoding='utf-8') as file:
         content = file.read()
 
@@ -120,7 +129,7 @@ def parse_vtt_file(file_path):
     return subtitles
 
 
-def count_syllables(word):
+def count_syllables(word: str):
     word = word.lower()
     word = re.sub(r'[^a-z]', '', word)
 
@@ -147,7 +156,7 @@ def count_syllables(word):
     return count
 
 
-def flesch_reading_ease(text, num_subtitle_blocks):
+def flesch_reading_ease(text: str, num_subtitle_blocks: int):
     text = re.sub(r'[^\w\s.]', '', text)
 
     words = re.findall(r'\b\w+\b', text.lower())
@@ -169,7 +178,7 @@ def flesch_reading_ease(text, num_subtitle_blocks):
     return int(round(score))
 
 
-def words_per_minute(text, duration_seconds):
+def words_per_minute(text: str, duration_seconds: int):
     if duration_seconds <= 0:
         return 0
 
@@ -181,7 +190,7 @@ def words_per_minute(text, duration_seconds):
     return int(round(wpm))
 
 
-def calculate_complexity_score(fk_score, wpm):
+def calculate_complexity_score(fk_score: float, wpm: int):
     if fk_score is None:
         fk_score = 90.0
 
@@ -190,14 +199,14 @@ def calculate_complexity_score(fk_score, wpm):
     wpm_reduction = 1
     if wpm > 150:
         wpm_reduction = round(
-            (10 - math.log(math.floor((wpm - 150) / 25))) / 10, 2)
+            (10 - math.log(math.ceil((wpm - 150) / 25))) / 10, 2)
 
     final_score = max(1, min(10, fk_component * wpm_reduction))
 
     return round(final_score/10, 2)
 
 
-def analyze_subtitles_with_rolling_window(subtitles):
+def analyze_subtitles_with_rolling_window(subtitles: list[str]):
     results = []
     last_valid_fk_score = 100.0
 
@@ -233,8 +242,8 @@ def analyze_subtitles_with_rolling_window(subtitles):
         complexity = calculate_complexity_score(fk_score, wpm)
 
         results.append({
-            'start_time': original_start,
-            'end_time': original_end,
+            'start_time': round(original_start, 2),
+            'end_time': round(original_end, 2),
             'text': original_text,
             'flesch_reading_ease': fk_score,
             'words_per_minute': wpm,
@@ -244,7 +253,7 @@ def analyze_subtitles_with_rolling_window(subtitles):
     return results
 
 
-def append_subtitles_to_existing_file(existing_file, subtitles_data):
+def append_subtitles_to_existing_file(existing_file: str, subtitles_data):
     with open(existing_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
     data["subtitles"] = subtitles_data
@@ -253,38 +262,56 @@ def append_subtitles_to_existing_file(existing_file, subtitles_data):
 
 
 if __name__ == "__main__":
-    video = "theSocialNetwork"
+    videos = ["asia", "nigel_slater", "one_show", "weakest_link"]
 
-    print(f"Processing {video}.mp3")
-    dir = f"C:/Users/sacha/Desktop/ca11y-deployment/public/{video}"
+    for video in videos:
+        print(f"Processing {video}.mp3")
+        dir = f"C:/Users/sacha/Desktop/ca11y-deployment/public/{video}"
+        audioFile = Path(f"{dir}/{video}.mp3")
+        speakerFile = Path(f"{dir}/{video}_speaker.mp3")
+        musicFile = Path(f"{dir}/{video}_music.mp3")
+        otherFile = Path(f"{dir}/{video}_other.mp3")
 
-    # strCrowded = "(Vocals)"
-    # strMusic = "(Instrumental)"
-    # strVoice = "(other)"
-    # strCrowd = "(crowd)"
+        if (audioFile.is_file()):
+            print(f"{video}.mp3 already exists.")
+        else:
+            print(f"{video}.mp3 does not exists.\nCreating it...")
+            segmentAudio(f"{dir}/{video}")
 
-    # with open(f"{dir}/{video}.json", "w") as file:
-    #     audio = MP3(f"{dir}/{video}.mp3")
-    #     file.write(f"{{\n    \"duration\": {int(audio.info.length)}\n}}")
+        strCrowded = "(Vocals)"
+        strMusic = "(Instrumental)"
+        strVoice = "(other)"
+        strCrowd = "(crowd)"
 
-    # dockerSegmentMusic(name=video)
+        print("\nGetting audio duration...")
+        with open(f"{dir}/{video}.json", "w") as file:
+            audio = MP3(f"{dir}/{video}.mp3")
+            file.write(f"{{\n    \"duration\": {int(audio.info.length)}\n}}")
 
-    # renameFiles(directory=dir, searchStr=strCrowded, newName="crowded.mp3")
-    # renameFiles(directory=dir, searchStr=strMusic,
-    #             newName=f"{video}_music.mp3")
+        print("\nSegmenting music...")
+        if (musicFile.is_file()):
+            print(f"{video}_music.mp3 already exists.")
+        else:
+            dockerSegmentMusic(name=video)
+            renameFiles(directory=dir, searchStr=strCrowded,
+                        newName="crowded.mp3")
+            renameFiles(directory=dir, searchStr=strMusic,
+                        newName=f"{video}_music.mp3")
 
-    # dockerSegmentCrowd(name=video)
+        print("\nSegmenting other...")
+        if (speakerFile.is_file() | otherFile.is_file()):
+            print(f"{video}_speaker.mp3 and {video}_other.mp3 already exists.")
+        else:
+            dockerSegmentCrowd(name=video)
+            renameFiles(directory=dir, searchStr=strVoice,
+                        newName=f"{video}_speaker.mp3")
+            renameFiles(directory=dir, searchStr=strCrowd,
+                        newName=f"{video}_other.mp3")
 
-    # renameFiles(directory=dir, searchStr=strVoice,
-    #             newName=f"{video}_speaker.mp3")
-    # renameFiles(directory=dir, searchStr=strCrowd,
-    #             newName=f"{video}_other.mp3")
+        print("\nCleaning up...")
+        deleteFiles(directory=dir, searchStr="crowded")
 
-    # deleteFiles(directory=dir, searchStr="crowded")
-
-    subtitles = parse_vtt_file(f"{dir}/{video}.vtt")
-    results = analyze_subtitles_with_rolling_window(subtitles)
-    append_subtitles_to_existing_file(f"{dir}/{video}.json", results)
-
-    # subtitles = process_vtt_subtitles(f"captions.vtt")
-    # append_subtitles_to_existing_file(f"captions.json", subtitles)
+        print("\nComputing complexity scores...")
+        subtitles = parse_vtt_file(f"{dir}/{video}.vtt")
+        results = analyze_subtitles_with_rolling_window(subtitles)
+        append_subtitles_to_existing_file(f"{dir}/{video}.json", results)

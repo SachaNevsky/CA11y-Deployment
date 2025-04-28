@@ -35,3 +35,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# large video files
+/public/asia/*.mp4
+/public/nigel_slater/*.mp4
+/public/one_show/*.mp4
+/public/weakest_link/*.mp4
