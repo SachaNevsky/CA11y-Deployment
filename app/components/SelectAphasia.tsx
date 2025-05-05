@@ -91,7 +91,7 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 
 	return (
 		<div className="mx-[16%]">
-			<p className="text-lg font-semibold mb-4">Hello {name}! We will ask you some questions about your aphasia.</p>
+			<p className="text-lg font-semibold my-4">Hello {name}! We will ask you some questions about your aphasia.</p>
 			{aphasiaCharacteristics.listening !== 0 && aphasiaCharacteristics.speaking !== 0 && aphasiaCharacteristics.reading !== 0 && aphasiaCharacteristics.writing !== 0 ? (
 				<button onClick={handleConfirm} className={"py-4 px-10 border-solid border-2 rounded-md border-gray-300"}>Confirm</button>
 			) : (
@@ -99,7 +99,7 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 			)}
 			<div>
 				<div className="p-4">
-					<div className="my-6">
+					{/* <div className="my-6">
 						<p className="text-lg font-semibold mb-2">
 							What hand do you prefer using?
 						</p>
@@ -137,7 +137,7 @@ const SelectAphasia: React.FC<SelectAphasiaProps> = ({ name }: SelectAphasiaProp
 								Right-Handed
 							</button>
 						</div>
-					</div>
+					</div> */}
 					<div className="my-6">
 						<p className="text-lg font-semibold mb-2">
 							How do you find your language abilities?

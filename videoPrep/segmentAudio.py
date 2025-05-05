@@ -262,7 +262,7 @@ def append_subtitles_to_existing_file(existing_file: str, subtitles_data):
 
 
 if __name__ == "__main__":
-    videos = ["asia", "nigel_slater", "one_show", "weakest_link"]
+    videos = ["nigel_slater"]
 
     for video in videos:
         print(f"Processing {video}.mp3")

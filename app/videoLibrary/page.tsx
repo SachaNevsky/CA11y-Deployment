@@ -8,7 +8,7 @@ const VideoLibrary = () => {
     const videos = [
         { name: "The Social Network", video: "theSocialNetwork", info: { year: "2010", type: "Drama film" } },
         { name: "Asia", video: "asia", info: { year: "2024", type: "Nature documentary" } },
-        { name: "Nigel Slater Simple Christmas", video: "nigel_slater", info: { year: "2024", type: "Cooking show" } },
+        { name: "Nigel Slater's Middle East", video: "nigel_slater", info: { year: "2018", type: "Cooking show" } },
         { name: "The One Show", video: "one_show", info: { year: "2025", type: "Talk show" } },
         { name: "The Weakest Link", video: "weakest_link", info: { year: "2025", type: "Quiz show" } }
     ];
@@ -55,7 +55,7 @@ const VideoLibrary = () => {
 
     return (
         <div className="m-auto w-[90%] text-center">
-            Hello {name}, this is our video library.<br />Choose something to watch.
+            <p className="text-xl pt-4">Hello {name}, this is our video library.<br />Choose something to watch.</p>
             <div>
                 <button className="py-2 px-4 m-4 border-solid border-2 rounded-md border-gray-500" onClick={() => { handleDeleteCharacteristics() }}>Delete aphasia characteristics</button>
             </div>

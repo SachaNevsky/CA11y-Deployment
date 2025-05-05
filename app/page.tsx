@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from 'next/image'
 import { logAction } from "@/lib/logAction";
 import SelectAphasia from "./components/SelectAphasia";
 
@@ -69,20 +70,19 @@ const Home = () => {
 			) : (
 				<form onSubmit={handleNameSubmit}>
 					<div>
-						<div>
-							<label htmlFor="nameInput" className="mx-2 my-4">What is your name?</label>
+						<div className="mx-2 mt-8 text-2xl">
+							<label htmlFor="nameInput">Hello! What is your name?</label>
+							<Image className="m-auto" alt="Icon of an ID card" src="/icons/name.png" width={100} height={100} />
 						</div>
 						<div>
 							<input
+								placeholder="Enter name here..."
 								id="nameInput"
 								type="text"
-								className="mx-2 my-4 p-4 w-1/3 rounded-md border-solid border-2 border-gray-400"
+								className="mx-2 my-8 p-4 w-1/2 md:w-1/3 rounded-md border-solid border-2 border-gray-400"
 							/>
 						</div>
-						<button
-							type="submit"
-							className="px-4 py-2 rounded-md border-solid border-2 border-gray-300 transition hover:border-gray-400 hover:bg-gray-200 ease-in delay-100"
-						>
+						<button type="submit" className="py-4 rounded-md font-bold text-lg transition-colors duration-200 shadow-md bg-blue-500 hover:bg-blue-600 text-white w-1/2 md:w-1/6">
 							Submit
 						</button>
 					</div>
