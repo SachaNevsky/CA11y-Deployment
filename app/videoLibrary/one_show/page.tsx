@@ -28,8 +28,8 @@ const OneShow = () => {
 
     return (
         <div className="m-1">
-            {/* <VideoPlayer videoName="one_show" muxAssetId={{ original: "", highlight: "" }} /> */}
-            <VideoPlayer videoName="one_show" />
+            <VideoPlayer videoName="one_show" muxAssetId={{ original: "oaspPgUKcDxQ3FtUGYXgArn9TwKFPcVT4NI4p9snAsM", highlight: "j1W02tk5FKM9rZt3eQ01FJp01S6Q3iCRVy6iV3qcsAyJPk" }} />
+            {/* <VideoPlayer videoName="one_show" /> */}
         </div>
     )
 }

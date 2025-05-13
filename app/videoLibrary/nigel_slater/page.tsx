@@ -28,8 +28,8 @@ const NigelSlater = () => {
 
     return (
         <div className="m-1">
-            {/* <VideoPlayer videoName="nigel_slater" muxAssetId={{ original: "", highlight: "" }} /> */}
-            <VideoPlayer videoName="nigel_slater" />
+            <VideoPlayer videoName="nigel_slater" muxAssetId={{ original: "NJNC3P401IxvHbabH01p02TI00mMg1eUeX800XY35jRzREc8", highlight: "yM7hbAcp9PGHLVEfd01tq9ddfUW5XRfGSNnQaKigIHO4" }} />
+            {/* <VideoPlayer videoName="nigel_slater" /> */}
         </div>
     )
 }

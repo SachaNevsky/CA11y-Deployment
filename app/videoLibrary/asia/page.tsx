@@ -28,8 +28,8 @@ const Asia = () => {
 
     return (
         <div className="m-1">
-            {/* <VideoPlayer videoName="asia" muxAssetId={{ original: "", highlight: "" }} /> */}
-            <VideoPlayer videoName="asia" />
+            <VideoPlayer videoName="asia" muxAssetId={{ original: "aMrs9Ln3F02ZMEQxsV02OU5A7kLRGC80201UZXagxnyAgkY", highlight: "4CS01BHR9ldoc200LoxDcrWkD01D008zfhzPlTVaFPa7kt8" }} />
+            {/* <VideoPlayer videoName="asia" /> */}
         </div>
     )
 }

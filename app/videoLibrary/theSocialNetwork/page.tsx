@@ -28,8 +28,8 @@ const TheSocialNetwork = () => {
 
     return (
         <div className="m-1">
-            {/* <VideoPlayer videoName="theSocialNetwork" muxAssetId={{ original: "l9G5Me8Mwz5009FiNowaldgOd6Mr1n5YVtvch02r59sew", highlight: "TwIChxe902xtC3lCZ8lglSl00oE02suvBTdZXhlNx4HCtI" }} /> */}
-            <VideoPlayer videoName="theSocialNetwork" />
+            <VideoPlayer videoName="theSocialNetwork" muxAssetId={{ original: "Z028U3zCXmoR6rsKBpbPXIkfeB9sXWINj7PIA6a37n00I", highlight: "RSHR8iFShwvQCJMFEzRCMOjnkF00Fs4TVRgTOCmJNfao" }} />
+            {/* <VideoPlayer videoName="theSocialNetwork" /> */}
         </div>
     )
 }

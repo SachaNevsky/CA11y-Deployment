@@ -814,7 +814,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                                             label={`English ${captionMode}`}
                                             kind="subtitles"
                                             srcLang="en"
-                                            src={captionMode === "default" ? defaultCaptionsSrc : simplifiedCaptionsSrc}
+                                            src={captionMode === "none" ? "" : captionMode === "default" ? defaultCaptionsSrc : simplifiedCaptionsSrc}
                                         />
                                     </MuxPlayer>
                                 )}
