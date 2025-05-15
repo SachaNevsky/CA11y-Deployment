@@ -10,6 +10,7 @@ const VideoLibrary = () => {
         { name: "Asia", video: "asia", info: { year: "2024", type: "Nature documentary" } },
         { name: "Nigel Slater's Middle East", video: "nigel_slater", info: { year: "2018", type: "Cooking show" } },
         { name: "The One Show", video: "one_show", info: { year: "2025", type: "Talk show" } },
+        { name: "Black Books", video: "black_books", info: { year: "2000", type: "Comedy TV show" } },
         { name: "The Weakest Link", video: "weakest_link", info: { year: "2025", type: "Quiz show" } }
     ];
 
