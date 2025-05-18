@@ -15,7 +15,7 @@ import CaptionControls from "./CaptionControls";
 import FullscreenControls from "./FullscreenControls";
 import PlaybackSpeedControls from "./PlaybackSpeedControls";
 import SpotlightControls from "./SpotlightControls";
-import Video from "next-video";
+// import Video from "next-video";
 
 const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element => {
     const [metadata, setMetadata] = useState<VideoMetadata | null>(null);
@@ -36,7 +36,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     const simplifiedCaptionsSrc = `${basePath}.vtt`;
     // const simplifiedCaptionsSrc = `${basePath}_simplified.vtt`;
 
-    const localVideoSrc = `${basePath}.mp4`
+    // const localVideoSrc = `${basePath}.mp4`
     // const localHighlightSrc = `${basePath}.mp4`
     const [useLocalVideo] = useState<boolean>(!muxAssetId?.original);
 
@@ -749,15 +749,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                 <>
                     {!isFullScreen && (
                         <div className="p-4 md:p-6">
-                            <div className="mb-4">
-                                <IconButton
-                                    text="View Video"
-                                    icon="fullscreen"
-                                    onClickFunction={toggleFullscreen}
-                                    className="w-full justify-center text-lg py-3"
-                                    aria-label="Enter fullscreen video mode"
-                                />
-                            </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <CaptionControls
                                     captionMode={captionMode}
@@ -787,38 +778,36 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                                     onOpenHelp={() => handleOpenHelp("volume")}
                                 />
                             </div>
+                            <div className="my-4">
+                                <IconButton
+                                    text="Play Video"
+                                    icon="play"
+                                    onClickFunction={toggleFullscreen}
+                                    className="w-full justify-center text-lg py-8"
+                                    aria-label="Enter fullscreen video mode"
+                                />
+                            </div>
                         </div>
                     )}
                     <div ref={videoContainerRef} className={`bg-black ${isFullScreen ? 'fixed inset-0 z-50 w-screen h-screen' : 'hidden'}`}>
                         {showVideo && isFullScreen && isMuxPlayerLoaded && (
-                            <>
-                                {useLocalVideo ? (
-                                    <div className="w-full">
-                                        <Video id="video" ref={videoRef} controls={false} muted>
-                                            <source id="videoSource" src={localVideoSrc} type="video/mp4" />
-                                            <track label={`English ${captionMode}`} kind="subtitles" srcLang="en" src={captionMode === "default" ? defaultCaptionsSrc : simplifiedCaptionsSrc} />
-                                        </Video>
-                                    </div>
-                                ) : (
-                                    <MuxPlayer
-                                        ref={muxPlayerRef}
-                                        playbackId={currentMuxAssetId}
-                                        streamType="on-demand"
-                                        muted={true}
-                                        autoPlay={false}
-                                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                                        playbackRate={playbackRate}
-                                        startTime={currentTimestamp}
-                                    >
-                                        <track
-                                            label={`English ${captionMode}`}
-                                            kind="subtitles"
-                                            srcLang="en"
-                                            src={captionMode === "none" ? "" : captionMode === "default" ? defaultCaptionsSrc : simplifiedCaptionsSrc}
-                                        />
-                                    </MuxPlayer>
-                                )}
-                            </>
+                            <MuxPlayer
+                                ref={muxPlayerRef}
+                                playbackId={currentMuxAssetId}
+                                streamType="on-demand"
+                                muted={true}
+                                autoPlay={false}
+                                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                playbackRate={playbackRate}
+                                startTime={currentTimestamp}
+                            >
+                                <track
+                                    label={`English ${captionMode}`}
+                                    kind="subtitles"
+                                    srcLang="en"
+                                    src={captionMode === "none" ? "" : captionMode === "default" ? defaultCaptionsSrc : simplifiedCaptionsSrc}
+                                />
+                            </MuxPlayer>
                         )}
                         {isFullScreen && (
                             <FullscreenControls

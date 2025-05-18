@@ -45,21 +45,21 @@ const VideoLibrary = () => {
         window.open(`/videoLibrary/${video}`, "_self");
     }
 
-    const handleDeleteCharacteristics = () => {
-        const name = localStorage.getItem("ca11yDeploymentName")
+    // const handleDeleteCharacteristics = () => {
+    //     const name = localStorage.getItem("ca11yDeploymentName")
 
-        if (name) logAction(name, "Deleted their aphasia characteristics.");
+    //     if (name) logAction(name, "Deleted their aphasia characteristics.");
 
-        localStorage.removeItem("ca11yAphasiaCharacteristics");
-        window.open("/", "_self");
-    }
+    //     localStorage.removeItem("ca11yAphasiaCharacteristics");
+    //     window.open("/", "_self");
+    // }
 
     return (
         <div className="m-auto w-[90%] text-center">
-            <p className="text-xl pt-4">Hello {name}, this is our video library.<br />Choose something to watch.</p>
-            <div>
+            <p className="text-2xl font-semibold pt-4">Hello <span className="text-2xl font-bold">{name}</span>!<br />Choose something to watch.</p>
+            {/* <div>
                 <button className="py-2 px-4 m-4 border-solid border-2 rounded-md border-gray-500" onClick={() => { handleDeleteCharacteristics() }}>Delete aphasia characteristics</button>
-            </div>
+            </div> */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
                 {videos.map(video => {
                     return (
