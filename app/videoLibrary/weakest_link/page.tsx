@@ -28,8 +28,8 @@ const WeakestLink = () => {
 
     return (
         <div className="m-1">
-            {/* <VideoPlayer videoName="weakest_link" muxAssetId={{ original: "", highlight: "" }} /> */}
-            <VideoPlayer videoName="weakest_link" />
+            <VideoPlayer videoName="weakest_link" muxAssetId={{ original: "iUOTA01NV7dWhV2NMNSLt7xR00l4Tdpq2W02QNT01bFNgcY", highlight: "V9qMEmtJNvDNm02b3hLhC01LTHu1gTAA6izrfngNN3zt00" }} />
+            {/* <VideoPlayer videoName="weakest_link" /> */}
         </div>
     )
 }
