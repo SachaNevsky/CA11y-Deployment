@@ -42,3 +42,4 @@ next-env.d.ts
 /public/one_show/*.mp4
 /public/weakest_link/*.mp4
 /public/black_books/*.mkv
+/public/black_books/*.mp4
