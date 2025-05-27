@@ -24,11 +24,12 @@ const VideoLibrary = () => {
         const name = localStorage.getItem("ca11yDeploymentName")
         const settings = localStorage.getItem("ca11ySettings");
 
-        if (name) logAction(name, "Deleted Ca11y name and settings.");
-
-        localStorage.removeItem("ca11yAphasiaCharacteristics");
-        localStorage.removeItem("ca11ySettings");
-        window.open("/", "_self");
+        if (name && settings) {
+		logAction(name, "Deleted Ca11y name and settings.");
+        	localStorage.removeItem("ca11yAphasiaCharacteristics");
+        	localStorage.removeItem("ca11ySettings");
+        	window.open("/", "_self");
+	}
     }
 
     return (
