@@ -26,7 +26,7 @@ const VideoLibrary = () => {
 
         if (name && settings) {
 		logAction(name, "Deleted Ca11y name and settings.");
-        	localStorage.removeItem("ca11yAphasiaCharacteristics");
+        	localStorage.removeItem("ca11yDeploymentName");
         	localStorage.removeItem("ca11ySettings");
         	window.open("/", "_self");
 	}
