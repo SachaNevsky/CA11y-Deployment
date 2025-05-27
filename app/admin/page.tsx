@@ -24,7 +24,7 @@ const VideoLibrary = () => {
         const name = localStorage.getItem("ca11yDeploymentName")
         const settings = localStorage.getItem("ca11ySettings");
 
-        if (name && settings) {
+        if (name || settings) {
 		logAction(name, "Deleted Ca11y name and settings.");
         	localStorage.removeItem("ca11yDeploymentName");
         	localStorage.removeItem("ca11ySettings");
