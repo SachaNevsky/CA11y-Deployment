@@ -416,7 +416,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
 
     const handleSpeedUp = (): void => {
         if (isSpeedAutomated) return;
-        if (playbackRate > 0.5) {
+        if (playbackRate < 1.5) {
             const newRate: number = Math.round((playbackRate + 0.05) * 100) / 100;
             setPlaybackRate(newRate);
             setManualPlaybackRate(newRate);
