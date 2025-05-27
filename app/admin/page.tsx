@@ -24,8 +24,7 @@ const VideoLibrary = () => {
         const name = localStorage.getItem("ca11yDeploymentName")
         const settings = localStorage.getItem("ca11ySettings");
 
-        if (name) logAction(name, "Deleted their aphasia characteristics.");
-        if (settings) logAction(name, "Deleted their aphasia settings.")
+        if (name) logAction(name, "Deleted Ca11y name and settings.");
 
         localStorage.removeItem("ca11yAphasiaCharacteristics");
         localStorage.removeItem("ca11ySettings");
