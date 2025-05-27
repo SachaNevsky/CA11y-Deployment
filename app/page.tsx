@@ -14,13 +14,14 @@ const Home = () => {
 	useEffect(() => {
 		if (typeof window !== "undefined") {
 			const storedName = localStorage.getItem("ca11yDeploymentName");
-			const storedAphasiaCharacteristic = localStorage.getItem("ca11yAphasiaCharacteristics");
+			// const storedAphasiaCharacteristic = localStorage.getItem("ca11yAphasiaCharacteristics");
 
 			// if (storedName) setName(storedName);
 
 			setLoaded(true);
 
-			if (storedName && storedAphasiaCharacteristic) router.push("/videoLibrary");
+			// if (storedName && storedAphasiaCharacteristic) router.push("/videoLibrary");
+			if (storedName) router.push("/videoLibrary");
 		}
 	}, [router]);
 
