@@ -381,10 +381,21 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [highlight]);
 
+    // const handleSlowDown = (): void => {
+    //     if (isSpeedAutomated) return;
+    //     if (playbackRate > 0.5) {
+    //         const newRate: number = playbackRate - 0.05;
+    //         setPlaybackRate(newRate);
+    //         setManualPlaybackRate(newRate);
+    //         handleLogging(`Playback speed was decreased to ${newRate}.`, "speed");
+    //         setTimeout(saveSettings, 0);
+    //     }
+    // };
+
     const handleSlowDown = (): void => {
         if (isSpeedAutomated) return;
         if (playbackRate > 0.5) {
-            const newRate: number = playbackRate - 0.05;
+            const newRate: number = Math.round((playbackRate - 0.05) * 100) / 100;
             setPlaybackRate(newRate);
             setManualPlaybackRate(newRate);
             handleLogging(`Playback speed was decreased to ${newRate}.`, "speed");
@@ -392,10 +403,21 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         }
     };
 
+    // const handleSpeedUp = (): void => {
+    //     if (isSpeedAutomated) return;
+    //     if (playbackRate < 1.5) {
+    //         const newRate: number = playbackRate + 0.05;
+    //         setPlaybackRate(newRate);
+    //         setManualPlaybackRate(newRate);
+    //         handleLogging(`Playback speed was increased to ${newRate}.`, "speed");
+    //         setTimeout(saveSettings, 0);
+    //     }
+    // };
+
     const handleSpeedUp = (): void => {
         if (isSpeedAutomated) return;
-        if (playbackRate < 1.5) {
-            const newRate: number = playbackRate + 0.05;
+        if (playbackRate > 0.5) {
+            const newRate: number = Math.round((playbackRate + 0.05) * 100) / 100;
             setPlaybackRate(newRate);
             setManualPlaybackRate(newRate);
             handleLogging(`Playback speed was increased to ${newRate}.`, "speed");
