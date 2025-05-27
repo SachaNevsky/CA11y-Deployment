@@ -385,9 +385,9 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         if (isSpeedAutomated) return;
         if (playbackRate > 0.5) {
             const newRate = playbackRate - 0.05;
-            setPlaybackRate(newRate);
-            setManualPlaybackRate(newRate);
-            handleLogging(`Playback speed was decreased to ${newRate}.`, "speed");
+            setPlaybackRate(newRate.toFixed(2));
+            setManualPlaybackRate(newRate.toFixed(2));
+            handleLogging(`Playback speed was decreased to ${newRate.toFixed(2)}.`, "speed");
             setTimeout(saveSettings, 0);
         }
     };
@@ -396,9 +396,9 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         if (isSpeedAutomated) return;
         if (playbackRate < 1.5) {
             const newRate = playbackRate + 0.05;
-            setPlaybackRate(newRate);
-            setManualPlaybackRate(newRate);
-            handleLogging(`Playback speed was increased to ${newRate}.`, "speed");
+            setPlaybackRate(newRate.toFixed(2));
+            setManualPlaybackRate(newRate.toFixed(2));
+            handleLogging(`Playback speed was increased to ${newRate.toFixed(2)}.`, "speed");
             setTimeout(saveSettings, 0);
         }
     };
