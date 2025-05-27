@@ -383,8 +383,8 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
 
     const handleSlowDown = (): void => {
         if (isSpeedAutomated) return;
-        if (playbackRate > 0.2) {
-            const newRate = playbackRate - 0.1;
+        if (playbackRate > 0.5) {
+            const newRate = playbackRate - 0.05;
             setPlaybackRate(newRate);
             setManualPlaybackRate(newRate);
             handleLogging(`Playback speed was decreased to ${newRate}.`, "speed");
@@ -394,8 +394,8 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
 
     const handleSpeedUp = (): void => {
         if (isSpeedAutomated) return;
-        if (playbackRate < 2) {
-            const newRate = playbackRate + 0.1;
+        if (playbackRate < 1.5) {
+            const newRate = playbackRate + 0.05;
             setPlaybackRate(newRate);
             setManualPlaybackRate(newRate);
             handleLogging(`Playback speed was increased to ${newRate}.`, "speed");
