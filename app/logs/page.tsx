@@ -46,6 +46,7 @@ export default function LogsPage() {
             }
             const data = await response.json();
             setLogs(data);
+            console.log(logs);
             processLogs(data);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred');
@@ -141,11 +142,16 @@ export default function LogsPage() {
                     consolidated.push(currentAction);
                     i++;
                 }
-            } else if (currentAction.action.toLowerCase().includes("volume")) {
+            } else if (currentAction.action.toLowerCase().includes("volume was")) {
+                // Extract volume type (Speaker, Music, Other)
+                const volumeType = extractVolumeType(currentAction.action);
                 const volumeActions = [currentAction];
                 let j = i + 1;
 
-                while (j < actions.length && actions[j].action.toLowerCase().includes("volume")) {
+                // Only consolidate actions of the same volume type
+                while (j < actions.length &&
+                    actions[j].action.toLowerCase().includes("volume was") &&
+                    extractVolumeType(actions[j].action) === volumeType) {
                     const timeDiff = new Date(actions[j].timestamp).getTime() - new Date(actions[j - 1].timestamp).getTime();
                     if (timeDiff < 5000) {
                         volumeActions.push(actions[j]);
@@ -161,7 +167,7 @@ export default function LogsPage() {
 
                     if (firstVolume && lastVolume && firstVolume !== lastVolume) {
                         const consolidatedAction: LogAction = {
-                            action: `Volume changed from ${firstVolume}% to ${lastVolume}%`,
+                            action: `${volumeType} volume changed from ${firstVolume}% to ${lastVolume}%`,
                             timestamp: volumeActions[volumeActions.length - 1].timestamp
                         };
                         consolidated.push(consolidatedAction);
@@ -196,6 +202,20 @@ export default function LogsPage() {
         }
 
         return consolidated;
+    };
+
+    // Add this new helper function to extract volume type
+    const extractVolumeType = (action: string): string => {
+        const lowerAction = action.toLowerCase();
+        if (lowerAction.includes("speaker volume was")) {
+            return "Speaker";
+        } else if (lowerAction.includes("music volume was")) {
+            return "Music";
+        } else if (lowerAction.includes("other volume was")) {
+            return "Other";
+        }
+        // Fallback for generic "volume was" without type
+        return "Volume";
     };
 
     const extractSeekTime = (action: string): string | null => {
@@ -259,7 +279,7 @@ export default function LogsPage() {
             });
 
             if (currentSession) {
-                currentSession.actions = consolidateActions(currentSession.actions);
+                (currentSession as Session).actions = consolidateActions((currentSession as Session).actions);
                 grouped[log.user].push(currentSession);
             }
         });
