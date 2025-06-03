@@ -1,0 +1,107 @@
+{
+    "_id": {
+        "$oid": "683993dd138044cb09c3189b"
+    },
+    "user": "Roger",
+    "actions": [
+        {
+            "action": "'Submitted' a name.",
+            "timestamp": {
+                "$date": {
+                    "$numberLong": "1748603869694"
+                }
+            },
+            "_id": {
+                "$oid": "683993dd138044cb09c3189c"
+            }
+        },
+        {
+            "action": "Selected the video asia",
+            "timestamp": {
+                "$date": {
+                    "$numberLong": "1748603884690"
+                }
+            },
+            "_id": {
+                "$oid": "683993ec138044cb09c318a0"
+            }
+        },
+        {
+            "action": "Watching the video Asia.",
+            "timestamp": {
+                "$date": {
+                    "$numberLong": "1748603885595"
+                }
+            },
+            "_id": {
+                "$oid": "683993ed138044cb09c318a5"
+            }
+        },
+        {
+            "action": "Captions turned on.",
+            "timestamp": {
+                "$date": {
+                    "$numberLong": "1748603901139"
+                }
+            },
+            "_id": {
+                "$oid": "683993fd138044cb09c318ab"
+            }
+        },
+        {
+            "action": "Caption mode changed to simplified.",
+            "timestamp": {
+                "$date": {
+                    "$numberLong": "1748603944906"
+                }
+            },
+            "_id": {
+                "$oid": "68399428138044cb09c318b2"
+            }
+        },
+        {
+            "action": "Captions turned off.",
+            "timestamp": {
+                "$date": {
+                    "$numberLong": "1748603949601"
+                }
+            },
+            "_id": {
+                "$oid": "6839942d138044cb09c318ba"
+            }
+        },
+        {
+            "action": "Playback speed was decreased to 0.95.",
+            "timestamp": {
+                "$date": {
+                    "$numberLong": "1748603986857"
+                }
+            },
+            "_id": {
+                "$oid": "68399452138044cb09c318c3"
+            }
+        },
+        {
+            "action": "Playback speed was decreased to 0.9.",
+            "timestamp": {
+                "$date": {
+                    "$numberLong": "1748603987403"
+                }
+            },
+            "_id": {
+                "$oid": "68399453138044cb09c318cd"
+            }
+        }
+    ],
+    "createdAt": {
+        "$date": {
+            "$numberLong": "1748603869694"
+        }
+    },
+    "documentIndex": {
+        "$numberInt": "0"
+    },
+    "__v": {
+        "$numberInt": "123"
+    }
+}

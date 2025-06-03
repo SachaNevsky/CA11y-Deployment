@@ -58,3 +58,20 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Server error:', e }, { status: 500 });
     }
 }
+
+export async function GET() {
+    try {
+        await dbConnect();
+
+        // Fetch all logs, sorted by creation date (newest first)
+        const logs = await Log.find({}).sort({ createdAt: -1 }).lean();
+
+        return NextResponse.json(logs, { status: 200 });
+    } catch (error) {
+        console.error('Error fetching logs:', error);
+        return NextResponse.json(
+            { error: 'Failed to fetch logs' },
+            { status: 500 }
+        );
+    }
+}
