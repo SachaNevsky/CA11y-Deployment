@@ -123,7 +123,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
 
             activityTimerRef.current = setTimeout(() => {
                 setIsUserActive(false);
-            }, 2000);
+            }, 4000);
         };
 
         if (isFullScreen) {
