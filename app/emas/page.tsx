@@ -288,7 +288,8 @@ export default function EMAPage() {
                     <p className="text-gray-600 mb-4">
                         EMA responses over time (Sessions are grouped when responses occur within 30 minutes of each other)
                     </p>
-                    <div className="mb-6">
+                    <a href="/logs" className="font-bold text-white px-4 py-3 rounded-md transition-colors duration-200 shadow-md bg-blue-500 hover:bg-blue-600">See logs</a>
+                    <div className="mb-6 pt-4">
                         <label htmlFor="user-select" className="block text-sm font-medium text-gray-700 mb-2">
                             Select User:
                         </label>

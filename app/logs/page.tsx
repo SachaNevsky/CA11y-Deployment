@@ -1,4 +1,5 @@
 // ./app/logs/page.tsx
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -321,6 +322,38 @@ export default function LogsPage() {
         });
     };
 
+    const getColor = (action: LogAction): string => {
+        if (["volume", "audio"].some(i => action.action.toLowerCase().includes(i))) {
+            return "bg-blue-100 text-blue-800"
+        } else if (action.action.toLowerCase().includes("caption")) {
+            return "bg-purple-100 text-purple-800"
+        } else if (action.action.toLowerCase().includes("highlight")) {
+            return "bg-yellow-100 text-yellow-800"
+        } else if (["playback speed", "automated speed"].some(i => action.action.toLowerCase().includes(i))) {
+            return "bg-green-100 text-green-800"
+        } else if (["video was put in play", "paused", "10 seconds", "seeked"].some(i => action.action.toLowerCase().includes(i))) {
+            return "bg-orange-100 text-orange-800"
+        } else {
+            return "bg-gray-100 text-gray-800"
+        }
+    }
+
+    const getText = (action: LogAction): string => {
+        if (action.action.toLowerCase().includes("volume")) {
+            return "Volume"
+        } else if (action.action.toLowerCase().includes("captions")) {
+            return "Captions"
+        } else if (action.action.toLowerCase().includes("highlight")) {
+            return "Highlight"
+        } else if (action.action.toLowerCase().includes("playback speed")) {
+            return "Speed"
+        } else if (["video was put in play", "paused", "10 seconds", "seeked"].some(i => action.action.toLowerCase().includes(i))) {
+            return "Playback"
+        } else {
+            return "Other"
+        }
+    }
+
     if (loading) {
         return (
             <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -345,7 +378,8 @@ export default function LogsPage() {
                     <p className="text-gray-600 mb-4">
                         Sessions are grouped when actions occur within 30 minutes of each other
                     </p>
-                    <div className="mb-4">
+                    <a href="/emas" className="font-bold text-white px-4 py-3 rounded-md transition-colors duration-200 shadow-md bg-blue-500 hover:bg-blue-600">See EMAs</a>
+                    <div className="mb-4 pt-4">
                         <label htmlFor="user-select" className="block text-sm font-medium text-gray-700 mb-2">
                             Select User:
                         </label>
@@ -448,6 +482,9 @@ export default function LogsPage() {
                                                                         </div>
                                                                         <div className="flex-1 text-sm text-gray-700 bg-white px-3 py-2 rounded border">
                                                                             {action.action}
+                                                                            <span className={`px-2 py-1 ml-3 rounded text-xs font-medium ${getColor(action)}`}>
+                                                                                {getText(action)}
+                                                                            </span>
                                                                         </div>
                                                                     </div>
                                                                 ))}
