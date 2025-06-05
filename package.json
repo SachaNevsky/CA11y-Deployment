@@ -25,7 +25,8 @@
     "next-video": "^2.0.4",
     "react": "^18",
     "react-dom": "^18",
-    "react-router-dom": "^7.3.0"
+    "react-router-dom": "^7.3.0",
+    "recharts": "^2.15.3"
   },
   "devDependencies": {
     "@types/node": "^20",

@@ -1,3 +1,5 @@
+// ./app/api/logs/route.ts
+
 import { NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import Log from '@/models/log';
