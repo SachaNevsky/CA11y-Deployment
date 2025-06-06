@@ -322,37 +322,27 @@ export default function LogsPage() {
         });
     };
 
-    const getColor = (action: LogAction): string => {
-        if (["volume", "audio"].some(i => action.action.toLowerCase().includes(i))) {
-            return "bg-blue-100 text-blue-800"
-        } else if (action.action.toLowerCase().includes("caption")) {
-            return "bg-purple-100 text-purple-800"
-        } else if (action.action.toLowerCase().includes("highlight")) {
-            return "bg-yellow-100 text-yellow-800"
-        } else if (["playback speed", "automated speed"].some(i => action.action.toLowerCase().includes(i))) {
-            return "bg-green-100 text-green-800"
-        } else if (["video was put in play", "paused", "10 seconds", "seeked"].some(i => action.action.toLowerCase().includes(i))) {
-            return "bg-orange-100 text-orange-800"
-        } else {
-            return "bg-gray-100 text-gray-800"
-        }
-    }
+    const getActionType = (action: LogAction): { key: string; value: string } => {
+        const lowerCaseAction = action.action.toLowerCase();
 
-    const getText = (action: LogAction): string => {
-        if (action.action.toLowerCase().includes("volume")) {
-            return "Volume"
-        } else if (action.action.toLowerCase().includes("captions")) {
-            return "Captions"
-        } else if (action.action.toLowerCase().includes("highlight")) {
-            return "Highlight"
-        } else if (action.action.toLowerCase().includes("playback speed")) {
-            return "Speed"
-        } else if (["video was put in play", "paused", "10 seconds", "seeked"].some(i => action.action.toLowerCase().includes(i))) {
-            return "Playback"
-        } else {
-            return "Other"
+        if (["volume", "audio"].some(i => lowerCaseAction.includes(i))) {
+            return { key: "Volume", value: "bg-blue-100 text-blue-800" };
         }
-    }
+        if (lowerCaseAction.includes("caption")) {
+            return { key: "Captions", value: "bg-purple-100 text-purple-800" };
+        }
+        if (lowerCaseAction.includes("highlight")) {
+            return { key: "Highlight", value: "bg-yellow-100 text-yellow-800" };
+        }
+        if (["playback speed", "automated speed"].some(i => lowerCaseAction.includes(i))) {
+            return { key: "Speed", value: "bg-green-100 text-green-800" };
+        }
+        if (["video was put in play", "paused", "10 seconds", "seeked"].some(i => lowerCaseAction.includes(i))) {
+            return { key: "Playback", value: "bg-orange-100 text-orange-800" };
+        }
+
+        return { key: "Other", value: "bg-gray-100 text-gray-800" };
+    };
 
     if (loading) {
         return (
@@ -482,8 +472,8 @@ export default function LogsPage() {
                                                                         </div>
                                                                         <div className="flex-1 text-sm text-gray-700 bg-white px-3 py-2 rounded border">
                                                                             {action.action}
-                                                                            <span className={`px-2 py-1 ml-3 rounded text-xs font-medium ${getColor(action)}`}>
-                                                                                {getText(action)}
+                                                                            <span className={`px-2 py-1 ml-3 rounded text-xs font-medium ${getActionType(action).value}`}>
+                                                                                {getActionType(action).key}
                                                                             </span>
                                                                         </div>
                                                                     </div>
