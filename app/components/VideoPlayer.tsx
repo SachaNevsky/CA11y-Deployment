@@ -15,6 +15,7 @@ import CaptionControls from "./CaptionControls";
 import FullscreenControls from "./FullscreenControls";
 import PlaybackSpeedControls from "./PlaybackSpeedControls";
 import SpotlightControls from "./SpotlightControls";
+import { MoonLoader } from "react-spinners"
 // import Video from "next-video";
 
 const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element => {
@@ -63,6 +64,8 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     const [userName, setUserName] = useState<string>("");
     const [lastAction, setLastAction] = useState<string>("general");
     const [helpPopup, setHelpPopup] = useState<{ isOpen: boolean; title: string; content: string; section: string }>({ isOpen: false, title: "", content: "", section: "" });
+
+    // const [syncing, setSyncing] = useState<boolean>(false);
 
     const handleOpenHelp = (section: string) => {
         let title = "";
@@ -343,7 +346,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                     setCurrentMuxAssetId(muxAssetId?.original);
                     handleLogging("Highlight was turned off.", "highlight");
                 }
-                
+
                 setTimeout(saveSettings, 0);
                 if (isMuxPlayerLoaded) setShowVideo(true);
 
@@ -417,11 +420,19 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         }
     };
 
-    useEffect(() => {
-        const player = muxPlayerRef.current;
-        const speaker = speakerRef.current;
-        if(player && speaker) console.log("player - speaker:", (player.currentTime - speaker.currentTime).toFixed(2), player.currentTime.toFixed(2), speaker.currentTime.toFixed(2));
-    })
+    // useEffect(() => {
+    //     const player = muxPlayerRef.current;
+    //     const speaker = speakerRef.current;
+    //     if (player && speaker) {
+    //         // if (Math.abs(player.currentTime - speaker.currentTime) > 0.2) {
+    //         //     setSyncing(true);
+    //         // } else {
+    //         //     setSyncing(false);
+    //         // }
+    //         // console.log("isFullScreen:", isFullScreen, " - syncing:", syncing)
+    //         // console.log("player - speaker:", (player.currentTime - speaker.currentTime).toFixed(2), player.currentTime.toFixed(2), speaker.currentTime.toFixed(2));
+    //     }
+    // })
 
     const handleToggleAutomateSpeed = (): void => {
         setIsSpeedAutomated(prev => {
@@ -470,7 +481,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         if (player && speaker && music && other) {
             if (button === "play") {
                 const targetTime = speaker.currentTime;
-        
+
                 // Set all to same time
                 player.currentTime = targetTime;
                 speaker.currentTime = targetTime;
@@ -518,7 +529,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                         music.play(),
                         other.play()
                     ]);
-                    
+
                     // setCurrentTimestamp(player.currentTime);
                     handleLogging("Video was put in play.");
                 } catch (error) {
@@ -824,22 +835,22 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     //     const speaker = speakerRef.current;
     //     const music = musicRef.current;
     //     const other = otherRef.current;
-    
+
     //     // Only run this interval when NOT in fullscreen mode
     //     // When in fullscreen, let MuxPlayer's onTimeUpdate handle the timing
     //     if (player && speaker && music && other && !isFullScreen) {
     //         const checkTime = (): void => {
     //             if (speaker.currentTime !== currentTimestamp) {
     //                 setCurrentTimestamp(speaker.currentTime);
-    
+
     //                 if (isSpeedAutomated) {
     //                     updateAutomatedSpeed(speaker.currentTime);
     //                 }
     //             }
     //         };
-    
+
     //         const interval = setInterval(checkTime, 100);
-    
+
     //         return () => {
     //             clearInterval(interval);
     //         };
@@ -895,6 +906,82 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
             videoElement.removeEventListener("pause", syncAudio);
         };
     });
+
+    const [syncing, setSyncing] = useState<boolean>(false);
+
+    useEffect(() => {
+        if (!isFullScreen || !isMuxPlayerLoaded) return;
+
+        const interval = setInterval(async () => {
+
+            const player = muxPlayerRef.current;
+            const speaker = speakerRef.current;
+            const music = musicRef.current;
+            const other = otherRef.current;
+
+            if (!player || !speaker || !music || !other) {
+                return;
+            }
+
+            if (player.paused || speaker.paused) {
+                return;
+            }
+
+            const timeDifference = Math.abs(player.currentTime - speaker.currentTime);
+
+            if (timeDifference >= 0.1) {
+                console.log(`Sync drift detected: ${timeDifference.toFixed(2)}s difference. Resyncing...`);
+                setSyncing(true);
+
+                try {
+                    player.pause();
+                    speaker.pause();
+                    music.pause();
+                    other.pause();
+
+                    await new Promise(resolve => setTimeout(resolve, 500));
+
+                    const targetTime = speaker.currentTime;
+                    player.currentTime = targetTime;
+                    speaker.currentTime = targetTime;
+                    music.currentTime = targetTime;
+                    other.currentTime = targetTime;
+
+                    await Promise.all([
+                        new Promise<void>(resolve => {
+                            const checkReady = () => {
+                                if (Math.abs(player.currentTime - targetTime) < 0.1) resolve();
+                                else requestAnimationFrame(checkReady);
+                            };
+                            checkReady();
+                        }),
+                        new Promise<void>(resolve => {
+                            const checkReady = () => {
+                                if (Math.abs(speaker.currentTime - targetTime) < 0.1) resolve();
+                                else requestAnimationFrame(checkReady);
+                            };
+                            checkReady();
+                        })
+                    ]);
+
+                    await Promise.all([
+                        player.play(),
+                        speaker.play(),
+                        music.play(),
+                        other.play()
+                    ]);
+                    setSyncing(false);
+
+                } catch (error) {
+                    console.error("Error during sync correction:", error);
+                }
+            }
+        }, 2000); // Check every 2 seconds
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, [isFullScreen, isMuxPlayerLoaded]);
 
     return (
         <div className="w-full mx-auto relative">
@@ -963,7 +1050,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                                 style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                                 playbackRate={playbackRate}
                                 startTime={currentTimestamp}
-                                // startTime={speakerRef.current?.currentTime}
                             >
                                 <track
                                     label={`English ${captionMode}`}
@@ -984,6 +1070,9 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                                 onSeek={handleSeek}
                                 onExitFullscreen={toggleFullscreen}
                             />
+                        )}
+                        {isFullScreen && syncing && (
+                            <div className="z-10 absolute top-[50%] left-[50%] translate-x-[-50%] bg-white/25 rounded-full  p-2"><MoonLoader color="#dc2626" size={100} /></div>
                         )}
                     </div>
                     {ema.currentQuestion && (
