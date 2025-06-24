@@ -11,12 +11,12 @@ const FullscreenControls = ({ isUserActive, currentTimestamp, duration, onSkipBa
         return `${mins}:${secs.toString().padStart(2, "0")}`;
     };
 
-    const handlePlay = () => {
-        onPlayPause("play");
-        setTimeout(() => {
-            onPlayPause("play")
-        }, 2000)
-    }
+    // const handlePlay = () => {
+    //     onPlayPause("play");
+    //     setTimeout(() => {
+    //         onPlayPause("play")
+    //     }, 2000)
+    // }
 
     return (
         <>
@@ -33,8 +33,8 @@ const FullscreenControls = ({ isUserActive, currentTimestamp, duration, onSkipBa
                 <div className="bg-black/60 rounded-lg p-3 md:p-4">
                     <div className="flex items-center gap-2 md:gap-4 mb-3">
                         <IconButton text="10s" icon="rewind" onClickFunction={onSkipBackwards} className="text-white" aria-label="Skip backward 10 seconds" />
-                        {/* <IconButton text="Play" icon="play" onClickFunction={() => onPlayPause("play")} className="text-white" aria-label="Play video" /> */}
-                        <IconButton text="Play" icon="play" onClickFunction={handlePlay} className="text-white" aria-label="Play video" />
+                        <IconButton text="Play" icon="play" onClickFunction={() => onPlayPause("play")} className="text-white" aria-label="Play video" />
+                        {/* <IconButton text="Play" icon="play" onClickFunction={handlePlay} className="text-white" aria-label="Play video" /> */}
                         <IconButton text="Pause" icon="pause" onClickFunction={() => onPlayPause("pause")} className="text-white" aria-label="Pause video" />
                         <IconButton text="10s" icon="forwards" onClickFunction={onSkipForwards} className="text-white" aria-label="Skip forward 10 seconds" />
                     </div>
