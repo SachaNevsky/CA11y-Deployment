@@ -31,6 +31,13 @@ interface ChartDataPoint {
     questionType?: QuestionType;
 }
 
+interface AllUsersChartDataPoint {
+    index: number;
+    label: string;
+    count: number;
+    [key: string]: number | string; // Dynamic user keys
+}
+
 interface EMASession {
     startTime: Date;
     endTime: Date;
@@ -51,7 +58,23 @@ export default function EMAPage() {
     const [error, setError] = useState<string | null>(null);
     const [selectedUser, setSelectedUser] = useState<string>('');
     const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
+    const [allUsersChartData, setAllUsersChartData] = useState<AllUsersChartDataPoint[]>([]);
     const [excludeFirstSession, setExcludeFirstSession] = useState(false);
+    const [showOverallBestFit, setShowOverallBestFit] = useState(false);
+
+    // Predefined colors for users
+    const userColors = [
+        '#22c55e', // green
+        '#3b82f6', // blue
+        '#f59e0b', // amber
+        '#ef4444', // red
+        '#8b5cf6', // violet
+        '#06b6d4', // cyan
+        '#f97316', // orange
+        '#84cc16', // lime
+        '#ec4899', // pink
+        '#6366f1', // indigo
+    ];
 
     useEffect(() => {
         fetchEMAs();
@@ -144,6 +167,113 @@ export default function EMAPage() {
         return 'general';
     };
 
+    // Process data for all users chart
+    const processAllUsersChartData = React.useCallback(() => {
+        if (Object.keys(groupedEMAs).length === 0) {
+            setAllUsersChartData([]);
+            return;
+        }
+
+        const users = Object.keys(groupedEMAs);
+        const userData: { [user: string]: { [key: string]: { scores: number[]; count: number } } } = {};
+
+        // Initialize user data structure
+        users.forEach(user => {
+            userData[user] = {};
+        });
+
+        // Process each user's sessions
+        users.forEach(user => {
+            const userSessions = groupedEMAs[user];
+            const sessionsToInclude = excludeFirstSession && userSessions.length > 1
+                ? userSessions.slice(1)
+                : userSessions;
+
+            // Group by session
+            sessionsToInclude.forEach((session, sessionIndex) => {
+                const sessionKey = `${sessionIndex + (excludeFirstSession && userSessions.length > 1 ? 2 : 1)}`;
+                const sessionScores = session.responses.map(r => r.response);
+                const averageScore = sessionScores.reduce((sum, score) => sum + score, 0) / sessionScores.length;
+
+                if (!userData[user][sessionKey]) {
+                    userData[user][sessionKey] = { scores: [], count: 0 };
+                }
+                userData[user][sessionKey].scores.push(averageScore);
+                userData[user][sessionKey].count += sessionScores.length;
+            });
+        });
+
+        // Get all unique time periods across all users
+        const allTimePeriods = new Set<string>();
+        users.forEach(user => {
+            Object.keys(userData[user]).forEach(period => {
+                allTimePeriods.add(period);
+            });
+        });
+
+        // Sort time periods
+        const sortedTimePeriods = Array.from(allTimePeriods).sort((a, b) => {
+            const aNum = parseInt(a.split(' ')[1]);
+            const bNum = parseInt(b.split(' ')[1]);
+            return aNum - bNum;
+        });
+
+        // Create chart data points
+        const chartPoints: AllUsersChartDataPoint[] = sortedTimePeriods.map((period, index) => {
+            const dataPoint: AllUsersChartDataPoint = {
+                index: index + 1,
+                label: period,
+                count: 1
+            };
+
+            users.forEach(user => {
+                if (userData[user][period] && userData[user][period].scores.length > 0) {
+                    const userScores = userData[user][period].scores;
+                    const averageScore = userScores.reduce((sum, score) => sum + score, 0) / userScores.length;
+                    dataPoint[user] = Math.round(averageScore * 100) / 100; // Round to 2 decimal places
+                    dataPoint[`${user}_count`] = userData[user][period].count; // Store count for dot sizing
+                }
+            });
+
+            // console.log(dataPoint)
+            return dataPoint;
+        });
+
+        if (showOverallBestFit) {
+            const allPointsForOverallRegression: { x: number; y: number }[] = [];
+            if (showOverallBestFit) {
+                // Collect all points for overall best fit only
+                users.forEach(user => {
+                    chartPoints.forEach(point => {
+                        if (point[user] !== undefined) {
+                            allPointsForOverallRegression.push({ x: point.index, y: point[user] as number });
+                        }
+                    });
+                });
+            }
+
+            // Calculate overall best fit line
+            if (showOverallBestFit && allPointsForOverallRegression.length > 1) {
+                const n = allPointsForOverallRegression.length;
+                const sumX = allPointsForOverallRegression.reduce((sum, point) => sum + point.x, 0);
+                const sumY = allPointsForOverallRegression.reduce((sum, point) => sum + point.y, 0);
+                const sumXY = allPointsForOverallRegression.reduce((sum, point) => sum + point.x * point.y, 0);
+                const sumXX = allPointsForOverallRegression.reduce((sum, point) => sum + point.x * point.x, 0);
+
+                const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+                const intercept = (sumY - slope * sumX) / n;
+
+                // Add overall best fit values
+                chartPoints.forEach(point => {
+                    point.overall_bestfit = slope * point.index + intercept;
+                });
+            }
+        }
+
+        // console.log(chartPoints)
+        setAllUsersChartData(chartPoints);
+    }, [groupedEMAs, excludeFirstSession, showOverallBestFit]);
+
     const processChartData = React.useCallback(() => {
         if (!selectedUser || !groupedEMAs[selectedUser]) {
             setChartData([]);
@@ -234,8 +364,12 @@ export default function EMAPage() {
     }, [groupedEMAs, selectedUser, excludeFirstSession]);
 
     useEffect(() => {
-        processChartData();
-    }, [processChartData]);
+        if (selectedUser === 'all-users') {
+            processAllUsersChartData();
+        } else {
+            processChartData();
+        }
+    }, [processChartData, processAllUsersChartData, selectedUser]);
 
     const formatDateTime = (date: Date) => {
         return date.toLocaleString('en-GB', {
@@ -262,6 +396,10 @@ export default function EMAPage() {
 
     const getUsers = () => {
         return Object.keys(groupedEMAs);
+    };
+
+    const getUserColor = (user: string, index: number) => {
+        return userColors[index % userColors.length];
     };
 
     if (loading) {
@@ -300,6 +438,7 @@ export default function EMAPage() {
                             className="block w-64 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                         >
                             <option value="">Select a user</option>
+                            <option value="all-users">All Users</option>
                             {getUsers().map(user => (
                                 <option key={user} value={user}>{user}</option>
                             ))}
@@ -308,102 +447,171 @@ export default function EMAPage() {
                 </div>
 
                 {/* Chart Section */}
-                {selectedUser && groupedEMAs[selectedUser] && (
+                {selectedUser && (
                     <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8 p-6">
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-xl font-semibold text-gray-900">EMA Scores Over Time</h2>
-                            {groupedEMAs[selectedUser].length > 1 && (
-                                <div className="flex items-center space-x-2">
-                                    <input
-                                        type="checkbox"
-                                        id="exclude-first-session"
-                                        checked={excludeFirstSession}
-                                        onChange={(e) => setExcludeFirstSession(e.target.checked)}
-                                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                                    />
-                                    <label htmlFor="exclude-first-session" className="text-sm font-medium text-gray-700">
-                                        Exclude first session from chart
-                                    </label>
-                                </div>
-                            )}
+                            <h2 className="text-xl font-semibold text-gray-900">
+                                {selectedUser === 'all-users' ? 'All Users EMA Scores Over Time' : 'EMA Scores Over Time'}
+                            </h2>
+                            <div className="flex items-center space-x-6">
+                                {selectedUser === 'all-users' && (
+                                    <>
+                                        <div className="flex items-center space-x-2">
+                                            <input
+                                                type="checkbox"
+                                                id="show-overall-bestfit"
+                                                checked={showOverallBestFit}
+                                                onChange={(e) => setShowOverallBestFit(e.target.checked)}
+                                                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                            />
+                                            <label htmlFor="show-overall-bestfit" className="text-sm font-medium text-gray-700">
+                                                Show overall best fit line
+                                            </label>
+                                        </div>
+                                    </>
+                                )}
+                                {((selectedUser !== 'all-users' && groupedEMAs[selectedUser]?.length > 1) ||
+                                    (selectedUser === 'all-users' && Object.keys(groupedEMAs).length > 0)) && (
+                                        <div className="flex items-center space-x-2">
+                                            <input
+                                                type="checkbox"
+                                                id="exclude-first-session"
+                                                checked={excludeFirstSession}
+                                                onChange={(e) => setExcludeFirstSession(e.target.checked)}
+                                                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                            />
+                                            <label htmlFor="exclude-first-session" className="text-sm font-medium text-gray-700">
+                                                Exclude first session from chart
+                                            </label>
+                                        </div>
+                                    )}
+                            </div>
                         </div>
                         <div className="h-96">
                             <ResponsiveContainer width="100%" height="100%">
-                                <LineChart data={chartData}>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis
-                                        dataKey="index"
-                                        label={{ value: 'Response Index', position: 'insideBottom', offset: -10 }}
-                                    />
-                                    <YAxis
-                                        domain={[1, 5]}
-                                        label={{ value: 'Score', angle: -90, position: 'insideLeft' }}
-                                    />
-                                    <Legend
-                                        wrapperStyle={{ paddingTop: "2%" }}
-                                    />
-                                    <Line
-                                        type="monotone"
-                                        dataKey="general"
-                                        stroke="#000000"
-                                        strokeWidth={0}
-                                        dot={{ fill: '#000000', strokeWidth: 2, r: 4 }}
-                                        connectNulls={false}
-                                        name="General"
-                                        isAnimationActive={false}
-                                    />
-                                    <Line
-                                        type="monotone"
-                                        dataKey="speed"
-                                        stroke="#22c55e"
-                                        strokeWidth={0}
-                                        dot={{ fill: '#22c55e', strokeWidth: 2, r: 4 }}
-                                        connectNulls={false}
-                                        name="Speed"
-                                        isAnimationActive={false}
-                                    />
-                                    <Line
-                                        type="monotone"
-                                        dataKey="volume"
-                                        stroke="#3b82f6"
-                                        strokeWidth={0}
-                                        dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
-                                        connectNulls={false}
-                                        name="Volume"
-                                        isAnimationActive={false}
-                                    />
-                                    <Line
-                                        type="monotone"
-                                        dataKey="captions"
-                                        stroke="#a855f7"
-                                        strokeWidth={0}
-                                        dot={{ fill: '#a855f7', strokeWidth: 2, r: 4 }}
-                                        connectNulls={false}
-                                        name="Captions"
-                                        isAnimationActive={false}
-                                    />
-                                    <Line
-                                        type="monotone"
-                                        dataKey="highlight"
-                                        stroke="#eab308"
-                                        strokeWidth={0}
-                                        dot={{ fill: '#eab308', strokeWidth: 2, r: 4 }}
-                                        connectNulls={false}
-                                        name="Highlight"
-                                        isAnimationActive={false}
-                                    />
-                                    {/* Single best fit line for all points */}
-                                    <Line
-                                        type="monotone"
-                                        dataKey="bestfit"
-                                        stroke="#dc2626"
-                                        strokeWidth={2}
-                                        dot={false}
-                                        connectNulls={true}
-                                        name="Best Fit (All Points)"
-                                        isAnimationActive={false}
-                                    />
-                                </LineChart>
+                                {selectedUser === 'all-users' ? (
+                                    <LineChart data={allUsersChartData}>
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis
+                                            dataKey="label"
+                                            label={{ value: 'Session', position: 'insideBottom', offset: -10 }}
+                                        />
+                                        <YAxis
+                                            domain={[1, 5]}
+                                            label={{ value: 'Average EMA Score', angle: -90 }}
+                                        />
+                                        <Legend
+                                            wrapperStyle={{ paddingTop: "2%" }}
+                                        />
+                                        {getUsers().map((user, index) => {
+                                            const userCount: string = `${user}_count`;
+                                            if (allUsersChartData.length > 0) {
+                                                console.log(">", user, " | ", allUsersChartData[0][userCount])
+                                            }
+                                            return (
+                                                <Line
+                                                    key={user}
+                                                    type="monotone"
+                                                    dataKey={user}
+                                                    stroke={getUserColor(user, index)}
+                                                    strokeWidth={0}
+                                                    dot={{ fill: getUserColor(user, index), strokeWidth: 2, r: 4 }}
+                                                    connectNulls={false}
+                                                    name={user}
+                                                    isAnimationActive={false}
+                                                />
+                                            )
+                                        })}
+                                        {showOverallBestFit && (
+                                            <Line
+                                                type="monotone"
+                                                dataKey="overall_bestfit"
+                                                stroke="#000000"
+                                                strokeWidth={3}
+                                                dot={false}
+                                                connectNulls={true}
+                                                name="Overall Best Fit"
+                                                isAnimationActive={false}
+                                            />
+                                        )}
+                                    </LineChart>
+                                ) : (
+                                    <LineChart data={chartData}>
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis
+                                            dataKey="index"
+                                            label={{ value: 'Response Index', position: 'insideBottom', offset: -10 }}
+                                        />
+                                        <YAxis
+                                            domain={[1, 5]}
+                                            label={{ value: 'Score', angle: -90, position: 'insideLeft' }}
+                                        />
+                                        <Legend
+                                            wrapperStyle={{ paddingTop: "2%" }}
+                                        />
+                                        <Line
+                                            type="monotone"
+                                            dataKey="general"
+                                            stroke="#000000"
+                                            strokeWidth={0}
+                                            dot={{ fill: '#000000', strokeWidth: 2, r: 4 }}
+                                            connectNulls={false}
+                                            name="General"
+                                            isAnimationActive={false}
+                                        />
+                                        <Line
+                                            type="monotone"
+                                            dataKey="speed"
+                                            stroke="#22c55e"
+                                            strokeWidth={0}
+                                            dot={{ fill: '#22c55e', strokeWidth: 2, r: 4 }}
+                                            connectNulls={false}
+                                            name="Speed"
+                                            isAnimationActive={false}
+                                        />
+                                        <Line
+                                            type="monotone"
+                                            dataKey="volume"
+                                            stroke="#3b82f6"
+                                            strokeWidth={0}
+                                            dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
+                                            connectNulls={false}
+                                            name="Volume"
+                                            isAnimationActive={false}
+                                        />
+                                        <Line
+                                            type="monotone"
+                                            dataKey="captions"
+                                            stroke="#a855f7"
+                                            strokeWidth={0}
+                                            dot={{ fill: '#a855f7', strokeWidth: 2, r: 4 }}
+                                            connectNulls={false}
+                                            name="Captions"
+                                            isAnimationActive={false}
+                                        />
+                                        <Line
+                                            type="monotone"
+                                            dataKey="highlight"
+                                            stroke="#eab308"
+                                            strokeWidth={0}
+                                            dot={{ fill: '#eab308', strokeWidth: 2, r: 4 }}
+                                            connectNulls={false}
+                                            name="Highlight"
+                                            isAnimationActive={false}
+                                        />
+                                        {/* Single best fit line for all points */}
+                                        <Line
+                                            type="monotone"
+                                            dataKey="bestfit"
+                                            stroke="#dc2626"
+                                            strokeWidth={2}
+                                            dot={false}
+                                            connectNulls={true}
+                                            name="Best Fit (All Points)"
+                                            isAnimationActive={false}
+                                        />
+                                    </LineChart>
+                                )}
                             </ResponsiveContainer>
                         </div>
                     </div>
@@ -414,7 +622,7 @@ export default function EMAPage() {
                     <div className="text-center py-12">
                         <div className="text-gray-500 text-lg">No EMAs found</div>
                     </div>
-                ) : selectedUser ? (
+                ) : selectedUser && selectedUser !== 'all-users' ? (
                     <div className="space-y-8">
                         {groupedEMAs[selectedUser] && (
                             <div className="bg-white rounded-lg shadow-sm border border-gray-200">
@@ -434,7 +642,7 @@ export default function EMAPage() {
                                                 <div className="flex items-center justify-between mb-4">
                                                     <div className="flex items-center space-x-4">
                                                         <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
-                                                            Session {sessionIndex + 1}
+                                                            {sessionIndex + 1}
                                                         </div>
                                                         <div className="text-sm text-gray-600">
                                                             {formatDateTime(session.startTime)} to {formatDateTime(session.endTime).slice(-8)}
@@ -488,6 +696,29 @@ export default function EMAPage() {
                                 </div>
                             </div>
                         )}
+                    </div>
+                ) : selectedUser === 'all-users' ? (
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+                        <h2 className="text-xl font-semibold text-gray-900 mb-4">All Users Summary</h2>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {getUsers().map((user, index) => (
+                                <div key={user} className="border border-gray-200 rounded-lg p-4">
+                                    <div className="flex items-center space-x-2 mb-2">
+                                        <div
+                                            className="w-4 h-4 rounded-full"
+                                            style={{ backgroundColor: getUserColor(user, index) }}
+                                        ></div>
+                                        <h3 className="font-semibold text-gray-900">{user}</h3>
+                                    </div>
+                                    <p className="text-sm text-gray-600">
+                                        {groupedEMAs[user].length} session{groupedEMAs[user].length !== 1 ? 's' : ''} recorded
+                                    </p>
+                                    <p className="text-sm text-gray-600">
+                                        {groupedEMAs[user].reduce((total, session) => total + session.responses.length, 0)} total responses
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 ) : (
                     <div className="text-center py-12">
