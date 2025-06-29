@@ -912,8 +912,14 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     useEffect(() => {
         if (!isFullScreen || !isMuxPlayerLoaded) return;
 
-        const interval = setInterval(async () => {
+        let syncInProgress = false;
+        let consecutiveSyncAttempts = 0;
+        const MAX_SYNC_ATTEMPTS = 5;
+        const SYNC_THRESHOLD = 0.2;
+        const SYNC_COOLDOWN = 3000;
+        let lastSyncTime = 0;
 
+        const interval = setInterval(async () => {
             const player = muxPlayerRef.current;
             const speaker = speakerRef.current;
             const music = musicRef.current;
@@ -923,60 +929,112 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                 return;
             }
 
-            if (player.paused || speaker.paused) {
+            if (player.paused || speaker.paused || syncInProgress) {
+                return;
+            }
+
+            const now = Date.now();
+            if (now - lastSyncTime < SYNC_COOLDOWN) {
                 return;
             }
 
             const timeDifference = Math.abs(player.currentTime - speaker.currentTime);
 
-            if (timeDifference >= 0.1) {
-                console.log(`Sync drift detected: ${timeDifference.toFixed(2)}s difference. Resyncing...`);
+            if (timeDifference >= SYNC_THRESHOLD) {
+                if (consecutiveSyncAttempts >= MAX_SYNC_ATTEMPTS) {
+                    console.warn(`Max sync attempts (${MAX_SYNC_ATTEMPTS}) reached. Stopping sync attempts.`);
+                    return;
+                }
+
+                console.log(`Sync drift detected: ${timeDifference.toFixed(2)}s difference. Resyncing... (attempt ${consecutiveSyncAttempts + 1})`);
+
+                syncInProgress = true;
                 setSyncing(true);
+                consecutiveSyncAttempts++;
+                lastSyncTime = now;
 
                 try {
-                    player.pause();
-                    speaker.pause();
-                    music.pause();
-                    other.pause();
+                    await Promise.all([
+                        player.pause(),
+                        speaker.pause(),
+                        music.pause(),
+                        other.pause()
+                    ]);
 
-                    await new Promise(resolve => setTimeout(resolve, 500));
+                    await new Promise(resolve => setTimeout(resolve, 750));
 
                     const targetTime = speaker.currentTime;
+
                     player.currentTime = targetTime;
-                    speaker.currentTime = targetTime;
                     music.currentTime = targetTime;
                     other.currentTime = targetTime;
 
-                    await Promise.all([
-                        new Promise<void>(resolve => {
-                            const checkReady = () => {
-                                if (Math.abs(player.currentTime - targetTime) < 0.1) resolve();
-                                else requestAnimationFrame(checkReady);
-                            };
-                            checkReady();
-                        }),
-                        new Promise<void>(resolve => {
-                            const checkReady = () => {
-                                if (Math.abs(speaker.currentTime - targetTime) < 0.1) resolve();
-                                else requestAnimationFrame(checkReady);
-                            };
-                            checkReady();
-                        })
+                    await Promise.race([
+                        Promise.all([
+                            new Promise<void>((resolve) => {
+                                const checkPlayerReady = () => {
+                                    if (Math.abs(player.currentTime - targetTime) < 0.05) {
+                                        resolve();
+                                    } else {
+                                        requestAnimationFrame(checkPlayerReady);
+                                    }
+                                };
+                                checkPlayerReady();
+                            }),
+                            new Promise<void>((resolve) => {
+                                const checkMusicReady = () => {
+                                    if (Math.abs(music.currentTime - targetTime) < 0.05) {
+                                        resolve();
+                                    } else {
+                                        requestAnimationFrame(checkMusicReady);
+                                    }
+                                };
+                                checkMusicReady();
+                            }),
+                            new Promise<void>((resolve) => {
+                                const checkOtherReady = () => {
+                                    if (Math.abs(other.currentTime - targetTime) < 0.05) {
+                                        resolve();
+                                    } else {
+                                        requestAnimationFrame(checkOtherReady);
+                                    }
+                                };
+                                checkOtherReady();
+                            })
+                        ]),
+                        new Promise<void>(resolve => setTimeout(resolve, 500))
                     ]);
 
                     await Promise.all([
-                        player.play(),
-                        speaker.play(),
-                        music.play(),
-                        other.play()
+                        player.play().catch(e => console.warn("Player play failed:", e)),
+                        speaker.play().catch(e => console.warn("Speaker play failed:", e)),
+                        music.play().catch(e => console.warn("Music play failed:", e)),
+                        other.play().catch(e => console.warn("Other play failed:", e))
                     ]);
-                    setSyncing(false);
+
+                    await new Promise(resolve => setTimeout(resolve, 200));
+
+                    const postSyncDifference = Math.abs(player.currentTime - speaker.currentTime);
+                    if (postSyncDifference < SYNC_THRESHOLD) {
+                        console.log(`Sync successful: ${postSyncDifference.toFixed(2)}s`);
+                        consecutiveSyncAttempts = 0;
+                    } else {
+                        console.warn(`Sync may have failed. Post-sync difference: ${postSyncDifference.toFixed(2)}s`);
+                    }
 
                 } catch (error) {
                     console.error("Error during sync correction:", error);
+                    consecutiveSyncAttempts = MAX_SYNC_ATTEMPTS;
+                } finally {
+                    syncInProgress = false;
+                    setSyncing(false);
+                }
+            } else {
+                if (consecutiveSyncAttempts > 0) {
+                    consecutiveSyncAttempts = 0;
                 }
             }
-        }, 2000); // Check every 2 seconds
+        }, 2000);
 
         return () => {
             clearInterval(interval);
