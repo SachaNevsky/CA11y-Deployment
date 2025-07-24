@@ -265,8 +265,10 @@ export default function EMAPage() {
                     normalizedChartPoints.push(dataPoint);
                 }
             } else if (normalizationMethod === 'quartiles') {
-                const quartilePoints = [0, 0.25, 0.5, 0.75, 1.0];
-                const quartileLabels = ['Start', 'Q1 (25%)', 'Q2 (50%)', 'Q3 (75%)', 'End'];
+                // const quartilePoints = [0, 0.25, 0.5, 0.75, 1.0];
+                // const quartileLabels = ['Start', 'Q1 (25%)', 'Q2 (50%)', 'Q3 (75%)', 'End'];
+                const quartilePoints = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
+                const quartileLabels = ['0%', '10%', "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"];
 
                 quartilePoints.forEach((quartile, index) => {
                     const dataPoint: AllUsersChartDataPoint = {
@@ -591,18 +593,6 @@ export default function EMAPage() {
                             <div className="flex items-center space-x-6">
                                 {selectedUser === 'all-users' && (
                                     <>
-                                        <div className="flex items-center space-x-2">
-                                            <input
-                                                type="checkbox"
-                                                id="normalize-data"
-                                                checked={normalizeData}
-                                                onChange={(e) => setNormalizeData(e.target.checked)}
-                                                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                                            />
-                                            <label htmlFor="normalize-data" className="text-sm font-medium text-gray-700">
-                                                Normalise
-                                            </label>
-                                        </div>
                                         {normalizeData && (
                                             <div className="flex items-center space-x-2">
                                                 <select
@@ -615,6 +605,18 @@ export default function EMAPage() {
                                                 </select>
                                             </div>
                                         )}
+                                        <div className="flex items-center space-x-2">
+                                            <input
+                                                type="checkbox"
+                                                id="normalize-data"
+                                                checked={normalizeData}
+                                                onChange={(e) => setNormalizeData(e.target.checked)}
+                                                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                            />
+                                            <label htmlFor="normalize-data" className="text-sm font-medium text-gray-700">
+                                                Normalise
+                                            </label>
+                                        </div>
                                         <div className="flex items-center space-x-2">
                                             <input
                                                 type="checkbox"
