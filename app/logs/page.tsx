@@ -246,7 +246,7 @@ export default function LogsPage() {
     const processLogs = (logsData: UserLog[]) => {
         const grouped: GroupedLogs = {};
 
-        const SESSION_GAP_MS = 30 * 60 * 1000;
+        const SESSION_GAP_MS = 60 * 60 * 1000;
 
         logsData.forEach(log => {
             if (!grouped[log.user]) {
@@ -366,7 +366,7 @@ export default function LogsPage() {
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">User Activity Logs</h1>
                     <p className="text-gray-600 mb-4">
-                        Sessions are grouped when actions occur within 30 minutes of each other
+                        Sessions are grouped when actions occur within 60 minutes of each other
                     </p>
                     <a href="/emas" className="font-bold text-white px-4 py-3 rounded-md transition-colors duration-200 shadow-md bg-blue-500 hover:bg-blue-600">See EMAs</a>
                     <div className="mb-4 pt-4">

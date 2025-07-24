@@ -35,7 +35,7 @@ interface AllUsersChartDataPoint {
     index: number;
     label: string;
     count: number;
-    [key: string]: number | string; // Dynamic user keys
+    [key: string]: number | string;
 }
 
 interface EMASession {
@@ -61,8 +61,9 @@ export default function EMAPage() {
     const [allUsersChartData, setAllUsersChartData] = useState<AllUsersChartDataPoint[]>([]);
     const [excludeFirstSession, setExcludeFirstSession] = useState(false);
     const [showOverallBestFit, setShowOverallBestFit] = useState(false);
+    const [normalizeData, setNormalizeData] = useState(false);
+    const [normalizationMethod, setNormalizationMethod] = useState<'session' | 'quartiles'>('session');
 
-    // Predefined colors for users
     const userColors = [
         '#22c55e', // green
         '#3b82f6', // blue
@@ -99,7 +100,7 @@ export default function EMAPage() {
 
     const processEMAs = (emasData: UserEMA[]) => {
         const grouped: GroupedEMAs = {};
-        const SESSION_GAP_MS = 30 * 60 * 1000; // 30 minutes
+        const SESSION_GAP_MS = 60 * 60 * 1000;
 
         emasData.forEach(ema => {
             if (!grouped[ema.user]) {
@@ -167,7 +168,6 @@ export default function EMAPage() {
         return 'general';
     };
 
-    // Process data for all users chart
     const processAllUsersChartData = React.useCallback(() => {
         if (Object.keys(groupedEMAs).length === 0) {
             setAllUsersChartData([]);
@@ -177,19 +177,16 @@ export default function EMAPage() {
         const users = Object.keys(groupedEMAs);
         const userData: { [user: string]: { [key: string]: { scores: number[]; count: number } } } = {};
 
-        // Initialize user data structure
         users.forEach(user => {
             userData[user] = {};
         });
 
-        // Process each user's sessions
         users.forEach(user => {
             const userSessions = groupedEMAs[user];
             const sessionsToInclude = excludeFirstSession && userSessions.length > 1
                 ? userSessions.slice(1)
                 : userSessions;
 
-            // Group by session
             sessionsToInclude.forEach((session, sessionIndex) => {
                 const sessionKey = `${sessionIndex + (excludeFirstSession && userSessions.length > 1 ? 2 : 1)}`;
                 const sessionScores = session.responses.map(r => r.response);
@@ -203,7 +200,159 @@ export default function EMAPage() {
             });
         });
 
-        // Get all unique time periods across all users
+        if (normalizeData) {
+            const maxSessions = Math.max(...users.map(user => Object.keys(userData[user]).length));
+
+            if (maxSessions <= 1) {
+                setNormalizeData(false);
+                return;
+            }
+
+            const normalizedChartPoints: AllUsersChartDataPoint[] = [];
+
+            if (normalizationMethod === 'session') {
+                for (let i = 1; i <= maxSessions; i++) {
+                    const dataPoint: AllUsersChartDataPoint = {
+                        index: i,
+                        label: `Session ${i}`,
+                        count: 1
+                    };
+
+                    users.forEach(user => {
+                        const userSessions = Object.keys(userData[user]).sort((a, b) => parseInt(a) - parseInt(b));
+                        const userSessionCount = userSessions.length;
+
+                        if (userSessionCount === 0) {
+                            return;
+                        } else if (userSessionCount === 1) {
+                            const sessionKey = userSessions[0];
+                            const userScores = userData[user][sessionKey].scores;
+                            const averageScore = userScores.reduce((sum, score) => sum + score, 0) / userScores.length;
+                            dataPoint[user] = Math.round(averageScore * 100) / 100;
+                            dataPoint[`${user}_count`] = userData[user][sessionKey].count;
+                        } else {
+                            const normalizedPosition = (i - 1) / (maxSessions - 1) * (userSessionCount - 1);
+                            const lowerIndex = Math.floor(normalizedPosition);
+                            const upperIndex = Math.ceil(normalizedPosition);
+
+                            const lowerSessionKey = userSessions[lowerIndex];
+                            const upperSessionKey = userSessions[upperIndex];
+
+                            const lowerScores = userData[user][lowerSessionKey].scores;
+                            const upperScores = userData[user][upperSessionKey].scores;
+
+                            const lowerAverage = lowerScores.reduce((sum, score) => sum + score, 0) / lowerScores.length;
+                            const upperAverage = upperScores.reduce((sum, score) => sum + score, 0) / upperScores.length;
+
+                            let interpolatedValue: number;
+                            if (lowerIndex === upperIndex) {
+                                interpolatedValue = lowerAverage;
+                            } else {
+                                const weight = normalizedPosition - lowerIndex;
+                                interpolatedValue = lowerAverage * (1 - weight) + upperAverage * weight;
+                            }
+
+                            dataPoint[user] = Math.round(interpolatedValue * 100) / 100;
+
+                            const lowerCount = userData[user][lowerSessionKey].count;
+                            const upperCount = userData[user][upperSessionKey].count;
+                            const interpolatedCount = lowerIndex === upperIndex ? lowerCount :
+                                Math.round(lowerCount * (1 - (normalizedPosition - lowerIndex)) + upperCount * (normalizedPosition - lowerIndex));
+                            dataPoint[`${user}_count`] = interpolatedCount;
+                        }
+                    });
+
+                    normalizedChartPoints.push(dataPoint);
+                }
+            } else if (normalizationMethod === 'quartiles') {
+                const quartilePoints = [0, 0.25, 0.5, 0.75, 1.0];
+                const quartileLabels = ['Start', 'Q1 (25%)', 'Q2 (50%)', 'Q3 (75%)', 'End'];
+
+                quartilePoints.forEach((quartile, index) => {
+                    const dataPoint: AllUsersChartDataPoint = {
+                        index: index + 1,
+                        label: quartileLabels[index],
+                        count: 1
+                    };
+
+                    users.forEach(user => {
+                        const userSessions = Object.keys(userData[user]).sort((a, b) => parseInt(a) - parseInt(b));
+                        const userSessionCount = userSessions.length;
+
+                        if (userSessionCount === 0) {
+                            return;
+                        } else if (userSessionCount === 1) {
+                            const sessionKey = userSessions[0];
+                            const userScores = userData[user][sessionKey].scores;
+                            const averageScore = userScores.reduce((sum, score) => sum + score, 0) / userScores.length;
+                            dataPoint[user] = Math.round(averageScore * 100) / 100;
+                            dataPoint[`${user}_count`] = userData[user][sessionKey].count;
+                        } else {
+                            const normalizedPosition = quartile * (userSessionCount - 1);
+                            const lowerIndex = Math.floor(normalizedPosition);
+                            const upperIndex = Math.ceil(normalizedPosition);
+
+                            const lowerSessionKey = userSessions[lowerIndex];
+                            const upperSessionKey = userSessions[upperIndex];
+
+                            const lowerScores = userData[user][lowerSessionKey].scores;
+                            const upperScores = userData[user][upperSessionKey].scores;
+
+                            const lowerAverage = lowerScores.reduce((sum, score) => sum + score, 0) / lowerScores.length;
+                            const upperAverage = upperScores.reduce((sum, score) => sum + score, 0) / upperScores.length;
+
+                            let interpolatedValue: number;
+                            if (lowerIndex === upperIndex) {
+                                interpolatedValue = lowerAverage;
+                            } else {
+                                const weight = normalizedPosition - lowerIndex;
+                                interpolatedValue = lowerAverage * (1 - weight) + upperAverage * weight;
+                            }
+
+                            dataPoint[user] = Math.round(interpolatedValue * 100) / 100;
+
+                            const lowerCount = userData[user][lowerSessionKey].count;
+                            const upperCount = userData[user][upperSessionKey].count;
+                            const interpolatedCount = lowerIndex === upperIndex ? lowerCount :
+                                Math.round(lowerCount * (1 - (normalizedPosition - lowerIndex)) + upperCount * (normalizedPosition - lowerIndex));
+                            dataPoint[`${user}_count`] = interpolatedCount;
+                        }
+                    });
+
+                    normalizedChartPoints.push(dataPoint);
+                });
+            }
+
+            if (showOverallBestFit) {
+                const allPointsForOverallRegression: { x: number; y: number }[] = [];
+                users.forEach(user => {
+                    normalizedChartPoints.forEach(point => {
+                        if (point[user] !== undefined) {
+                            allPointsForOverallRegression.push({ x: point.index, y: point[user] as number });
+                        }
+                    });
+                });
+
+                if (allPointsForOverallRegression.length > 1) {
+                    const n = allPointsForOverallRegression.length;
+                    const sumX = allPointsForOverallRegression.reduce((sum, point) => sum + point.x, 0);
+                    const sumY = allPointsForOverallRegression.reduce((sum, point) => sum + point.y, 0);
+                    const sumXY = allPointsForOverallRegression.reduce((sum, point) => sum + point.x * point.y, 0);
+                    const sumXX = allPointsForOverallRegression.reduce((sum, point) => sum + point.x * point.x, 0);
+
+                    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+                    const intercept = (sumY - slope * sumX) / n;
+
+                    normalizedChartPoints.forEach(point => {
+                        point.overall_bestfit = slope * point.index + intercept;
+                    });
+                }
+            }
+
+            setAllUsersChartData(normalizedChartPoints);
+            return;
+        }
+
         const allTimePeriods = new Set<string>();
         users.forEach(user => {
             Object.keys(userData[user]).forEach(period => {
@@ -211,14 +360,12 @@ export default function EMAPage() {
             });
         });
 
-        // Sort time periods
         const sortedTimePeriods = Array.from(allTimePeriods).sort((a, b) => {
             const aNum = parseInt(a.split(' ')[1]);
             const bNum = parseInt(b.split(' ')[1]);
             return aNum - bNum;
         });
 
-        // Create chart data points
         const chartPoints: AllUsersChartDataPoint[] = sortedTimePeriods.map((period, index) => {
             const dataPoint: AllUsersChartDataPoint = {
                 index: index + 1,
@@ -230,19 +377,17 @@ export default function EMAPage() {
                 if (userData[user][period] && userData[user][period].scores.length > 0) {
                     const userScores = userData[user][period].scores;
                     const averageScore = userScores.reduce((sum, score) => sum + score, 0) / userScores.length;
-                    dataPoint[user] = Math.round(averageScore * 100) / 100; // Round to 2 decimal places
-                    dataPoint[`${user}_count`] = userData[user][period].count; // Store count for dot sizing
+                    dataPoint[user] = Math.round(averageScore * 100) / 100;
+                    dataPoint[`${user}_count`] = userData[user][period].count;
                 }
             });
 
-            // console.log(dataPoint)
             return dataPoint;
         });
 
         if (showOverallBestFit) {
             const allPointsForOverallRegression: { x: number; y: number }[] = [];
             if (showOverallBestFit) {
-                // Collect all points for overall best fit only
                 users.forEach(user => {
                     chartPoints.forEach(point => {
                         if (point[user] !== undefined) {
@@ -252,7 +397,6 @@ export default function EMAPage() {
                 });
             }
 
-            // Calculate overall best fit line
             if (showOverallBestFit && allPointsForOverallRegression.length > 1) {
                 const n = allPointsForOverallRegression.length;
                 const sumX = allPointsForOverallRegression.reduce((sum, point) => sum + point.x, 0);
@@ -263,16 +407,14 @@ export default function EMAPage() {
                 const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
                 const intercept = (sumY - slope * sumX) / n;
 
-                // Add overall best fit values
                 chartPoints.forEach(point => {
                     point.overall_bestfit = slope * point.index + intercept;
                 });
             }
         }
 
-        // console.log(chartPoints)
         setAllUsersChartData(chartPoints);
-    }, [groupedEMAs, excludeFirstSession, showOverallBestFit]);
+    }, [groupedEMAs, excludeFirstSession, showOverallBestFit, normalizeData, normalizationMethod]);
 
     const processChartData = React.useCallback(() => {
         if (!selectedUser || !groupedEMAs[selectedUser]) {
@@ -293,13 +435,11 @@ export default function EMAPage() {
             });
         });
 
-        // Sort by timestamp
         allResponses.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
 
         const chartPoints: ChartDataPoint[] = [];
         let globalIndex = 1;
 
-        // Create data points for all responses
         allResponses.forEach((response) => {
             const type = getQuestionType(response.questionId, response.question);
 
@@ -309,7 +449,6 @@ export default function EMAPage() {
                 questionType: type,
             };
 
-            // Set the appropriate field based on question type
             switch (type) {
                 case 'general':
                     dataPoint.general = response.response;
@@ -332,7 +471,6 @@ export default function EMAPage() {
             globalIndex++;
         });
 
-        // Calculate single best fit line for all points
         if (chartPoints.length > 1) {
             const allPointsForRegression: { x: number; y: number }[] = [];
 
@@ -353,7 +491,6 @@ export default function EMAPage() {
                 const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
                 const intercept = (sumY - slope * sumX) / n;
 
-                // Add best fit values to all chart points
                 chartPoints.forEach(point => {
                     point.bestfit = slope * point.index + intercept;
                 });
@@ -424,7 +561,7 @@ export default function EMAPage() {
                 <div className="mb-8">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">EMA Responses</h1>
                     <p className="text-gray-600 mb-4">
-                        EMA responses over time (Sessions are grouped when responses occur within 30 minutes of each other)
+                        EMA responses over time (Sessions are grouped when responses occur within 60 minutes of each other)
                     </p>
                     <a href="/logs" className="font-bold text-white px-4 py-3 rounded-md transition-colors duration-200 shadow-md bg-blue-500 hover:bg-blue-600">See logs</a>
                     <div className="mb-6 pt-4">
@@ -445,8 +582,6 @@ export default function EMAPage() {
                         </select>
                     </div>
                 </div>
-
-                {/* Chart Section */}
                 {selectedUser && (
                     <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8 p-6">
                         <div className="flex items-center justify-between mb-4">
@@ -456,6 +591,30 @@ export default function EMAPage() {
                             <div className="flex items-center space-x-6">
                                 {selectedUser === 'all-users' && (
                                     <>
+                                        <div className="flex items-center space-x-2">
+                                            <input
+                                                type="checkbox"
+                                                id="normalize-data"
+                                                checked={normalizeData}
+                                                onChange={(e) => setNormalizeData(e.target.checked)}
+                                                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                            />
+                                            <label htmlFor="normalize-data" className="text-sm font-medium text-gray-700">
+                                                Normalise
+                                            </label>
+                                        </div>
+                                        {normalizeData && (
+                                            <div className="flex items-center space-x-2">
+                                                <select
+                                                    value={normalizationMethod}
+                                                    onChange={(e) => setNormalizationMethod(e.target.value as 'session' | 'quartiles')}
+                                                    className="text-sm px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                                >
+                                                    <option value="session">By session</option>
+                                                    <option value="quartiles">By quartiles</option>
+                                                </select>
+                                            </div>
+                                        )}
                                         <div className="flex items-center space-x-2">
                                             <input
                                                 type="checkbox"
@@ -494,11 +653,18 @@ export default function EMAPage() {
                                         <CartesianGrid strokeDasharray="3 3" />
                                         <XAxis
                                             dataKey="label"
-                                            label={{ value: 'Session', position: 'insideBottom', offset: -10 }}
+                                            label={{
+                                                value: 'Normalized Session',
+                                                position: 'insideBottom',
+                                                offset: -10
+                                            }}
                                         />
                                         <YAxis
                                             domain={[1, 5]}
-                                            label={{ value: 'Average EMA Score', angle: -90 }}
+                                            label={{
+                                                value: 'Average EMA Score',
+                                                angle: -90
+                                            }}
                                         />
                                         <Legend
                                             wrapperStyle={{ paddingTop: "2%" }}
@@ -599,7 +765,6 @@ export default function EMAPage() {
                                             name="Highlight"
                                             isAnimationActive={false}
                                         />
-                                        {/* Single best fit line for all points */}
                                         <Line
                                             type="monotone"
                                             dataKey="bestfit"
@@ -616,8 +781,6 @@ export default function EMAPage() {
                         </div>
                     </div>
                 )}
-
-                {/* EMA Logs Section */}
                 {Object.keys(groupedEMAs).length === 0 ? (
                     <div className="text-center py-12">
                         <div className="text-gray-500 text-lg">No EMAs found</div>
@@ -634,7 +797,6 @@ export default function EMAPage() {
                                         {groupedEMAs[selectedUser].length} session{groupedEMAs[selectedUser].length !== 1 ? 's' : ''} recorded
                                     </p>
                                 </div>
-
                                 <div className="p-6">
                                     <div className="space-y-6">
                                         {groupedEMAs[selectedUser].map((session, sessionIndex) => (
@@ -655,7 +817,6 @@ export default function EMAPage() {
                                                         Duration: {session.duration}
                                                     </div>
                                                 </div>
-
                                                 <div className="space-y-2">
                                                     {session.responses
                                                         .sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime())
@@ -668,7 +829,6 @@ export default function EMAPage() {
                                                                 captions: 'bg-purple-100 text-purple-800',
                                                                 highlight: 'bg-yellow-100 text-yellow-800'
                                                             };
-
                                                             return (
                                                                 <div key={responseIndex} className="flex items-start space-x-3 py-2">
                                                                     <div className="flex-shrink-0 py-2 w-16 text-xs text-gray-500 font-mono mt-0.5">
