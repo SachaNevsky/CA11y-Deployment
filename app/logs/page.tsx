@@ -25,7 +25,7 @@ export default function LogsPage() {
             }
             const data = await response.json();
             setLogs(data);
-            console.log(data);
+            console.log(logs, data);
             processLogs(data);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred');
