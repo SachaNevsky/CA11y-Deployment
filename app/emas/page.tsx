@@ -4,52 +4,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from 'recharts';
-
-interface EMAResponse {
-    questionId: string;
-    question: string;
-    response: number;
-    timestamp: string;
-}
-
-interface UserEMA {
-    _id: string;
-    user: string;
-    responses: EMAResponse[];
-    createdAt: string;
-}
-
-interface ChartDataPoint {
-    index: number;
-    general?: number;
-    speed?: number;
-    volume?: number;
-    captions?: number;
-    highlight?: number;
-    bestfit?: number;
-    timestamp: string;
-    questionType?: QuestionType;
-}
-
-interface AllUsersChartDataPoint {
-    index: number;
-    label: string;
-    count: number;
-    [key: string]: number | string;
-}
-
-interface EMASession {
-    startTime: Date;
-    endTime: Date;
-    responses: EMAResponse[];
-    duration: string;
-}
-
-interface GroupedEMAs {
-    [user: string]: EMASession[];
-}
-
-type QuestionType = 'general' | 'speed' | 'volume' | 'captions' | 'highlight';
+import { EMAResponse, UserEMA, ChartDataPoint, AllUsersChartDataPoint, EMASession, GroupedEMAs, QuestionType, IndividualScoreDataPoint, ChartMode } from './interfaces';
 
 export default function EMAPage() {
     const [emas, setEmas] = useState<UserEMA[]>([]);
@@ -59,10 +14,13 @@ export default function EMAPage() {
     const [selectedUser, setSelectedUser] = useState<string>('');
     const [chartData, setChartData] = useState<ChartDataPoint[]>([]);
     const [allUsersChartData, setAllUsersChartData] = useState<AllUsersChartDataPoint[]>([]);
+    const [individualScoreData, setIndividualScoreData] = useState<IndividualScoreDataPoint[]>([]);
     const [excludeFirstSession, setExcludeFirstSession] = useState(false);
     const [showOverallBestFit, setShowOverallBestFit] = useState(false);
     const [normalizeData, setNormalizeData] = useState(false);
     const [normalizationMethod, setNormalizationMethod] = useState<'session' | 'quartiles'>('session');
+    const [chartMode, setChartMode] = useState<ChartMode>('sessions');
+    const [showIndividualBestFit, setShowIndividualBestFit] = useState(false);
 
     const userColors = [
         '#22c55e', // green
@@ -103,9 +61,7 @@ export default function EMAPage() {
         const SESSION_GAP_MS = 60 * 60 * 1000;
 
         emasData.forEach(ema => {
-            if (!grouped[ema.user]) {
-                grouped[ema.user] = [];
-            }
+            if (!grouped[ema.user]) grouped[ema.user] = [];
 
             const sortedResponses = [...ema.responses].sort(
                 (a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
@@ -118,9 +74,7 @@ export default function EMAPage() {
 
                 if (!currentSession ||
                     (responseTime.getTime() - currentSession.endTime.getTime()) > SESSION_GAP_MS) {
-                    if (currentSession) {
-                        grouped[ema.user].push(currentSession);
-                    }
+                    if (currentSession) grouped[ema.user].push(currentSession);
                     currentSession = {
                         startTime: responseTime,
                         endTime: responseTime,
@@ -133,9 +87,7 @@ export default function EMAPage() {
                 }
             });
 
-            if (currentSession) {
-                grouped[ema.user].push(currentSession);
-            }
+            if (currentSession) grouped[ema.user].push(currentSession);
         });
 
         // Calculate durations and sort sessions
@@ -168,6 +120,122 @@ export default function EMAPage() {
         return 'general';
     };
 
+    const processIndividualScoreData = React.useCallback(() => {
+        if (Object.keys(groupedEMAs).length === 0) {
+            setIndividualScoreData([]);
+            return;
+        }
+
+        const users = Object.keys(groupedEMAs);
+        const allIndividualScores: IndividualScoreDataPoint[] = [];
+
+        if (selectedUser === 'all-users') {
+            // Process all users
+            users.forEach(user => {
+                const userSessions = groupedEMAs[user];
+                const sessionsToInclude = excludeFirstSession && userSessions.length > 1 ? userSessions.slice(1) : userSessions;
+
+                const allUserResponses: EMAResponse[] = [];
+                sessionsToInclude.forEach(session => {
+                    session.responses.forEach(response => {
+                        allUserResponses.push(response);
+                    });
+                });
+
+                allUserResponses.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+
+                allUserResponses.forEach((response, index) => {
+                    const questionType = getQuestionType(response.questionId, response.question);
+                    const dataPoint: IndividualScoreDataPoint = {
+                        index: index + 1,
+                        user,
+                        score: response.response,
+                        timestamp: response.timestamp,
+                        questionType,
+                        [user]: response.response
+                    };
+                    allIndividualScores.push(dataPoint);
+                });
+            });
+
+            // Add best fit line if enabled
+            if (showIndividualBestFit && allIndividualScores.length > 1) {
+                // Calculate overall best fit across all users
+                const allPointsForRegression: { x: number; y: number }[] = [];
+                allIndividualScores.forEach(point => {
+                    allPointsForRegression.push({ x: point.index, y: point.score });
+                });
+
+                if (allPointsForRegression.length > 1) {
+                    const n = allPointsForRegression.length;
+                    const sumX = allPointsForRegression.reduce((sum, point) => sum + point.x, 0);
+                    const sumY = allPointsForRegression.reduce((sum, point) => sum + point.y, 0);
+                    const sumXY = allPointsForRegression.reduce((sum, point) => sum + point.x * point.y, 0);
+                    const sumXX = allPointsForRegression.reduce((sum, point) => sum + point.x * point.x, 0);
+
+                    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+                    const intercept = (sumY - slope * sumX) / n;
+
+                    // Add best fit values to each point
+                    allIndividualScores.forEach(point => {
+                        point.overall_bestfit = slope * point.index + intercept;
+                    });
+                }
+            }
+        } else if (selectedUser && groupedEMAs[selectedUser]) {
+            // Process single user
+            const userSessions = groupedEMAs[selectedUser];
+            const sessionsToInclude = excludeFirstSession && userSessions.length > 1
+                ? userSessions.slice(1)
+                : userSessions;
+
+            const allUserResponses: EMAResponse[] = [];
+            sessionsToInclude.forEach(session => {
+                session.responses.forEach(response => {
+                    allUserResponses.push(response);
+                });
+            });
+
+            allUserResponses.sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime());
+
+            allUserResponses.forEach((response, index) => {
+                const questionType = getQuestionType(response.questionId, response.question);
+                const dataPoint: IndividualScoreDataPoint = {
+                    index: index + 1,
+                    score: response.response,
+                    timestamp: response.timestamp,
+                    questionType
+                };
+                allIndividualScores.push(dataPoint);
+            });
+
+            // Add best fit line for single user if enabled
+            if (showIndividualBestFit && allIndividualScores.length > 1) {
+                const allPointsForRegression: { x: number; y: number }[] = [];
+                allIndividualScores.forEach(point => {
+                    allPointsForRegression.push({ x: point.index, y: point.score });
+                });
+
+                if (allPointsForRegression.length > 1) {
+                    const n = allPointsForRegression.length;
+                    const sumX = allPointsForRegression.reduce((sum, point) => sum + point.x, 0);
+                    const sumY = allPointsForRegression.reduce((sum, point) => sum + point.y, 0);
+                    const sumXY = allPointsForRegression.reduce((sum, point) => sum + point.x * point.y, 0);
+                    const sumXX = allPointsForRegression.reduce((sum, point) => sum + point.x * point.x, 0);
+
+                    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+                    const intercept = (sumY - slope * sumX) / n;
+
+                    allIndividualScores.forEach(point => {
+                        point.bestfit = slope * point.index + intercept;
+                    });
+                }
+            }
+        }
+
+        setIndividualScoreData(allIndividualScores);
+    }, [groupedEMAs, selectedUser, excludeFirstSession, showIndividualBestFit]);
+
     const processAllUsersChartData = React.useCallback(() => {
         if (Object.keys(groupedEMAs).length === 0) {
             setAllUsersChartData([]);
@@ -183,18 +251,15 @@ export default function EMAPage() {
 
         users.forEach(user => {
             const userSessions = groupedEMAs[user];
-            const sessionsToInclude = excludeFirstSession && userSessions.length > 1
-                ? userSessions.slice(1)
-                : userSessions;
+            const sessionsToInclude = excludeFirstSession && userSessions.length > 1 ? userSessions.slice(1) : userSessions;
 
             sessionsToInclude.forEach((session, sessionIndex) => {
                 const sessionKey = `${sessionIndex + (excludeFirstSession && userSessions.length > 1 ? 2 : 1)}`;
                 const sessionScores = session.responses.map(r => r.response);
                 const averageScore = sessionScores.reduce((sum, score) => sum + score, 0) / sessionScores.length;
 
-                if (!userData[user][sessionKey]) {
-                    userData[user][sessionKey] = { scores: [], count: 0 };
-                }
+                if (!userData[user][sessionKey]) userData[user][sessionKey] = { scores: [], count: 0 };
+
                 userData[user][sessionKey].scores.push(averageScore);
                 userData[user][sessionKey].count += sessionScores.length;
             });
@@ -256,8 +321,7 @@ export default function EMAPage() {
 
                             const lowerCount = userData[user][lowerSessionKey].count;
                             const upperCount = userData[user][upperSessionKey].count;
-                            const interpolatedCount = lowerIndex === upperIndex ? lowerCount :
-                                Math.round(lowerCount * (1 - (normalizedPosition - lowerIndex)) + upperCount * (normalizedPosition - lowerIndex));
+                            const interpolatedCount = lowerIndex === upperIndex ? lowerCount : Math.round(lowerCount * (1 - (normalizedPosition - lowerIndex)) + upperCount * (normalizedPosition - lowerIndex));
                             dataPoint[`${user}_count`] = interpolatedCount;
                         }
                     });
@@ -265,8 +329,6 @@ export default function EMAPage() {
                     normalizedChartPoints.push(dataPoint);
                 }
             } else if (normalizationMethod === 'quartiles') {
-                // const quartilePoints = [0, 0.25, 0.5, 0.75, 1.0];
-                // const quartileLabels = ['Start', 'Q1 (25%)', 'Q2 (50%)', 'Q3 (75%)', 'End'];
                 const quartilePoints = [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
                 const quartileLabels = ['0%', '10%', "20%", "30%", "40%", "50%", "60%", "70%", "80%", "90%", "100%"];
 
@@ -425,9 +487,7 @@ export default function EMAPage() {
         }
 
         const userSessions = groupedEMAs[selectedUser];
-        const sessionsToInclude = excludeFirstSession && userSessions.length > 1
-            ? userSessions.slice(1)
-            : userSessions;
+        const sessionsToInclude = excludeFirstSession && userSessions.length > 1 ? userSessions.slice(1) : userSessions;
 
         const allResponses: EMAResponse[] = [];
 
@@ -504,11 +564,19 @@ export default function EMAPage() {
 
     useEffect(() => {
         if (selectedUser === 'all-users') {
-            processAllUsersChartData();
+            if (chartMode === 'sessions') {
+                processAllUsersChartData();
+            } else {
+                processIndividualScoreData();
+            }
         } else {
-            processChartData();
+            if (chartMode === 'sessions') {
+                processChartData();
+            } else {
+                processIndividualScoreData();
+            }
         }
-    }, [processChartData, processAllUsersChartData, selectedUser]);
+    }, [processChartData, processAllUsersChartData, processIndividualScoreData, selectedUser, chartMode]);
 
     const formatDateTime = (date: Date) => {
         return date.toLocaleString('en-GB', {
@@ -539,6 +607,102 @@ export default function EMAPage() {
 
     const getUserColor = (user: string, index: number) => {
         return userColors[index % userColors.length];
+    };
+
+    const renderIndividualScoresChart = () => {
+        if (selectedUser === 'all-users') {
+            const users = getUsers();
+            const maxDataPoints = Math.max(...users.map(user =>
+                individualScoreData.filter(point => point.user === user).length
+            ));
+
+            const consolidatedData: { index: number;[key: string]: number | string | undefined }[] = [];
+            for (let i = 1; i <= maxDataPoints; i++) {
+                const dataPoint: { index: number;[key: string]: number | string | undefined } = { index: i };
+                users.forEach(user => {
+                    const userPoint = individualScoreData.find(point => point.user === user && point.index === i);
+                    if (userPoint) {
+                        dataPoint[user] = userPoint.score;
+                        if (userPoint.overall_bestfit !== undefined) dataPoint.overall_bestfit = userPoint.overall_bestfit;
+                    }
+                });
+                consolidatedData.push(dataPoint);
+            }
+
+            return (
+                <LineChart data={consolidatedData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis
+                        dataKey="index"
+                        label={{ value: 'Response Index', position: 'insideBottom', offset: -10 }}
+                    />
+                    <YAxis
+                        domain={[1, 5]}
+                        label={{ value: 'EMA Score', angle: -90 }}
+                    />
+                    <Legend
+                        wrapperStyle={{ paddingTop: "2%" }}
+                    />
+                    {users.map((user, index) => (
+                        <Line
+                            key={user}
+                            type="monotone"
+                            dataKey={user}
+                            stroke={getUserColor(user, index)}
+                            strokeWidth={0}
+                            dot={{ fill: getUserColor(user, index), strokeWidth: 2, r: 4 }}
+                            connectNulls={false}
+                            name={user}
+                            isAnimationActive={false}
+                        />
+                    ))}
+                    {showIndividualBestFit && (
+                        <Line
+                            type="monotone"
+                            dataKey="overall_bestfit"
+                            stroke="#000000"
+                            strokeWidth={3}
+                            dot={false}
+                            connectNulls={true}
+                            name="Overall Best Fit"
+                            isAnimationActive={false}
+                        />
+                    )}
+                </LineChart>
+            );
+        } else {
+            return (
+                <LineChart data={individualScoreData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="index" label={{ value: 'Response Index', position: 'insideBottom', offset: -10 }}
+                    />
+                    <YAxis domain={[1, 5]} label={{ value: 'Score', angle: -90, position: 'insideLeft' }} />
+                    <Legend wrapperStyle={{ paddingTop: "2%" }} />
+                    <Line
+                        type="monotone"
+                        dataKey="score"
+                        stroke="#3b82f6"
+                        strokeWidth={0}
+                        dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
+                        connectNulls={false}
+                        name="EMA Score"
+                        isAnimationActive={false}
+                    />
+                    {showIndividualBestFit && (
+                        <Line
+                            type="monotone"
+                            dataKey="bestfit"
+                            stroke="#dc2626"
+                            strokeWidth={2}
+                            dot={false}
+                            connectNulls={true}
+                            name="Best Fit Line"
+                            isAnimationActive={false}
+                        />
+                    )}
+                </LineChart>
+            );
+        }
     };
 
     if (loading) {
@@ -586,12 +750,26 @@ export default function EMAPage() {
                 </div>
                 {selectedUser && (
                     <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-8 p-6">
+                        <h2 className="text-xl font-semibold text-gray-900 pb-4">
+                            {selectedUser === 'all-users' ? 'All Users EMA Scores Over Time' : 'EMA Scores Over Time'}
+                        </h2>
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-xl font-semibold text-gray-900">
-                                {selectedUser === 'all-users' ? 'All Users EMA Scores Over Time' : 'EMA Scores Over Time'}
-                            </h2>
                             <div className="flex items-center space-x-6">
-                                {selectedUser === 'all-users' && (
+                                <div className="flex items-center space-x-2">
+                                    <label htmlFor="chart-mode" className="text-sm font-medium text-gray-700">
+                                        Chart Mode:
+                                    </label>
+                                    <select
+                                        id="chart-mode"
+                                        value={chartMode}
+                                        onChange={(e) => setChartMode(e.target.value as ChartMode)}
+                                        className="text-sm px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                                    >
+                                        <option value="sessions">Session Averages</option>
+                                        <option value="individual">Individual Scores</option>
+                                    </select>
+                                </div>
+                                {chartMode === 'sessions' && selectedUser === 'all-users' && (
                                     <>
                                         {normalizeData && (
                                             <div className="flex items-center space-x-2">
@@ -631,46 +809,46 @@ export default function EMAPage() {
                                         </div>
                                     </>
                                 )}
-                                {((selectedUser !== 'all-users' && groupedEMAs[selectedUser]?.length > 1) ||
-                                    (selectedUser === 'all-users' && Object.keys(groupedEMAs).length > 0)) && (
-                                        <div className="flex items-center space-x-2">
-                                            <input
-                                                type="checkbox"
-                                                id="exclude-first-session"
-                                                checked={excludeFirstSession}
-                                                onChange={(e) => setExcludeFirstSession(e.target.checked)}
-                                                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                                            />
-                                            <label htmlFor="exclude-first-session" className="text-sm font-medium text-gray-700">
-                                                Exclude first session from chart
-                                            </label>
-                                        </div>
-                                    )}
+                                {chartMode === 'individual' && (
+                                    <div className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            id="show-individual-bestfit"
+                                            checked={showIndividualBestFit}
+                                            onChange={(e) => setShowIndividualBestFit(e.target.checked)}
+                                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                        />
+                                        <label htmlFor="show-individual-bestfit" className="text-sm font-medium text-gray-700">
+                                            Show best fit line
+                                        </label>
+                                    </div>
+                                )}
+                                {selectedUser === 'all-users' && Object.keys(groupedEMAs).length > 0 && (
+                                    <div className="flex items-center space-x-2">
+                                        <input
+                                            type="checkbox"
+                                            id="exclude-first-session"
+                                            checked={excludeFirstSession}
+                                            onChange={(e) => setExcludeFirstSession(e.target.checked)}
+                                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                                        />
+                                        <label htmlFor="exclude-first-session" className="text-sm font-medium text-gray-700">
+                                            Exclude first session from chart
+                                        </label>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         <div className="h-96">
                             <ResponsiveContainer width="100%" height="100%">
-                                {selectedUser === 'all-users' ? (
+                                {chartMode === 'individual' ? (
+                                    renderIndividualScoresChart()
+                                ) : selectedUser === 'all-users' ? (
                                     <LineChart data={allUsersChartData}>
                                         <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis
-                                            dataKey="label"
-                                            label={{
-                                                value: 'Normalized Session',
-                                                position: 'insideBottom',
-                                                offset: -10
-                                            }}
-                                        />
-                                        <YAxis
-                                            domain={[1, 5]}
-                                            label={{
-                                                value: 'Average EMA Score',
-                                                angle: -90
-                                            }}
-                                        />
-                                        <Legend
-                                            wrapperStyle={{ paddingTop: "2%" }}
-                                        />
+                                        <XAxis dataKey="label" label={{ value: 'Normalized Session', position: 'insideBottom', offset: -10 }} />
+                                        <YAxis domain={[1, 5]} label={{ value: 'Average EMA Score', angle: -90 }} />
+                                        <Legend wrapperStyle={{ paddingTop: "2%" }} />
                                         {getUsers().map((user, index) => {
                                             const userCount: string = `${user}_count`;
                                             if (allUsersChartData.length > 0) {
@@ -706,17 +884,9 @@ export default function EMAPage() {
                                 ) : (
                                     <LineChart data={chartData}>
                                         <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis
-                                            dataKey="index"
-                                            label={{ value: 'Response Index', position: 'insideBottom', offset: -10 }}
-                                        />
-                                        <YAxis
-                                            domain={[1, 5]}
-                                            label={{ value: 'Score', angle: -90, position: 'insideLeft' }}
-                                        />
-                                        <Legend
-                                            wrapperStyle={{ paddingTop: "2%" }}
-                                        />
+                                        <XAxis dataKey="index" label={{ value: 'Response Index', position: 'insideBottom', offset: -10 }} />
+                                        <YAxis domain={[1, 5]} label={{ value: 'Score', angle: -90, position: 'insideLeft' }} />
+                                        <Legend wrapperStyle={{ paddingTop: "2%" }} />
                                         <Line
                                             type="monotone"
                                             dataKey="general"

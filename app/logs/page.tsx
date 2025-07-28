@@ -3,30 +3,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-
-interface LogAction {
-    action: string;
-    timestamp: string;
-}
-
-interface UserLog {
-    _id: string;
-    user: string;
-    actions: LogAction[];
-    createdAt: string;
-    documentIndex: number;
-}
-
-interface Session {
-    startTime: Date;
-    endTime: Date;
-    actions: LogAction[];
-    duration: string;
-}
-
-interface GroupedLogs {
-    [user: string]: Session[];
-}
+import { LogAction, UserLog, Session, GroupedLogs } from './interfaces';
 
 export default function LogsPage() {
     const [logs, setLogs] = useState<UserLog[]>([]);
@@ -48,7 +25,7 @@ export default function LogsPage() {
             }
             const data = await response.json();
             setLogs(data);
-            console.log(logs);
+            console.log(data);
             processLogs(data);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An error occurred');
