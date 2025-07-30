@@ -153,7 +153,7 @@ export default function EMAPage() {
 
         const users = Object.keys(groupedEMAs);
         const allIndividualScores: IndividualScoreDataPoint[] = [];
-        let newRSquaredCoefficients = { ...rSquaredCoefficients };
+        const newRSquaredCoefficients = { ...rSquaredCoefficients };
 
         if (selectedUser === 'all-users') {
             // Process all users
