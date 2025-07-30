@@ -22,6 +22,13 @@ export default function EMAPage() {
     const [chartMode, setChartMode] = useState<ChartMode>('sessions');
     const [showIndividualBestFit, setShowIndividualBestFit] = useState(false);
 
+    // R-squared coefficients
+    const [rSquaredCoefficients, setRSquaredCoefficients] = useState<{
+        individual?: number;
+        overall?: number;
+        singleUser?: number;
+    }>({});
+
     const userColors = [
         '#22c55e', // green
         '#3b82f6', // blue
@@ -104,6 +111,24 @@ export default function EMAPage() {
         setGroupedEMAs(grouped);
     };
 
+    const calculateRSquared = (points: { x: number; y: number }[], slope: number, intercept: number): number => {
+        if (points.length <= 1) return 0;
+
+        const yMean = points.reduce((sum, point) => sum + point.y, 0) / points.length;
+
+        let ssTotal = 0;
+        let ssResidual = 0;
+
+        points.forEach(point => {
+            const yPredicted = slope * point.x + intercept;
+            ssTotal += Math.pow(point.y - yMean, 2);
+            ssResidual += Math.pow(point.y - yPredicted, 2);
+        });
+
+        if (ssTotal === 0) return 0;
+        return Math.max(0, 1 - (ssResidual / ssTotal));
+    };
+
     const getQuestionType = (questionId: string, question: string): QuestionType => {
         const lowerQuestion = question.toLowerCase();
         const lowerQuestionId = questionId.toLowerCase();
@@ -128,6 +153,7 @@ export default function EMAPage() {
 
         const users = Object.keys(groupedEMAs);
         const allIndividualScores: IndividualScoreDataPoint[] = [];
+        let newRSquaredCoefficients = { ...rSquaredCoefficients };
 
         if (selectedUser === 'all-users') {
             // Process all users
@@ -175,6 +201,10 @@ export default function EMAPage() {
 
                     const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
                     const intercept = (sumY - slope * sumX) / n;
+
+                    // Calculate R-squared
+                    const rSquared = calculateRSquared(allPointsForRegression, slope, intercept);
+                    newRSquaredCoefficients.overall = rSquared;
 
                     // Add best fit values to each point
                     allIndividualScores.forEach(point => {
@@ -226,6 +256,10 @@ export default function EMAPage() {
                     const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
                     const intercept = (sumY - slope * sumX) / n;
 
+                    // Calculate R-squared
+                    const rSquared = calculateRSquared(allPointsForRegression, slope, intercept);
+                    newRSquaredCoefficients.individual = rSquared;
+
                     allIndividualScores.forEach(point => {
                         point.bestfit = slope * point.index + intercept;
                     });
@@ -233,6 +267,7 @@ export default function EMAPage() {
             }
         }
 
+        setRSquaredCoefficients(newRSquaredCoefficients);
         setIndividualScoreData(allIndividualScores);
     }, [groupedEMAs, selectedUser, excludeFirstSession, showIndividualBestFit]);
 
@@ -244,6 +279,7 @@ export default function EMAPage() {
 
         const users = Object.keys(groupedEMAs);
         const userData: { [user: string]: { [key: string]: { scores: number[]; count: number } } } = {};
+        let newRSquaredCoefficients = { ...rSquaredCoefficients };
 
         users.forEach(user => {
             userData[user] = {};
@@ -407,12 +443,17 @@ export default function EMAPage() {
                     const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
                     const intercept = (sumY - slope * sumX) / n;
 
+                    // Calculate R-squared
+                    const rSquared = calculateRSquared(allPointsForOverallRegression, slope, intercept);
+                    newRSquaredCoefficients.overall = rSquared;
+
                     normalizedChartPoints.forEach(point => {
                         point.overall_bestfit = slope * point.index + intercept;
                     });
                 }
             }
 
+            setRSquaredCoefficients(newRSquaredCoefficients);
             setAllUsersChartData(normalizedChartPoints);
             return;
         }
@@ -471,12 +512,17 @@ export default function EMAPage() {
                 const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
                 const intercept = (sumY - slope * sumX) / n;
 
+                // Calculate R-squared
+                const rSquared = calculateRSquared(allPointsForOverallRegression, slope, intercept);
+                newRSquaredCoefficients.overall = rSquared;
+
                 chartPoints.forEach(point => {
                     point.overall_bestfit = slope * point.index + intercept;
                 });
             }
         }
 
+        setRSquaredCoefficients(newRSquaredCoefficients);
         setAllUsersChartData(chartPoints);
     }, [groupedEMAs, excludeFirstSession, showOverallBestFit, normalizeData, normalizationMethod]);
 
@@ -501,6 +547,7 @@ export default function EMAPage() {
 
         const chartPoints: ChartDataPoint[] = [];
         let globalIndex = 1;
+        let newRSquaredCoefficients = { ...rSquaredCoefficients };
 
         allResponses.forEach((response) => {
             const type = getQuestionType(response.questionId, response.question);
@@ -553,12 +600,17 @@ export default function EMAPage() {
                 const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
                 const intercept = (sumY - slope * sumX) / n;
 
+                // Calculate R-squared
+                const rSquared = calculateRSquared(allPointsForRegression, slope, intercept);
+                newRSquaredCoefficients.singleUser = rSquared;
+
                 chartPoints.forEach(point => {
                     point.bestfit = slope * point.index + intercept;
                 });
             }
         }
 
+        setRSquaredCoefficients(newRSquaredCoefficients);
         setChartData(chartPoints);
     }, [groupedEMAs, selectedUser, excludeFirstSession]);
 
@@ -664,7 +716,7 @@ export default function EMAPage() {
                             strokeWidth={3}
                             dot={false}
                             connectNulls={true}
-                            name="Overall Best Fit"
+                            name={`Overall Best Fit${rSquaredCoefficients.overall !== undefined ? ` (R² = ${rSquaredCoefficients.overall.toFixed(3)})` : ''}`}
                             isAnimationActive={false}
                         />
                     )}
@@ -696,7 +748,7 @@ export default function EMAPage() {
                             strokeWidth={2}
                             dot={false}
                             connectNulls={true}
-                            name="Best Fit Line"
+                            name={`Best Fit Line${rSquaredCoefficients.individual !== undefined ? ` (R² = ${rSquaredCoefficients.individual.toFixed(3)})` : ''}`}
                             isAnimationActive={false}
                         />
                     )}
@@ -876,7 +928,7 @@ export default function EMAPage() {
                                                 strokeWidth={3}
                                                 dot={false}
                                                 connectNulls={true}
-                                                name="Overall Best Fit"
+                                                name={`Overall Best Fit${rSquaredCoefficients.overall !== undefined ? ` (R² = ${rSquaredCoefficients.overall.toFixed(3)})` : ''}`}
                                                 isAnimationActive={false}
                                             />
                                         )}
@@ -944,7 +996,7 @@ export default function EMAPage() {
                                             strokeWidth={2}
                                             dot={false}
                                             connectNulls={true}
-                                            name="Best Fit (All Points)"
+                                            name={`Best Fit (All Points)${rSquaredCoefficients.singleUser !== undefined ? ` (R² = ${rSquaredCoefficients.singleUser.toFixed(3)})` : ''}`}
                                             isAnimationActive={false}
                                         />
                                     </LineChart>
