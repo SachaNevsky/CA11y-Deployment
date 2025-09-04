@@ -63,6 +63,21 @@ export default function EMAPage() {
         }
     };
 
+    const getUserPNumber = (userName: string): string => {
+        const userMapping: Record<string, string> = {
+            'Ian': 'P1',
+            'Roger': 'P2',
+            'Alice': 'P3',
+            'Rita': 'P4',
+            'Ben': 'P5',
+            'David': 'P6',
+            'Peter': 'P7',
+            'Paul': 'P8',
+            'Eugene': 'P9'
+        };
+        return userMapping[userName] || userName;
+    };
+
     const processEMAs = (emasData: UserEMA[]) => {
         const grouped: GroupedEMAs = {};
         const SESSION_GAP_MS = 60 * 60 * 1000;
@@ -654,7 +669,11 @@ export default function EMAPage() {
     };
 
     const getUsers = () => {
-        return Object.keys(groupedEMAs);
+        return Object.keys(groupedEMAs).sort((a, b) => {
+            const pNumberA = getUserPNumber(a);
+            const pNumberB = getUserPNumber(b);
+            return pNumberA.localeCompare(pNumberB);
+        });
     };
 
     const getUserColor = (user: string, index: number) => {
@@ -893,32 +912,33 @@ export default function EMAPage() {
                                 )}
                             </div>
                         </div>
-                        <div className="h-96">
+                        <div className="h-[600px]">
                             <ResponsiveContainer width="100%" height="100%">
                                 {chartMode === 'individual' ? (
                                     renderIndividualScoresChart()
                                 ) : selectedUser === 'all-users' ? (
                                     <LineChart data={allUsersChartData}>
                                         <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis dataKey="label" label={{ value: 'Normalized Session', position: 'insideBottom', offset: -10 }} />
-                                        <YAxis domain={[1, 5]} label={{ value: 'Average EMA Score', angle: -90 }} />
-                                        <Legend wrapperStyle={{ paddingTop: "2%" }} />
+                                        <XAxis dataKey="label" label={{ value: 'Sessions (Normalised)', position: 'insideBottom', offset: -15 }} />
+                                        <YAxis domain={[1, 5]} label={{ value: 'Average EMA Score', angle: -90, position: "insideLeft", offset: 10 }} />
+                                        <Legend wrapperStyle={{ paddingTop: 20 }} />
                                         {getUsers().map((user, index) => {
                                             const userCount: string = `${user}_count`;
+                                            const pNumber = getUserPNumber(user);
                                             if (allUsersChartData.length > 0) {
                                                 console.log(">", user, " | ", allUsersChartData[0][userCount])
                                             }
                                             return (
                                                 <Line
                                                     key={user}
-                                                    type="monotone"
+                                                    type="linear"
                                                     dataKey={user}
                                                     stroke={getUserColor(user, index)}
                                                     strokeWidth={2}
                                                     strokeOpacity={0.25}
                                                     dot={{ fill: getUserColor(user, index), strokeWidth: 2, r: 4 }}
                                                     connectNulls={false}
-                                                    name={user}
+                                                    name={pNumber}
                                                     isAnimationActive={false}
                                                 />
                                             )
