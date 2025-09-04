@@ -645,6 +645,126 @@ export default function EMAPage() {
         }
     }, [processChartData, processAllUsersChartData, processIndividualScoreData, selectedUser, chartMode]);
 
+    const getDotShape = (userIndex: number) => {
+        const shapes = [
+            'circle',
+            'square',
+            'triangle',
+            'diamond',
+            'star',
+            'cross',
+            'wye',
+            'triangleDown',
+            'triangleLeft'
+        ];
+        return shapes[userIndex % shapes.length];
+    };
+
+    interface CustomLegendProps {
+        payload?: Array<{
+            value: string;
+            color: string;
+            type?: string;
+            dataKey?: string;
+        }>;
+    }
+
+    const CustomLegend = (props: CustomLegendProps) => {
+        const { payload } = props;
+
+        if (!payload) {
+            return null;
+        }
+
+        return (
+            <div className="flex flex-wrap justify-center gap-4 pt-4">
+                {payload.map((entry, index: number) => {
+                    const user = getUsers()[index];
+                    const userIndex = getUsers().indexOf(user);
+                    const dotShape = getDotShape(userIndex);
+                    const color = entry.color;
+
+                    return (
+                        <div key={entry.value} className="flex items-center gap-2">
+                            <svg width="12" height="12">
+                                <CustomDot
+                                    cx={6}
+                                    cy={6}
+                                    fill={color}
+                                    shape={dotShape}
+                                />
+                            </svg>
+                            <span className="text-sm" style={{ color: entry.color }}>
+                                {entry.value}
+                            </span>
+                        </div>
+                    );
+                })}
+            </div>
+        );
+    };
+
+    interface CustomDotProps {
+        cx?: number;
+        cy?: number;
+        fill?: string;
+        shape?: string;
+    }
+
+    const CustomDot = (props: CustomDotProps) => {
+        const { cx = 0, cy = 0, fill = '#000', shape = 'circle' } = props;
+        const size = 4;
+
+        switch (shape) {
+            case 'square':
+                return <rect x={cx - size} y={cy - size} width={size * 2} height={size * 2} fill={fill} stroke={fill} strokeWidth={2} />;
+            case 'triangle':
+                return <polygon points={`${cx},${cy - size} ${cx - size},${cy + size} ${cx + size},${cy + size}`} fill={fill} stroke={fill} strokeWidth={2} />;
+            case 'diamond':
+                return <polygon points={`${cx},${cy - size} ${cx + size},${cy} ${cx},${cy + size} ${cx - size},${cy}`} fill={fill} stroke={fill} strokeWidth={2} />;
+            case 'star':
+                const starPoints = [];
+                for (let i = 0; i < 5; i++) {
+                    const angle = (i * 2 * Math.PI) / 5 - Math.PI / 2;
+                    const outerX = cx + size * Math.cos(angle);
+                    const outerY = cy + size * Math.sin(angle);
+                    starPoints.push(`${outerX},${outerY}`);
+
+                    const innerAngle = ((i + 0.5) * 2 * Math.PI) / 5 - Math.PI / 2;
+                    const innerX = cx + (size * 0.5) * Math.cos(innerAngle);
+                    const innerY = cy + (size * 0.5) * Math.sin(innerAngle);
+                    starPoints.push(`${innerX},${innerY}`);
+                }
+                return <polygon points={starPoints.join(' ')} fill={fill} stroke={fill} strokeWidth={1} />;
+            case 'cross':
+                return (
+                    <g>
+                        <line x1={cx - size} y1={cy} x2={cx + size} y2={cy} stroke={fill} strokeWidth={2} />
+                        <line x1={cx} y1={cy - size} x2={cx} y2={cy + size} stroke={fill} strokeWidth={2} />
+                    </g>
+                );
+            case 'wye':
+                return (
+                    <g>
+                        <line x1={cx - size} y1={cy - size} x2={cx + size} y2={cy + size} stroke={fill} strokeWidth={2} />
+                        <line x1={cx - size} y1={cy + size} x2={cx + size} y2={cy - size} stroke={fill} strokeWidth={2} />
+                    </g>
+                );
+            case 'triangleDown':
+                return <polygon points={`${cx},${cy + size} ${cx - size},${cy - size} ${cx + size},${cy - size}`} fill={fill} stroke={fill} strokeWidth={2} />;
+            case 'triangleLeft':
+                return (
+                    <g>
+                        <line x1={cx - size * 1.2} y1={cy - size * 0.8} x2={cx + size * 1.2} y2={cy + size * 0.8} stroke={fill} strokeWidth={2} />
+                        <line x1={cx} y1={cy - size * 1.2} x2={cx} y2={cy + size * 1.2} stroke={fill} strokeWidth={2} />
+                        <line x1={cx - size * 1.2} y1={cy + size * 0.8} x2={cx + size * 1.2} y2={cy - size * 0.8} stroke={fill} strokeWidth={2} />
+                    </g>
+                );
+            default:
+                return <circle cx={cx} cy={cy} r={size} fill={fill} stroke={fill} strokeWidth={2} />;
+        }
+    };
+
     const formatDateTime = (date: Date) => {
         return date.toLocaleString('en-GB', {
             year: 'numeric',
@@ -921,10 +1041,11 @@ export default function EMAPage() {
                                         <CartesianGrid strokeDasharray="3 3" />
                                         <XAxis dataKey="label" label={{ value: 'Sessions (Normalised)', position: 'insideBottom', offset: -15 }} />
                                         <YAxis domain={[1, 5]} label={{ value: 'Average EMA Score', angle: -90, position: "insideLeft", offset: 10 }} />
-                                        <Legend wrapperStyle={{ paddingTop: 20 }} />
+                                        <Legend content={<CustomLegend />} wrapperStyle={{ paddingTop: 20 }} />
                                         {getUsers().map((user, index) => {
                                             const userCount: string = `${user}_count`;
                                             const pNumber = getUserPNumber(user);
+                                            const dotShape = getDotShape(index);
                                             if (allUsersChartData.length > 0) {
                                                 console.log(">", user, " | ", allUsersChartData[0][userCount])
                                             }
@@ -936,7 +1057,8 @@ export default function EMAPage() {
                                                     stroke={getUserColor(user, index)}
                                                     strokeWidth={2}
                                                     strokeOpacity={0.25}
-                                                    dot={{ fill: getUserColor(user, index), strokeWidth: 2, r: 4 }}
+                                                    dot={<CustomDot shape={dotShape} fill={getUserColor(user, index)} />}
+                                                    // dot={{ fill: getUserColor(user, index), strokeWidth: 2, r: 4 }}
                                                     connectNulls={false}
                                                     name={pNumber}
                                                     isAnimationActive={false}
