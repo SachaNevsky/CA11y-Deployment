@@ -279,7 +279,7 @@ export default function EMAPage() {
 
         const users = Object.keys(groupedEMAs);
         const userData: { [user: string]: { [key: string]: { scores: number[]; count: number } } } = {};
-        let newRSquaredCoefficients = { ...rSquaredCoefficients };
+        const newRSquaredCoefficients = { ...rSquaredCoefficients };
 
         users.forEach(user => {
             userData[user] = {};
@@ -547,7 +547,7 @@ export default function EMAPage() {
 
         const chartPoints: ChartDataPoint[] = [];
         let globalIndex = 1;
-        let newRSquaredCoefficients = { ...rSquaredCoefficients };
+        const newRSquaredCoefficients = { ...rSquaredCoefficients };
 
         allResponses.forEach((response) => {
             const type = getQuestionType(response.questionId, response.question);
@@ -701,7 +701,8 @@ export default function EMAPage() {
                             type="monotone"
                             dataKey={user}
                             stroke={getUserColor(user, index)}
-                            strokeWidth={0}
+                            strokeWidth={2}
+                            strokeOpacity={0.25}
                             dot={{ fill: getUserColor(user, index), strokeWidth: 2, r: 4 }}
                             connectNulls={false}
                             name={user}
@@ -734,7 +735,8 @@ export default function EMAPage() {
                         type="monotone"
                         dataKey="score"
                         stroke="#3b82f6"
-                        strokeWidth={0}
+                        strokeWidth={2}
+                        strokeOpacity={0.25}
                         dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
                         connectNulls={false}
                         name="EMA Score"
@@ -912,7 +914,8 @@ export default function EMAPage() {
                                                     type="monotone"
                                                     dataKey={user}
                                                     stroke={getUserColor(user, index)}
-                                                    strokeWidth={0}
+                                                    strokeWidth={2}
+                                                    strokeOpacity={0.25}
                                                     dot={{ fill: getUserColor(user, index), strokeWidth: 2, r: 4 }}
                                                     connectNulls={false}
                                                     name={user}
@@ -928,7 +931,8 @@ export default function EMAPage() {
                                                 strokeWidth={3}
                                                 dot={false}
                                                 connectNulls={true}
-                                                name={`Overall Best Fit${rSquaredCoefficients.overall !== undefined ? ` (R² = ${rSquaredCoefficients.overall.toFixed(3)})` : ''}`}
+                                                // name={`Overall Best Fit${rSquaredCoefficients.overall !== undefined ? ` (R² = ${rSquaredCoefficients.overall.toFixed(3)})` : ''}`}
+                                                name={`Overall Best Fit`}
                                                 isAnimationActive={false}
                                             />
                                         )}
