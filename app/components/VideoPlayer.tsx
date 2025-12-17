@@ -20,6 +20,7 @@ import { formatTime } from "../functions/formatTime";
 import { getEMAQuestion } from "../functions/getEMAQuestions";
 import { HELP_CONTENT } from "../api/helpContent";
 import { HelpSection } from "../api/types";
+import { Slider } from "@heroui/slider";
 
 const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element => {
     const [metadata, setMetadata] = useState<VideoMetadata | null>(null);
@@ -56,7 +57,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     const [musicControl, setMusicControl] = useState<AudioControls>({ volume: 1, muted: false, prevVolume: 1 });
     const [otherControl, setOtherControl] = useState<AudioControls>({ volume: 1, muted: false, prevVolume: 1 });
     const [currentMuxAssetId, setCurrentMuxAssetId] = useState<string | undefined>(muxAssetId?.original); // mux
-    const [isMuxPlayerLoaded, setIsMuxPlayerLoaded] = useState<boolean>(false); // mux
 
     const [ema, setEma] = useState<EMAState>({ isOpen: false, currentQuestion: null, lastAction: "general" });
     const [userName, setUserName] = useState<string>("");
@@ -245,7 +245,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     };
 
     const handleHighlight = (): void => {
-        if (isMuxPlayerLoaded) setShowVideo(false);
+        setShowVideo(false);
 
         setTimeout(() => {
             setHighlight(prev => {
@@ -259,7 +259,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                 }
 
                 setTimeout(saveSettings, 0);
-                if (isMuxPlayerLoaded) setShowVideo(true);
+                setShowVideo(true);
 
                 return newValue;
             });
@@ -584,7 +584,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                 };
 
                 videoStateRef.current = fullscreenStateRef;
-                setIsMuxPlayerLoaded(true);
 
                 if (videoContainerRef.current.requestFullscreen) {
                     videoContainerRef.current.requestFullscreen();
@@ -598,7 +597,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                 }
             } else {
                 if (document.exitFullscreen) {
-                    handlePlayPause("pause");
                     document.exitFullscreen();
                     handleLogging("Exited fullscreen mode.", lastAction);
                 }
@@ -612,7 +610,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
             setIsFullScreen(isNowFullScreen);
 
             if (!isNowFullScreen && isFullScreen) {
-                setIsMuxPlayerLoaded(false);
                 const question = getEMAQuestion(EMA_QUESTIONS, lastAction);
                 setEma({
                     isOpen: true,
@@ -696,8 +693,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     const [syncing, setSyncing] = useState<boolean>(false);
 
     useEffect(() => {
-        if (!isFullScreen || !isMuxPlayerLoaded) return;
-
         let syncInProgress = false;
         let consecutiveSyncAttempts = 0;
         const MAX_SYNC_ATTEMPTS = 5;
@@ -824,7 +819,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         return () => {
             clearInterval(interval);
         };
-    }, [isFullScreen, isMuxPlayerLoaded]);
+    }, []);
 
     return (
         <div className="w-full mx-auto relative">
@@ -840,24 +835,10 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                 <p className="text-center p-4">Video metadata not available.</p>
             ) : (
                 <>
-                    {!isFullScreen && (
-                        <div className="p-4 md:p-6">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <CaptionControls
-                                    captionMode={captionMode}
-                                    onCaptionsToggle={handleCaptions}
-                                    onSimpleCaptions={handleSimpleCaptions}
-                                    onOpenHelp={() => { handleOpenHelp("captions") }}
-                                />
+                    <div className="h-fit flex flex-col p-2 md:p-4 overflow-hidden">
+                        <div className="flex items-center gap-2 md:gap-4 mb-2 md:mb-4 min-h-0">
+                            <div className="flex flex-col gap-2 md:gap-4 w-[20%] flex-shrink-0">
                                 <SpotlightControls highlight={highlight} onHighlightToggle={handleHighlight} onOpenHelp={handleOpenHelp} />
-                                <PlaybackSpeedControls
-                                    playbackRate={playbackRate}
-                                    isSpeedAutomated={isSpeedAutomated}
-                                    onSlowDown={handleSlowDown}
-                                    onSpeedUp={handleSpeedUp}
-                                    onToggleAutomateSpeed={handleToggleAutomateSpeed}
-                                    onOpenHelp={handleOpenHelp}
-                                />
                                 <VolumeControls
                                     speakerControl={speakerControl}
                                     musicControl={musicControl}
@@ -871,52 +852,92 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                                     onOpenHelp={() => handleOpenHelp("volume")}
                                 />
                             </div>
-                            <div className="my-4">
-                                <IconButton
-                                    text="Play Video"
-                                    icon="play"
-                                    onClickFunction={toggleFullscreen}
-                                    className="w-full justify-center text-lg py-8"
-                                    aria-label="Enter fullscreen video mode"
+
+                            <div ref={videoContainerRef} className={`bg-black flex-shrink flex-grow min-w-0 min-h-0 ${isFullScreen ? 'fixed inset-0 z-50 w-screen h-screen' : 'aspect-video max-w-full'}`}>
+                                {showVideo && (
+                                    <MuxPlayer
+                                        ref={muxPlayerRef}
+                                        playbackId={currentMuxAssetId}
+                                        streamType="on-demand"
+                                        muted={true}
+                                        autoPlay={false}
+                                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                        playbackRate={playbackRate}
+                                        startTime={currentTimestamp}
+                                    >
+                                        <track
+                                            label={`English ${captionMode}`}
+                                            kind="subtitles"
+                                            srcLang="en"
+                                            src={captionMode === "none" ? "" : captionMode === "default" ? defaultCaptionsSrc : simplifiedCaptionsSrc}
+                                        />
+                                    </MuxPlayer>
+                                )}
+                                {isFullScreen && (
+                                    <FullscreenControls
+                                        isUserActive={isUserActive}
+                                        currentTimestamp={currentTimestamp}
+                                        duration={metadata!.duration}
+                                        onSkipBackwards={handleSkipBackwards}
+                                        onSkipForwards={handleSkipForwards}
+                                        onPlayPause={handlePlayPause}
+                                        onSeek={handleSeek}
+                                        onExitFullscreen={toggleFullscreen}
+                                    />
+                                )}
+                                {syncing && (
+                                    <div className="z-10 absolute top-[50%] left-[50%] translate-x-[-50%] bg-white/25 rounded-full p-2">
+                                        <MoonLoader color="#dc2626" size={100} />
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="flex flex-col gap-2 md:gap-4 w-[20%] flex-shrink-0">
+                                <CaptionControls
+                                    captionMode={captionMode}
+                                    onCaptionsToggle={handleCaptions}
+                                    onSimpleCaptions={handleSimpleCaptions}
+                                    onOpenHelp={() => { handleOpenHelp("captions") }}
+                                />
+                                <PlaybackSpeedControls
+                                    playbackRate={playbackRate}
+                                    isSpeedAutomated={isSpeedAutomated}
+                                    onSlowDown={handleSlowDown}
+                                    onSpeedUp={handleSpeedUp}
+                                    onToggleAutomateSpeed={handleToggleAutomateSpeed}
+                                    onOpenHelp={handleOpenHelp}
                                 />
                             </div>
                         </div>
-                    )}
-                    <div ref={videoContainerRef} className={`bg-black ${isFullScreen ? 'fixed inset-0 z-50 w-screen h-screen' : 'hidden'}`}>
-                        {showVideo && isFullScreen && isMuxPlayerLoaded && (
-                            <MuxPlayer
-                                ref={muxPlayerRef}
-                                playbackId={currentMuxAssetId}
-                                streamType="on-demand"
-                                muted={true}
-                                autoPlay={false}
-                                style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                                playbackRate={playbackRate}
-                                startTime={currentTimestamp}
-                            >
-                                <track
-                                    label={`English ${captionMode}`}
-                                    kind="subtitles"
-                                    srcLang="en"
-                                    src={captionMode === "none" ? "" : captionMode === "default" ? defaultCaptionsSrc : simplifiedCaptionsSrc}
-                                />
-                            </MuxPlayer>
-                        )}
-                        {isFullScreen && (
-                            <FullscreenControls
-                                isUserActive={isUserActive}
-                                currentTimestamp={currentTimestamp}
-                                duration={metadata!.duration}
-                                onSkipBackwards={handleSkipBackwards}
-                                onSkipForwards={handleSkipForwards}
-                                onPlayPause={handlePlayPause}
-                                onSeek={handleSeek}
-                                onExitFullscreen={toggleFullscreen}
-                            />
-                        )}
-                        {isFullScreen && syncing && (
-                            <div className="z-10 absolute top-[50%] left-[50%] translate-x-[-50%] bg-white/25 rounded-full  p-2"><MoonLoader color="#dc2626" size={100} /></div>
-                        )}
+
+                        <div className="p-3 md:p-4">
+                            <div className="flex items-center gap-2 md:gap-4 mb-3">
+                                <IconButton text="10s" icon="rewind" onClickFunction={handleSkipBackwards} className="text-white" aria-label="Skip backward 10 seconds" />
+                                <IconButton text="Play" icon="play" onClickFunction={() => handlePlayPause("play")} className="text-white" aria-label="Play video" />
+                                <IconButton text="Pause" icon="pause" onClickFunction={() => handlePlayPause("pause")} className="text-white" aria-label="Pause video" />
+                                <IconButton text="10s" icon="forwards" onClickFunction={handleSkipForwards} className="text-white" aria-label="Skip forward 10 seconds" />
+                            </div>
+                            <div>
+                                <div className="flex-grow mx-2">
+                                    <Slider
+                                        aria-label="SeekbarSlider"
+                                        name="seekSlider"
+                                        color="primary"
+                                        size="lg"
+                                        classNames={{ track: "custom-slider-track-fullscreen" }}
+                                        defaultValue={currentTimestamp}
+                                        minValue={0}
+                                        maxValue={metadata!.duration}
+                                        step={1}
+                                        value={currentTimestamp}
+                                        onChange={(val) => handleSeek(val as number)}
+                                    />
+                                </div>
+                                <p className="text-black text-lg font-mono text-center">
+                                    {formatTime(currentTimestamp)} / {formatTime(metadata!.duration)}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                     {ema.currentQuestion && (
                         <EMACard

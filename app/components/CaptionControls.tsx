@@ -21,7 +21,7 @@ const CaptionControls = ({ captionMode, onCaptionsToggle, onSimpleCaptions, onOp
                     <HelpCircle size={"1.5em"} />
                 </button>
             </h3>
-            <div className="flex flex-row gap-3">
+            <div className="flex flex-col gap-3">
                 {captionMode === "none" ?
                     (<IconButton text="Turn ON captions" icon="captionsOn" color="purple" onClickFunction={onCaptionsToggle} />)
                     : (<IconButton text="Turn OFF captions" icon="captionsOff" color="purple" onClickFunction={onCaptionsToggle} />)
