@@ -125,3 +125,5 @@ export interface SpotlightControlsProps {
     onHighlightToggle: () => void;
     onOpenHelp: (section: string) => void;
 }
+
+export type HelpSection = "captions" | "spotlight" | "speed" | "volume" | "default";

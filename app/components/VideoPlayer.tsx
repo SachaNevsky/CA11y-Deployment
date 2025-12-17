@@ -5,7 +5,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import MuxPlayer from "@mux/mux-player-react";
 import MuxPlayerElement from "@mux/mux-player";
 import EMACard from "./EMACard";
-import { AudioControls, VideoMetadata, VideoPlayerProps, VideoPlayerSettings, EMAQuestion, EMAState } from "../api/types";
+import { AudioControls, VideoMetadata, VideoPlayerProps, VideoPlayerSettings, EMAState } from "../api/types";
 import { logAction } from "@/lib/logAction";
 import { EMA_QUESTIONS } from "../api/EMAQuestions";
 import IconButton from "./IconButton";
@@ -16,7 +16,10 @@ import FullscreenControls from "./FullscreenControls";
 import PlaybackSpeedControls from "./PlaybackSpeedControls";
 import SpotlightControls from "./SpotlightControls";
 import { MoonLoader } from "react-spinners"
-// import Video from "next-video";
+import { formatTime } from "../functions/formatTime";
+import { getEMAQuestion } from "../functions/getEMAQuestions";
+import { HELP_CONTENT } from "../api/helpContent";
+import { HelpSection } from "../api/types";
 
 const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element => {
     const [metadata, setMetadata] = useState<VideoMetadata | null>(null);
@@ -35,11 +38,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     const otherSrc = `${basePath}_other.mp3`;
     const defaultCaptionsSrc = `${basePath}.vtt`;
     const simplifiedCaptionsSrc = `${basePath}.vtt`;
-    // const simplifiedCaptionsSrc = `${basePath}_simplified.vtt`;
-
-    // const localVideoSrc = `${basePath}.mp4`
-    // const localHighlightSrc = `${basePath}.mp4`
-    // const [useLocalVideo] = useState<boolean>(!muxAssetId?.original);
 
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const speakerRef = useRef<HTMLAudioElement | null>(null);
@@ -65,33 +63,8 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
     const [lastAction, setLastAction] = useState<string>("general");
     const [helpPopup, setHelpPopup] = useState<{ isOpen: boolean; title: string; content: string; section: string }>({ isOpen: false, title: "", content: "", section: "" });
 
-    // const [syncing, setSyncing] = useState<boolean>(false);
-
     const handleOpenHelp = (section: string) => {
-        let title = "";
-        let content = "";
-
-        switch (section) {
-            case "captions":
-                title = "Captions Help";
-                content = "Captions show <strong>dialogue</strong> as <strong>text</strong>. You can turn captions <strong>ON</strong> or <strong>OFF</strong>, or switch to a <strong>simplified version</strong>.";
-                break;
-            case "spotlight":
-                title = "Spotlight Help";
-                content = "Spotlight <strong>highlights</strong> the <strong>current speaker</strong>. You can turn spotlight <strong>ON</strong> or <strong>OFF</strong>.";
-                break;
-            case "speed":
-                title = "Playback Speed Help";
-                content = "Playback speed controls <strong>how fast</strong> the <strong>video</strong> is playing. You can <strong>speed up</strong> or <strong>slow down</strong> the video. You can also make the <strong>system automate</strong> the <strong>speed</strong>.";
-                break;
-            case "volume":
-                title = "Volume Controls Help";
-                content = "Volume controls <strong>how loud</strong> different <strong>audio</strong> is. You can <strong>control</strong> the <strong>speaker</strong>, <strong>music</strong> and <strong>background</strong> audio. You can also <strong>mute</strong> audio you do not want.";
-                break;
-            default:
-                title = "Help";
-                content = "Need assistance with the video player controls?";
-        }
+        const { title, content } = HELP_CONTENT[section as HelpSection] ?? HELP_CONTENT.default;
 
         setHelpPopup({ isOpen: true, title, content, section });
         handleLogging(`Opened help for ${section} controls.`);
@@ -109,9 +82,9 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
 
             if (name) {
                 setUserName(name);
-                logAction(name, action)
+                logAction(name, action);
             } else {
-                console.error("No ca11yDeploymentName stored.")
+                console.error("No ca11yDeploymentName stored.");
             };
         }
     }
@@ -157,15 +130,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         }
     }, [isFullScreen]);
 
-    const getEMAQuestion = (actionCategory: string): EMAQuestion => {
-        const matchingQuestions = EMA_QUESTIONS.filter(q => q.condition === actionCategory);
-        if (matchingQuestions.length > 0) {
-            return matchingQuestions[Math.floor(Math.random() * matchingQuestions.length)];
-        }
-
-        return EMA_QUESTIONS.find(q => q.condition === "general") || EMA_QUESTIONS[0];
-    };
-
     const handleEMAClose = () => {
         setEma(prev => ({ ...prev, isOpen: false }));
     };
@@ -203,37 +167,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
 
         fetchMetadata();
     }, [videoName]);
-
-    // useEffect(() => {
-    //     if (typeof window !== "undefined") {
-    //         const savedSettings = localStorage.getItem("ca11ySettings");
-
-    //         if (!savedSettings) console.error("No ca11ySettings stored.")
-
-    //         if (savedSettings) {
-    //             const settings: VideoPlayerSettings = JSON.parse(savedSettings);
-    //             setCaptionMode(settings.captionMode);
-    //             setPlaybackRate(settings.playbackRate);
-    //             setManualPlaybackRate(settings.manualPlaybackRate);
-    //             setIsSpeedAutomated(settings.isSpeedAutomated);
-    //             setSpeakerControl(settings.speakerControl);
-    //             setMusicControl(settings.musicControl);
-    //             setOtherControl(settings.otherControl);
-
-    //             if (settings.highlight) {
-    //                 setHighlight(true);
-    //                 setCurrentMuxAssetId(highlightSrc);
-    //             } else {
-    //                 setHighlight(false);
-    //                 setCurrentMuxAssetId(videoSrc);
-    //             }
-
-    //             setTimeout(() => {
-    //                 updateCaptionsMode(settings.captionMode);
-    //             }, 100);
-    //         }
-    //     }
-    // }, [videoSrc, highlightSrc]);
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -311,28 +244,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         setTimeout(saveSettings, 0);
     };
 
-    // const handleHighlight = (): void => {
-    //     if (isMuxPlayerLoaded) setShowVideo(false);
-
-    //     setTimeout(() => {
-    //         setHighlight(prev => {
-    //             const newValue = !prev;
-    //             if (newValue) {
-    //                 setCurrentMuxAssetId(muxAssetId?.highlight);
-    //                 handleLogging("Highlight was turned on.", "highlight");
-    //             } else {
-    //                 setCurrentMuxAssetId(muxAssetId?.original);
-    //                 handleLogging("Highlight was turned off.", "highlight");
-    //             }
-
-    //             setTimeout(saveSettings, 0);
-    //             if (isMuxPlayerLoaded) setShowVideo(true);
-
-    //             return newValue;
-    //         });
-    //     }, 0);
-    // };
-
     const handleHighlight = (): void => {
         if (isMuxPlayerLoaded) setShowVideo(false);
 
@@ -376,17 +287,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [highlight]);
 
-    // const handleSlowDown = (): void => {
-    //     if (isSpeedAutomated) return;
-    //     if (playbackRate > 0.5) {
-    //         const newRate: number = playbackRate - 0.05;
-    //         setPlaybackRate(newRate);
-    //         setManualPlaybackRate(newRate);
-    //         handleLogging(`Playback speed was decreased to ${newRate}.`, "speed");
-    //         setTimeout(saveSettings, 0);
-    //     }
-    // };
-
     const handleSlowDown = (): void => {
         if (isSpeedAutomated) return;
         if (playbackRate > 0.5) {
@@ -398,17 +298,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         }
     };
 
-    // const handleSpeedUp = (): void => {
-    //     if (isSpeedAutomated) return;
-    //     if (playbackRate < 1.5) {
-    //         const newRate: number = playbackRate + 0.05;
-    //         setPlaybackRate(newRate);
-    //         setManualPlaybackRate(newRate);
-    //         handleLogging(`Playback speed was increased to ${newRate}.`, "speed");
-    //         setTimeout(saveSettings, 0);
-    //     }
-    // };
-
     const handleSpeedUp = (): void => {
         if (isSpeedAutomated) return;
         if (playbackRate < 1.5) {
@@ -419,20 +308,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
             setTimeout(saveSettings, 0);
         }
     };
-
-    // useEffect(() => {
-    //     const player = muxPlayerRef.current;
-    //     const speaker = speakerRef.current;
-    //     if (player && speaker) {
-    //         // if (Math.abs(player.currentTime - speaker.currentTime) > 0.2) {
-    //         //     setSyncing(true);
-    //         // } else {
-    //         //     setSyncing(false);
-    //         // }
-    //         // console.log("isFullScreen:", isFullScreen, " - syncing:", syncing)
-    //         // console.log("player - speaker:", (player.currentTime - speaker.currentTime).toFixed(2), player.currentTime.toFixed(2), speaker.currentTime.toFixed(2));
-    //     }
-    // })
 
     const handleToggleAutomateSpeed = (): void => {
         setIsSpeedAutomated(prev => {
@@ -482,14 +357,12 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
             if (button === "play") {
                 const targetTime = speaker.currentTime;
 
-                // Set all to same time
                 player.currentTime = targetTime;
                 speaker.currentTime = targetTime;
                 music.currentTime = targetTime;
                 other.currentTime = targetTime;
                 setCurrentTimestamp(targetTime);
 
-                // Wait for seeks to complete
                 await Promise.all([
                     new Promise<void>(resolve => {
                         const checkReady = () => {
@@ -522,7 +395,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                 ]);
 
                 try {
-                    // Now play all at once
                     await Promise.all([
                         player.play(),
                         speaker.play(),
@@ -530,7 +402,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                         other.play()
                     ]);
 
-                    // setCurrentTimestamp(player.currentTime);
                     handleLogging("Video was put in play.");
                 } catch (error) {
                     console.error("Error starting playback:", error);
@@ -542,34 +413,12 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                 other.pause();
                 setCurrentTimestamp(player.currentTime);
                 handleLogging("Video playback paused.");
-                // player.currentTime = time;
                 speaker.currentTime = player.currentTime;
                 music.currentTime = player.currentTime;
                 other.currentTime = player.currentTime;
             }
         }
     };
-
-    // const handleSeek = (value: number) => {
-    //     const player = muxPlayerRef.current;
-    //     const speaker = speakerRef.current;
-    //     const music = musicRef.current;
-    //     const other = otherRef.current;
-    //     const time = value;
-
-    //     if (player && speaker && music && other) {
-    //         player.currentTime = time;
-    //         speaker.currentTime = time;
-    //         music.currentTime = time;
-    //         other.currentTime = time;
-    //         setCurrentTimestamp(time);
-    //         handleLogging(`The video was seeked to ${formatTime(time)}.`)
-
-    //         if (isSpeedAutomated) {
-    //             updateAutomatedSpeed(time);
-    //         }
-    //     }
-    // };
 
     const handleSeek = async (value: number): Promise<void> => {
         const player = muxPlayerRef.current;
@@ -579,20 +428,17 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         const time = value;
 
         if (player && speaker && music && other) {
-            // Pause everything first
             player.pause();
             speaker.pause();
             music.pause();
             other.pause();
 
-            // Set time on all elements
             player.currentTime = time;
             speaker.currentTime = time;
             music.currentTime = time;
             other.currentTime = time;
             setCurrentTimestamp(time);
 
-            // Wait for seek operations to complete
             await new Promise(resolve => {
                 let readyCount = 0;
                 const checkReady = () => {
@@ -607,7 +453,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                 music.addEventListener('seeked', checkReady, { once: true });
                 other.addEventListener('seeked', checkReady, { once: true });
 
-                // Fallback timeout
                 setTimeout(() => resolve(void 0), 100);
             });
 
@@ -761,13 +606,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
         }
     };
 
-    const formatTime = (seconds: number): string => {
-        const mins = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-
-        return `${mins}:${secs.toString().padStart(2, "0")}`;
-    };
-
     useEffect(() => {
         const handleFullScreenChange = (): void => {
             const isNowFullScreen = !!document.fullscreenElement;
@@ -775,7 +613,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
 
             if (!isNowFullScreen && isFullScreen) {
                 setIsMuxPlayerLoaded(false);
-                const question = getEMAQuestion(lastAction);
+                const question = getEMAQuestion(EMA_QUESTIONS, lastAction);
                 setEma({
                     isOpen: true,
                     currentQuestion: question,
@@ -789,31 +627,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
             document.removeEventListener("fullscreenchange", handleFullScreenChange);
         };
     }, [isFullScreen, lastAction]);
-
-    // useEffect(() => {
-    //     const player = muxPlayerRef.current;
-    //     const speaker = speakerRef.current;
-    //     const music = musicRef.current;
-    //     const other = otherRef.current;
-
-    //     if (player && speaker && music && other) {
-    //         const checkTime = (): void => {
-    //             if (speaker.currentTime !== currentTimestamp) {
-    //                 setCurrentTimestamp(speaker.currentTime);
-
-    //                 if (isSpeedAutomated) {
-    //                     updateAutomatedSpeed(speaker.currentTime);
-    //                 }
-    //             }
-    //         };
-
-    //         const interval = setInterval(checkTime, 100);
-
-    //         return () => {
-    //             clearInterval(interval);
-    //         };
-    //     }
-    // }, [currentTimestamp, isSpeedAutomated, metadata, updateAutomatedSpeed]);
 
     useEffect(() => {
         const speaker = speakerRef.current;
@@ -829,33 +642,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
             return () => speaker.removeEventListener('timeupdate', handleTimeUpdate);
         }
     }, [isSpeedAutomated, updateAutomatedSpeed]);
-
-    // useEffect(() => {
-    //     const player = muxPlayerRef.current;
-    //     const speaker = speakerRef.current;
-    //     const music = musicRef.current;
-    //     const other = otherRef.current;
-
-    //     // Only run this interval when NOT in fullscreen mode
-    //     // When in fullscreen, let MuxPlayer's onTimeUpdate handle the timing
-    //     if (player && speaker && music && other && !isFullScreen) {
-    //         const checkTime = (): void => {
-    //             if (speaker.currentTime !== currentTimestamp) {
-    //                 setCurrentTimestamp(speaker.currentTime);
-
-    //                 if (isSpeedAutomated) {
-    //                     updateAutomatedSpeed(speaker.currentTime);
-    //                 }
-    //             }
-    //         };
-
-    //         const interval = setInterval(checkTime, 100);
-
-    //         return () => {
-    //             clearInterval(interval);
-    //         };
-    //     }
-    // }, [currentTimestamp, isSpeedAutomated, metadata, updateAutomatedSpeed, isFullScreen]);
 
     useEffect(() => {
         const speaker = speakerRef.current;
@@ -964,7 +750,6 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                     await new Promise(resolve => setTimeout(resolve, 750));
 
                     const targetTime = speaker.currentTime;
-
                     player.currentTime = targetTime;
                     music.currentTime = targetTime;
                     other.currentTime = targetTime;
