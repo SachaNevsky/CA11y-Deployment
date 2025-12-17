@@ -835,9 +835,9 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                 <p className="text-center p-4">Video metadata not available.</p>
             ) : (
                 <>
-                    <div className="h-fit flex flex-col p-2 md:p-4 overflow-hidden">
-                        <div className="flex items-center gap-2 md:gap-4 mb-2 md:mb-4 min-h-0">
-                            <div className="flex flex-col gap-2 md:gap-4 w-[20%] flex-shrink-0">
+                    <div className="flex flex-col p-2 md:p-4 gap-2 md:gap-4 overflow-y-auto">
+                        <div className="flex items-center gap-2 md:gap-4 h-max">
+                            <div className="flex flex-col gap-2 md:gap-4 w-[20%] sm:w-[30%] flex-shrink-0">
                                 <SpotlightControls highlight={highlight} onHighlightToggle={handleHighlight} onOpenHelp={handleOpenHelp} />
                                 <VolumeControls
                                     speakerControl={speakerControl}
@@ -853,25 +853,36 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                                 />
                             </div>
 
-                            <div ref={videoContainerRef} className={`bg-black flex-shrink flex-grow min-w-0 min-h-0 ${isFullScreen ? 'fixed inset-0 z-50 w-screen h-screen' : 'aspect-video max-w-full'}`}>
+                            <div ref={videoContainerRef} className={`flex-shrink-1 flex-grow min-w-0 min-h-0 ${isFullScreen ? 'fixed inset-0 z-50 w-screen h-screen' : 'max-w-full'}`}>
                                 {showVideo && (
-                                    <MuxPlayer
-                                        ref={muxPlayerRef}
-                                        playbackId={currentMuxAssetId}
-                                        streamType="on-demand"
-                                        muted={true}
-                                        autoPlay={false}
-                                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                                        playbackRate={playbackRate}
-                                        startTime={currentTimestamp}
-                                    >
-                                        <track
-                                            label={`English ${captionMode}`}
-                                            kind="subtitles"
-                                            srcLang="en"
-                                            src={captionMode === "none" ? "" : captionMode === "default" ? defaultCaptionsSrc : simplifiedCaptionsSrc}
-                                        />
-                                    </MuxPlayer>
+                                    <>
+                                        <MuxPlayer
+                                            ref={muxPlayerRef}
+                                            playbackId={currentMuxAssetId}
+                                            streamType="on-demand"
+                                            muted={true}
+                                            autoPlay={false}
+                                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                            playbackRate={playbackRate}
+                                            startTime={currentTimestamp}
+                                        >
+                                            <track
+                                                label={`English ${captionMode}`}
+                                                kind="subtitles"
+                                                srcLang="en"
+                                                src={captionMode === "none" ? "" : captionMode === "default" ? defaultCaptionsSrc : simplifiedCaptionsSrc}
+                                            />
+                                        </MuxPlayer>
+                                        <div className="mt-1">
+                                            <IconButton
+                                                text="Fullscreen"
+                                                icon="fullscreen"
+                                                onClickFunction={toggleFullscreen}
+                                                className="w-full justify-center text-lg py-4"
+                                                aria-label="Enter fullscreen video mode"
+                                            />
+                                        </div>
+                                    </>
                                 )}
                                 {isFullScreen && (
                                     <FullscreenControls
@@ -892,7 +903,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                                 )}
                             </div>
 
-                            <div className="flex flex-col gap-2 md:gap-4 w-[20%] flex-shrink-0">
+                            <div className="flex flex-col gap-2 md:gap-4 w-[20%] sm:w-[30%] flex-shrink-0">
                                 <CaptionControls
                                     captionMode={captionMode}
                                     onCaptionsToggle={handleCaptions}
@@ -910,7 +921,7 @@ const VideoPlayer = ({ videoName, muxAssetId }: VideoPlayerProps): JSX.Element =
                             </div>
                         </div>
 
-                        <div className="p-3 md:p-4">
+                        <div className="shrink-0 p-3 md:p-4 bg-gray-100 rounded-lg">
                             <div className="flex items-center gap-2 md:gap-4 mb-3">
                                 <IconButton text="10s" icon="rewind" onClickFunction={handleSkipBackwards} className="text-white" aria-label="Skip backward 10 seconds" />
                                 <IconButton text="Play" icon="play" onClickFunction={() => handlePlayPause("play")} className="text-white" aria-label="Play video" />

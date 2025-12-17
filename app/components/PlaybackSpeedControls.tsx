@@ -9,7 +9,7 @@ const PlaybackSpeedControls = ({ playbackRate, isSpeedAutomated, onSlowDown, onS
         <div className="bg-warmGreen-100 px-6 py-4 rounded-xl">
             <h3 className="font-bold text-base mb-4 flex justify-between items-center">
                 <span>
-                    Playback Speed <span className="inline bg-warmGreen-300 mx-2 px-2 py-1 rounded">
+                    Speed <span className="inline bg-warmGreen-300 mx-2 px-2 py-1 rounded">
                         {isSpeedAutomated ? `Auto - ${Math.round(playbackRate * 100)}%` : `${Math.round(playbackRate * 100)}%`}
                     </span>
                 </span>
